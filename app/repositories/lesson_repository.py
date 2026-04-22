@@ -13,11 +13,11 @@ class LessonRepository:
         return self.db.query(Lesson).all()
     
 
-    def get_by_id(self, lesson_id) -> Optional[Lesson]:
+    def get_by_id(self, lesson_id: int) -> Optional[Lesson]:
         return self.db.query(Lesson).filter(Lesson.id==lesson_id).first()
     
 
-    def get_by_name(self, lesson_name) -> Optional[Lesson]:
+    def get_by_name(self, lesson_name: str) -> Optional[Lesson]:
         return self.db.query(Lesson).filter(Lesson.name==lesson_name).first()
     
 
@@ -27,6 +27,26 @@ class LessonRepository:
         self.db.commit()
         self.db.refresh(new_lesson)
         return new_lesson
-
-
     
+
+    def update(self, lesson_id: int, update_data: dict) -> Optional[Lesson]:
+        lesson = self.get_by_id(lesson_id)
+        if not lesson:
+            return None
+        
+        for key, value in update_data.items():
+            setattr(lesson, key, value)
+
+        self.db.commit()
+        self.db.refresh(lesson)
+        return lesson
+
+
+    def delete(self, lesson_id: int) -> bool:
+        lesson = self.db.query(Lesson).filter(Lesson.id == lesson_id).first()
+        if lesson:
+            self.db.delete(lesson)
+            self.db.commit()
+            return True
+        else:
+            return False

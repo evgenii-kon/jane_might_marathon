@@ -24,7 +24,6 @@ class UserRepository:
 
     def get_by_email(self, email: str) -> Optional[User]:
         return self.db.query(User).filter(User.email == email).first()
-
     
 
     def create(self, data: dict) -> User:
@@ -35,11 +34,26 @@ class UserRepository:
         self.db.refresh(new_user)
         return new_user
     
+
     def delete(self, id: int) -> bool:
         user = self.db.query(User).filter(User.id == id).first()
         if user:
             self.db.delete(user)
             self.db.commit()
             return True
-        else: return False
+        else: 
+            return False
+
+    
+    def update(self, id: int, update_data: dict) -> Optional[User]:
+        user = self.get_by_id(id)
+        if not user:
+            return None
+        
+        for key, value in update_data.items():
+            setattr(user, key, value)
+
+        self.db.commit()
+        self.db.refresh(user)
+        return user
 

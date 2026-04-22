@@ -2,6 +2,11 @@ from pydantic_settings import BaseSettings
 from typing import List, Optional
 from pydantic import Field, field_validator
 
+import os 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 class Settings(BaseSettings):
     app_name: str = "jane_might_maraphon"
     
@@ -31,6 +36,11 @@ class Settings(BaseSettings):
         'http://127.0.0.1:3000',
     ]
     
+    #JWT авторизация
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    ALGORITHM = os.getenv("ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+
     # Static files
     static_dir: str = 'static'
     images_dir: str = 'static/images'

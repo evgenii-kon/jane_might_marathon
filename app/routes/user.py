@@ -8,6 +8,7 @@ from ..schemas.user import UserCreate, UserResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Form
 
+""" user update и create будет в auth """
 
 templates = Jinja2Templates(directory = 'app/templates')
 
