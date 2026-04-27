@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>📚 Недели</h2>
+<p><a href="/admin/weeks/create">➕ Создать неделю</a></p>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Номер</th>
+            <th>Slug</th>
+            <th>Краткое описание</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for week in weeks %}
+        <tr>
+            <td>{{ week.id }}</td>
+            <td>{{ week.number }}</td>
+            <td>{{ week.slug }}</td>
+            <td>{{ week.short_description }}</td>
+            <td>
+                <a href="/admin/weeks/{{ week.id }}/edit">✏️</a>
+                <a href="/admin/weeks/{{ week.id }}/delete" onclick="return confirm('Удалить неделю {{ week.number }}?')">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

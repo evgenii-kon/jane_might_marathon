@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>{% if week %}✏️ Редактирование недели{% else %}➕ Новая неделя{% endif %}</h2>
+
+<form method="post">
+    <p>
+        <label>Номер:</label><br>
+        <input type="number" name="number" value="{{ week.number if week else '' }}" required>
+    </p>
+    <p>
+        <label>Slug (для URL):</label><br>
+        <input type="text" name="slug" value="{{ week.slug if week else '' }}" required>
+    </p>
+    <p>
+        <label>Краткое описание:</label><br>
+        <input type="text" name="short_description" value="{{ week.short_description if week else '' }}" size="50" required>
+    </p>
+    <p>
+        <label>Полное описание:</label><br>
+        <textarea name="long_description" rows="5" cols="60">{{ week.long_description if week else '' }}</textarea>
+    </p>
+    <p>
+        <label>Цель слов:</label><br>
+        <input type="number" name="target_words_count" value="{{ week.target_words_count if week else 0 }}">
+    </p>
+    <p>
+        <label>Цель упражнений:</label><br>
+        <input type="number" name="target_exercises_count" value="{{ week.target_exercises_count if week else 0 }}">
+    </p>
+    <p>
+        <button type="submit">💾 Сохранить</button>
+        <a href="/admin/weeks">Отмена</a>
+    </p>
+</form>
+{% endblock %}

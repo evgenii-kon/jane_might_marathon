@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Выход - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>🚪 Выход</h1>
+            <p>Вы уверены, что хотите выйти из аккаунта?</p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <div class="logout-actions">
+                <button type="submit" class="btn-logout">Да, выйти</button>
+                <a href="/dashboard" class="btn-cancel-logout">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -10,8 +10,8 @@ class Lesson(Base):
     week_id = Column(Integer, ForeignKey('weeks.id'), nullable=False)
     order_in_week = Column(Integer, nullable=False)
     content_html = Column(String, nullable=False)
-    video_url = Column(String, nullable=False)
+    video_url = Column(String, nullable=True)
 
     week = relationship('Week', back_populates='lessons')
-
+    user_progress = relationship("UserLessonProgress", back_populates="lesson", cascade="all, delete-orphan")
     

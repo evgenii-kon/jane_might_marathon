@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HSK-1 Марафон с Jane Might{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles/main.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-area">
+                <a href="{% if user %}/dashboard{% else %}/{% endif %}" class="logo-link">
+                    <img src="/static/images/orange_logo.png" alt="Логотип" class="logo">
+                </a>
+            </div>
+            <nav class="nav-links">
+                {% if user %}
+                    <a href="/dashboard">Кабинет</a>
+                    <a href="/auth/me">Профиль</a>
+                    <a href="/auth/logout" class="btn-outline">Выйти</a>
+                {% else %}
+                    <a href="/auth/login">Вход</a>
+                    <a href="/auth/register" class="btn-solid">Старт</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="/static/images/orange_logo.png" alt="Логотип">
+                <span>HSK-1 Марафон</span>
+            </div>
+            <div class="footer-links">
+                <a href="/about">О проекте</a>
+                <a href="/pricing">Цены</a>
+                <a href="/privacy">Политика</a>
+                <a href="/contacts">Контакты</a>
+            </div>
+            <div class="footer-copyright">
+                © 2024 Jane Might
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

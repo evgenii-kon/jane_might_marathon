@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель</title>
+</head>
+<body>
+    <h1>🔧 Админ-панель</h1>
+    <nav>
+        <a href="/admin/users">👥 Пользователи</a> |
+        <a href="/admin/weeks">📚 Недели</a> |
+        <a href="/admin/lessons">📖 Уроки</a> |
+        <a href="/auth/logout">🚪 Выйти</a>
+    </nav>
+    <hr>
+    
+    {% if error %}
+        <p style="color: red;">❌ {{ error }}</p>
+    {% endif %}
+    
+    {% if success %}
+        <p style="color: green;">✅ {{ success }}</p>
+    {% endif %}
+    
+    {% block content %}{% endblock %}
+</body>
+</html>

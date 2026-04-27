@@ -13,12 +13,12 @@ from app.schemas.lesson import LessonCreate, LessonResponse, LessonUpdate
 from app.repositories.lesson_repository import LessonRepository
 from app.services.lesson_service import LessonService
 
-router = APIRouter(prefix='/admin/lesson', tags=['admin', 'lesson'])
+router = APIRouter(prefix='/admin/lessons', tags=['admin', 'lesson'])
 
 templates = Jinja2Templates(directory = 'app/templates')
 
 
-@router.get('/all_lessons', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+@router.get('/', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def get_all_lessons(
     request: Request,
     current_admin: User = Depends(get_current_admin),
@@ -26,7 +26,7 @@ def get_all_lessons(
     ):
     lesson_service = LessonService(db)
     all_lessons = lesson_service.get_all_lessons()
-    return templates.TemplateResponse('all_lessons.html', {"request": request, 'all_lessons': all_lessons})
+    return templates.TemplateResponse('admin/lessons/lessons_list.html', {"request": request, 'lessons': all_lessons})
 
 
 @router.get('/create', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -35,7 +35,7 @@ def create_lesson_get(
     current_admin: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
     ):
-    return templates.TemplateResponse('create_lesson.html', {'request': request})
+    return templates.TemplateResponse('admin/lessons/lesson_create.html', {'request': request})
 
 
 @router.post('/create', response_class=HTMLResponse, status_code=status.HTTP_201_CREATED)
@@ -47,7 +47,7 @@ def create_lesson_post(
     ):
     lesson_service = LessonService(db)
     lesson = lesson_service.create_lesson(lesson_data)
-    return RedirectResponse(url='/admin/lesson/all_lessons', status_code=302)
+    return RedirectResponse(url='/admin/lessons', status_code=302)
 
 
 @router.get('/{lesson_id}/update', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -64,7 +64,7 @@ def update_lesson_get(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f'lesson with id = {lesson_id} not found'
         )
-    return templates.TemplateResponse('update_lesson.html', {'request': request, 'lesson': lesson})
+    return templates.TemplateResponse('admin/lessons/lesson_edit.html', {'request': request, 'lesson': lesson})
 
 
 @router.post('/{lesson_id}/update', status_code=status.HTTP_200_OK)
@@ -77,7 +77,7 @@ def update_lesson_post(
     ):
     lesson_service = LessonService(db)
     lesson = lesson_service.update_lesson(lesson_id, lesson_data)
-    return RedirectResponse(url='/admin/lesson/all_lessons', status_code=302)
+    return RedirectResponse(url='/admin/lesson/lessons_list', status_code=302)
 
 
 @router.get('/{lesson_id}/delete', response_class=HTMLResponse)

@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>📖 Уроки</h2>
+<p><a href="/admin/lessons/create">➕ Создать урок</a></p>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Неделя ID</th>
+            <th>Порядок</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lesson in lessons %}
+        <tr>
+            <td>{{ lesson.id }}</td>
+            <td>{{ lesson.name }}</td>
+            <td>{{ lesson.week_id }}</td>
+            <td>{{ lesson.order_in_week }}</td>
+            <td>
+                <a href="/admin/lessons/{{ lesson.id }}/edit">✏️</a>
+                <a href="/admin/lessons/{{ lesson.id }}/delete" onclick="return confirm('Удалить урок {{ lesson.name }}?')">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование профиля - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="profile-edit-container">
+    <div class="profile-edit-card">
+        <div class="profile-edit-header">
+            <h1>✏️ Редактирование профиля</h1>
+            <p>Измените свои данные</p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="profile-edit-form">
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" id="name" name="name" value="{{ user.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telegram">Telegram</label>
+                <input type="text" id="telegram" name="telegram" value="{{ user.telegram or '' }}">
+                <small>Укажите ваш Telegram для связи</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Новый пароль</label>
+                <input type="password" id="password" name="password" placeholder="Оставьте пустым, если не хотите менять">
+                <small>Минимум 6 символов</small>
+            </div>
+
+            <div class="profile-edit-actions">
+                <button type="submit" class="btn-save">💾 Сохранить изменения</button>
+                <a href="/auth/me" class="btn-cancel">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

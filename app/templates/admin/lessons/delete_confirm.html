@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Удаление урока</title>
+</head>
+<body>
+    <h1>Удаление урока</h1>
+    
+    <p>Вы уверены, что хотите удалить урок <strong>{{ lesson.name }}</strong>?</p>
+    <p style="color: red;">⚠️ Это действие необратимо!</p>
+    
+    <form method="post">
+        <button type="submit">✅ Да, удалить</button>
+        <a href="/admin/lessons">Отмена</a>
+    </form>
+</body>
+</html>

@@ -21,7 +21,7 @@ def register_get(
     request: Request, 
     db: Session = Depends(get_db)
 ):
-    return templates.TemplateResponse('register.html', {'request': request})
+    return templates.TemplateResponse('auth/register.html', {'request': request})
 
 
 @router.post('/register', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -48,7 +48,7 @@ def login_get(
     request: Request,
     db: Session = Depends(get_db)
 ):
-    return templates.TemplateResponse('login.html', {'request': request})
+    return templates.TemplateResponse('auth/login.html', {'request': request})
 
 
 @router.post('/login', response_class=HTMLResponse)
@@ -64,7 +64,7 @@ def login_post(
         user = user_service.authenticate_user(email, password)
         access_token = create_access_token(data={"user_id": user.id})
         
-        response = RedirectResponse(url='/auth/me', status_code=302)
+        response = RedirectResponse(url='/dashboard', status_code=302)
         response.set_cookie(
             key="access_token",
             value=f"Bearer {access_token}",
@@ -89,7 +89,7 @@ def logout_get(
     request: Request,
     db: Session = Depends(get_db)
 ):
-    return templates.TemplateResponse('logout.html', {'request': request})
+    return templates.TemplateResponse('auth/logout.html', {'request': request})
 
 
 @router.post('/logout')
@@ -104,9 +104,26 @@ def logout_post():
 @router.get('/me', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def get_profile(
     request: Request,
-    current_user: User = Depends(get_current_user) 
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    return templates.TemplateResponse('user_data.html', {'request': request, 'user_data': current_user})
+    from app.services.lesson_service import LessonService
+    from app.services.user_lesson_progress_service import UserLessonProgressService
+    
+    lesson_service = LessonService(db)
+    progress_service = UserLessonProgressService(db)
+    
+    total_lessons = lesson_service.get_lessons_count()
+    completed_lessons = progress_service.get_completed_count_by_user(current_user.id)
+    progress_percent = int((completed_lessons / total_lessons) * 100) if total_lessons > 0 else 0
+    
+    return templates.TemplateResponse('auth/user_data.html', {
+        'request': request,
+        'user': current_user,
+        'total_lessons': total_lessons,
+        'completed_lessons': completed_lessons,
+        'progress_percent': progress_percent
+    })
 
 
 @router.get('/me/edit', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -114,7 +131,7 @@ def edit_profile_get(
     request: Request,
     current_user: User = Depends(get_current_user)
 ):
-    return templates.TemplateResponse('user_edit_form.html', {'request': request, 'user': current_user})
+    return templates.TemplateResponse('auth/user_edit_form.html', {'request': request, 'user': current_user})
     
 
 @router.post('/me/edit', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -130,7 +147,7 @@ def edit_profile_post(
         return RedirectResponse(url='/auth/me', status_code=302)
     except HTTPException as e:
         return templates.TemplateResponse(
-            'user_edit_form.html',
+            'auth/user_edit_form.html',
             {'request': request, 'user': current_user, 'error': e.detail}
         )
 

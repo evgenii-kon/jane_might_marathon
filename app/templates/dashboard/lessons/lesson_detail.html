@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.name }} - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+    <!-- Навигация -->
+    <div class="lesson-nav">
+        <a href="/dashboard/weeks/{{ lesson.week_id }}" class="back-link">← Назад к неделе</a>
+    </div>
+
+    <!-- Заголовок урока -->
+    <div class="lesson-header">
+        <h1>{{ lesson.name }}</h1>
+        <div class="lesson-status">
+            {% if is_completed %}
+                <span class="status-completed">✅ Урок пройден</span>
+            {% elif is_started %}
+                <span class="status-in-progress">⏳ В процессе</span>
+            {% else %}
+                <span class="status-pending">📖 Не начат</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Видео (если есть) -->
+    {% if lesson.video_url %}
+    <div class="lesson-video">
+        <div class="video-container">
+            <iframe 
+                src="{{ lesson.video_url | replace('watch?v=', 'embed/') }}" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Теория -->
+    <div class="lesson-content">
+        {{ lesson.content_html | safe }}
+    </div>
+
+    <!-- Кнопка отметки пройденным -->
+    <div class="lesson-complete">
+        {% if is_completed %}
+            <button class="btn-completed" disabled>✅ Урок пройден</button>
+        {% else %}
+            <form method="post" action="/dashboard/lessons/{{ lesson.id }}/complete">
+                <button type="submit" class="btn-complete">📝 Отметить урок пройденным</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

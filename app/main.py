@@ -2,26 +2,37 @@ from fastapi import FastAPI, Request, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from .routes.user import router as user_router
-from .routes.lesson import router as lesson_router
+
+from .routes.dashboard.dashboard import router as dashboard_router
+from .routes.admin.lesson import router as lesson_router
+from .routes.admin.week import router as week_router
+from .routes.public.public import router as public_router
+from .routes.auth import router as auth_router
+from .routes.admin.user import router as admin_user_router
+from .routes.dashboard.weeks import router as dashboard_weeks_router
+from .routes.dashboard.lessons import router as dashboard_lessons_router
+
+
 from .database import init_db
 from .models.user import User
 from dotenv import load_dotenv
 import os
-
-load_dotenv()
-
-SECRET_KEY = os.get_env('SECRET_KEY')
-ALGORITHM = os.get_env('ALGORITHM')
-ACCESS_TOKEN_EXPIRE_MINUTES = os.get_env('ACCESS_TOKEN_EXPIRE_MINUTES')
 
 
 init_db()
 
 app = FastAPI()
 
-app.include_router(user_router)
+app.include_router(dashboard_router)
+app.include_router(dashboard_weeks_router)
+app.include_router(dashboard_lessons_router)
+app.include_router(public_router)
 app.include_router(lesson_router)
+app.include_router(week_router)
+app.include_router(auth_router)
+app.include_router(admin_user_router)
+
+
 
 templates = Jinja2Templates('app/templates')
 

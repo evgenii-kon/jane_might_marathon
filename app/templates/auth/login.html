@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Вход - HSK-4 Марафон{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Вход</h1>
+            <p>Войдите в свой аккаунт и продолжите обучение</p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="auth-success">
+            ✅ {{ success }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="ivan@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="Ваш пароль" required>
+            </div>
+
+            <button type="submit" class="btn-primary btn-block">🚀 Войти</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Нет аккаунта? <a href="/auth/register">Зарегистрироваться →</a></p>
+            <p><a href="/auth/reset-password" style="font-size: 14px;">Забыли пароль?</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -59,6 +59,14 @@ class LessonService:
             )
         lesson = self.repository.delete(lesson_id)
         return lesson
+    
 
+    def get_lessons_by_week(self, week_id: int) -> List[LessonResponse]:
+        """Получить все уроки определённой недели, отсортированные по порядку"""
+        lessons = self.repository.get_by_week_id(week_id)
+        return [LessonResponse.model_validate(lesson) for lesson in lessons]
     
-    
+
+    def get_lessons_count(self) -> int:
+        """Получить общее количество уроков"""
+        return self.repository.get_count()

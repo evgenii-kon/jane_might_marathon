@@ -19,7 +19,7 @@ router = APIRouter(prefix='/admin/weeks', tags=['admin', 'week'])
 templates = Jinja2Templates(directory='app/templates')
 
 
-@router.get('/all_weeks', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+@router.get('/', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def get_all_weeks(
     request: Request,
     current_admin: User = Depends(get_current_admin),
@@ -27,7 +27,7 @@ def get_all_weeks(
 ):
     week_service = WeekService(db)
     all_weeks = week_service.get_all_weeks()
-    return templates.TemplateResponse('all_weeks.html', {"request": request, 'all_weeks': all_weeks})
+    return templates.TemplateResponse('admin/weeks/weeks_list.html', {"request": request, 'weeks': all_weeks})
 
 
 @router.get('/create', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -36,7 +36,7 @@ def create_week_get(
     current_admin: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
 ):
-    return templates.TemplateResponse('create_week.html', {'request': request})
+    return templates.TemplateResponse('admin/weeks/weeks_create.html', {'request': request})
 
 
 @router.post('/create', response_class=HTMLResponse, status_code=status.HTTP_201_CREATED)
@@ -48,7 +48,7 @@ def create_week_post(
 ):
     week_service = WeekService(db)
     week = week_service.create_week(week_data)
-    return RedirectResponse(url='/admin/weeks/all_weeks', status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(url='/admin/weeks', status_code=status.HTTP_302_FOUND)
 
 
 @router.get('/{week_id}/update', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -65,7 +65,7 @@ def update_week_get(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f'Week with id={week_id} not found'
         )
-    return templates.TemplateResponse('update_week.html', {'request': request, 'week': week})
+    return templates.TemplateResponse('admin/weeks/weeks_edit.html', {'request': request, 'week': week})
 
 
 @router.post('/{week_id}/update', status_code=status.HTTP_200_OK)
@@ -78,7 +78,7 @@ def update_week_post(
 ):
     week_service = WeekService(db)
     week = week_service.update_week(week_id, week_data)
-    return RedirectResponse('/admin/weeks/all_weeks', status_code=status.HTTP_302_FOUND)
+    return RedirectResponse('/admin/weeks', status_code=status.HTTP_302_FOUND)
 
 
 @router.get('/{week_id}/delete', response_class=HTMLResponse)

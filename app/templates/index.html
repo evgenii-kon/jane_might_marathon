@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}HSK-4 за 60 дней — курс китайского с Jane Might{% endblock %}
+
+{% block content %}
+<!-- Hero секция -->
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-badge">🎯 АКЦИЯ: ПЕРВЫЙ УРОК БЕСПЛАТНО</span>
+        <h1>HSK-4 <span style="color: #f97316;">за 60 дней</span></h1>
+        <p class="hero-text">
+            Интенсивный онлайн-курс от сертифицированного преподавателя. 
+            Разговорная практика, лексика, грамматика — всё, чтобы сдать HSK-4 на отлично.
+        </p>
+        <div>
+            <a href="/auth/register" class="btn-primary">🚀 Начать бесплатно</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">выпускников</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">успешно сдали</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">60</div>
+                <div class="stat-label">дней до результата</div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-image">
+        <img src="/static/images/jane_photo.png" alt="Jane Might">
+    </div>
+</section>
+
+<!-- Преимущества -->
+<div class="features">
+    <div class="section-header">
+        <h2>Почему выбирают нас?</h2>
+        <p style="color: #4b5563;">Современный подход к изучению китайского языка</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3>60 уроков</h3>
+            <p>Полный охват всех тем HSK-4 с практическими заданиями</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎥</div>
+            <h3>Видео-уроки</h3>
+            <p>Каждый урок сопровождается видео-разбором и примерами</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>Упражнения</h3>
+            <p>Интерактивные задания для закрепления материала</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎓</div>
+            <h3>Куратор 24/7</h3>
+            <p>Личный наставник отвечает на вопросы в Telegram</p>
+        </div>
+    </div>
+</div>
+
+<!-- Об авторе -->
+<div class="author-section">
+    <img src="/static/images/jane_photo.png" alt="Jane Might" class="author-photo">
+    <div class="author-info">
+        <div class="author-name">Евгения Горбунова</div>
+        <div class="author-title">Jane Might — эксперт по китайскому языку 🇨🇳</div>
+        <div class="author-bio">
+            Сертифицированный преподаватель китайского языка с опытом более 8 лет. 
+            Жила и училась в Пекине, владеет языком на уровне носителя (HSK-6). 
+            Автор уникальной методики, которая помогла более 500 студентам успешно сдать HSK-4.
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+    <h2>🔥 Готовы к марафону?</h2>
+    <p>Зарегистрируйтесь сегодня и получите первый урок бесплатно!</p>
+    <a href="/auth/register" class="btn-primary">Присоединиться сейчас →</a>
+</div>
+{% endblock %}

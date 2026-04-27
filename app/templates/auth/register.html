@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация - HSK-4 Марафон{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Регистрация</h1>
+            <p>Начните свой путь к HSK-1 уже сегодня!</p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <div class="form-group">
+                <label for="name">Имя и фамилия</label>
+                <input type="text" id="name" name="name" placeholder="Например: Иван Петров" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="ivan@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="Минимум 6 символов" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telegram">Telegram (опционально)</label>
+                <input type="text" id="telegram" name="telegram" placeholder="@username">
+                <small>Для получения уведомлений и поддержки</small>
+            </div>
+
+            <button type="submit" class="btn-primary btn-block">🚀 Зарегистрироваться</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Уже есть аккаунт? <a href="/auth/login">Войти →</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

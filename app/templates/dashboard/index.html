@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Мой кабинет - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-card welcome-card">
+        <div class="welcome-header">
+            <div class="welcome-emoji">🌟</div>
+            <h1>С возвращением, {{ user.name }}!</h1>
+        </div>
+        <p class="welcome-text">Продолжим наше путешествие в мир китайского языка!</p>
+        
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">📊 Общий прогресс курса</span>
+                <span class="progress-stats">{{ total_completed }} из {{ total_lessons }} уроков</span>
+            </div>
+            <div class="progress-bar-large">
+                <div class="progress-fill w-{{ progress_percent|int }}">
+                    <span class="progress-percent">{{ progress_percent }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="section-header">
+            <h2>📚 Недели марафона</h2>
+            <span class="weeks-count">{{ weeks|length }} недель</span>
+        </div>
+
+        <div class="weeks-grid">
+            {% for week in weeks %}
+                {% if week.is_locked %}
+                    <div class="week-card locked">
+                        <div class="week-number">Неделя {{ week.number }}</div>
+                        <div class="week-title">{{ week.short_description }}</div>
+                        <div class="week-lock">
+                            <span class="lock-icon">🔒</span>
+                            <span class="lock-text">Откроется позже</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="week-card {% if week.is_completed %}completed{% endif %}">
+                        <div class="week-number">Неделя {{ week.number }}</div>
+                        <div class="week-title">{{ week.short_description }}</div>
+                        <div class="week-progress">
+                            <div class="week-stats">{{ week.completed_lessons }}/{{ week.total_lessons }} уроков</div>
+                            <div class="progress-bar small">
+                                <div class="progress-fill w-{{ week.progress_percent|int }}"></div>
+                            </div>
+                        </div>
+                        <div class="week-footer">
+                            {% if week.is_completed %}
+                                <span class="completed-badge">✅ Пройдена</span>
+                            {% endif %}
+                            <a href="/dashboard/weeks/{{ week.id }}" class="week-link">
+                                Перейти <span class="arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

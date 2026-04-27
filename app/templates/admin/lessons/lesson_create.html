@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>{% if lesson %}✏️ Редактирование урока{% else %}➕ Новый урок{% endif %}</h2>
+
+<form method="post">
+    <p>
+        <label>Название:</label><br>
+        <input type="text" name="name" value="{{ lesson.name if lesson else '' }}" size="60" required>
+    </p>
+    <p>
+        <label>Неделя (ID):</label><br>
+        <input type="number" name="week_id" value="{{ lesson.week_id if lesson else '' }}" required>
+    </p>
+    <p>
+        <label>Порядок в неделе:</label><br>
+        <input type="number" name="order_in_week" value="{{ lesson.order_in_week if lesson else '' }}" required>
+    </p>
+    <p>
+        <label>Содержание (HTML):</label><br>
+        <textarea name="content_html" rows="10" cols="80">{{ lesson.content_html if lesson else '' }}</textarea>
+    </p>
+    <p>
+        <label>YouTube URL:</label><br>
+        <input type="text" name="video_url" value="{{ lesson.video_url if lesson else '' }}" size="60">
+        <br><small>Пример: https://www.youtube.com/watch?v=xxxx</small>
+    </p>
+    <p>
+        <button type="submit">💾 Сохранить</button>
+        <a href="/admin/lessons">Отмена</a>
+    </p>
+</form>
+{% endblock %}

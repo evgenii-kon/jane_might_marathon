@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Удаление пользователя</title>
+</head>
+<body>
+    <h1>Удаление пользователя</h1>
+    
+    <p>Вы уверены, что хотите удалить пользователя <strong>{{ user.name }}</strong> ({{ user.email }})?</p>
+    <p style="color: red;">⚠️ Это действие необратимо!</p>
+    
+    <form method="post">
+        <button type="submit">✅ Да, удалить</button>
+        <a href="/admin/users">Отмена</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Неделя {{ week.number }} - {{ week.short_description }}{% endblock %}
+
+{% block content %}
+<div class="week-detail-container">
+    <div class="week-detail-nav">
+        <a href="/dashboard" class="back-link">← Назад к неделям</a>
+    </div>
+
+    <div class="week-detail-card">
+        <h1>Неделя {{ week.number }}: {{ week.short_description }}</h1>
+        <p class="week-description">{{ week.long_description }}</p>
+        
+        <div class="week-progress-section">
+            <div class="progress-header">
+                <span>📊 Прогресс недели</span>
+                <span>{{ completed_count }}/{{ total_count }} уроков</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lessons-list">
+        <h2>📖 Уроки недели</h2>
+        
+        {% for lesson in lessons %}
+            <div class="lesson-item 
+                {% if lesson.is_completed %}lesson-completed
+                {% elif lesson.is_started %}lesson-started
+                {% endif %}">
+                <div class="lesson-info">
+                    <div class="lesson-title">
+                        Урок {{ lesson.order_in_week }}: {{ lesson.name }}
+                        {% if lesson.is_completed %}
+                            <span class="completed-check">✅</span>
+                        {% elif lesson.is_started %}
+                            <span class="started-check">⏳</span>
+                        {% endif %}
+                    </div>
+                    {% if lesson.description %}
+                        <div class="lesson-description">{{ lesson.description }}</div>
+                    {% endif %}
+                </div>
+                <div class="lesson-actions">
+                    {% if lesson.is_completed %}
+                        <span class="completed-badge">✅ Пройдено</span>
+                    {% elif lesson.is_started %}
+                        <span class="started-badge">⏳ В процессе</span>
+                    {% else %}
+                        <span class="pending-badge">📖 Не начато</span>
+                    {% endif %}
+                    <a href="/dashboard/lessons/{{ lesson.id }}" class="lesson-link">
+                        {% if lesson.is_completed %}Повторить →{% elif lesson.is_started %}Продолжить →{% else %}Начать →{% endif %}
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

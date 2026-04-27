@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Удаление недели</title>
+</head>
+<body>
+    <h1>Удаление недели</h1>
+    
+    <p>Вы уверены, что хотите удалить <strong>Неделю {{ week.number }}: {{ week.short_description }}</strong>?</p>
+    <p style="color: red;">⚠️ Вместе с неделей будут удалены все уроки внутри неё!</p>
+    
+    <form method="post">
+        <button type="submit">✅ Да, удалить</button>
+        <a href="/admin/weeks">Отмена</a>
+    </form>
+</body>
+</html>

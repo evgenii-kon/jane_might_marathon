@@ -1,0 +1,4 @@
+bcrypt==3.2.0
+passlib==1.7.4
+psycopg2-binary==2.9.5
+alembic==1.18.4
