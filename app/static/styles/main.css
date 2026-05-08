@@ -589,7 +589,7 @@ h1 {
 }
 
 .welcome-card {
-    background: linear-gradient(135deg, #0f2b6d 0%, #1a3a8f 100%);
+    background: linear-gradient(135deg, #0f2b6d 0%, #1e40af 50%, #ea580c 100%);
     color: white;
 }
 
@@ -607,7 +607,7 @@ h1 {
 .welcome-card .welcome-header h1 {
     margin: 0;
     font-size: 28px;
-    color: #f97316 !important;
+    color: white !important;
     background: none !important;
     -webkit-background-clip: unset !important;
     -webkit-text-fill-color: unset !important;
@@ -1510,4 +1510,1132 @@ a:active {
     font-size: 11px;
     color: white;
     font-weight: bold;
+}
+
+/* ========== LESSON TABS ========== */
+.lesson-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+}
+
+.tab-btn:hover {
+    color: #f97316;
+}
+
+.tab-btn.active {
+    color: #f97316;
+    border-bottom-color: #f97316;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Слова (уже есть, добавим стили для пустого состояния) */
+.lesson-words-empty {
+    background: white;
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    color: #6b7280;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ========== FLASHCARDS ========== */
+.words-flashcards {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.flashcards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.flashcard {
+    background-color: transparent;
+    height: 280px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    border-radius: 16px;
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.flashcard-front {
+    background: linear-gradient(135deg, #0f2b6d, #1a3a8f);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.flashcard-hanzi {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.flashcard-transcription {
+    font-size: 20px;
+    opacity: 0.9;
+    margin-bottom: 20px;
+}
+
+.flashcard-hint {
+    position: absolute;
+    bottom: 20px;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.flashcard-back {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+    transform: rotateY(180deg);
+    overflow-y: auto;
+}
+
+.flashcard-translation {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.flashcard-audio {
+    margin: 16px 0;
+}
+
+.flashcard-audio audio {
+    width: 100%;
+    height: 36px;
+}
+
+.flashcard-example {
+    margin-top: 16px;
+    font-size: 14px;
+    text-align: center;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.flashcard-example .example-sentence {
+    margin-bottom: 8px;
+    font-style: italic;
+}
+
+.flashcard-example .example-translation {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .flashcards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .flashcard {
+        height: 260px;
+    }
+    
+    .flashcard-hanzi {
+        font-size: 36px;
+    }
+}
+
+/* ========== VOCABULARY TRAINER ========== */
+.trainer-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.trainer-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.trainer-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.trainer-desc {
+    color: #6b7280;
+}
+
+.trainer-stats {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.trainer-stats span {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.trainer-card-container {
+    margin-bottom: 30px;
+}
+
+.trainer-card-container .flashcard {
+    height: 320px;
+}
+
+.trainer-question {
+    font-size: 64px;
+    font-weight: 700;
+}
+
+.trainer-hint {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-top: 20px;
+}
+
+.trainer-translation {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.trainer-transcription {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 16px;
+}
+
+.trainer-example {
+    font-size: 14px;
+    opacity: 0.8;
+    max-width: 90%;
+}
+
+.trainer-input-area {
+    display: flex;
+    gap: 12px;
+}
+
+.trainer-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 48px;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.trainer-input:focus {
+    outline: none;
+    border-color: #f97316;
+}
+
+.trainer-btn {
+    padding: 14px 28px;
+    white-space: nowrap;
+}
+
+.trainer-feedback {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.feedback-correct {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.feedback-wrong {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.trainer-results {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 32px 0;
+}
+
+.result-card {
+    text-align: center;
+}
+
+.result-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: #f97316;
+}
+
+.result-label {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.results-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .trainer-container {
+        padding: 12px;
+    }
+    
+    .trainer-stats {
+        font-size: 14px;
+    }
+    
+    .trainer-question {
+        font-size: 40px;
+    }
+    
+    .trainer-translation {
+        font-size: 22px;
+    }
+    
+    .trainer-input-area {
+        flex-direction: column;
+    }
+    
+    .results-stats {
+        gap: 16px;
+    }
+    
+    .result-value {
+        font-size: 32px;
+    }
+}
+
+/* ========== VOCABULARY TRAINER ========== */
+.trainer-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.trainer-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.trainer-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.trainer-desc {
+    color: #6b7280;
+}
+
+.trainer-stats {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.trainer-stats span {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.trainer-card-container {
+    margin-bottom: 30px;
+}
+
+.trainer-card-container .flashcard {
+    height: 320px;
+}
+
+.trainer-question {
+    font-size: 64px;
+    font-weight: 700;
+}
+
+.trainer-hint {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-top: 20px;
+}
+
+.trainer-translation {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.trainer-transcription {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 16px;
+}
+
+.trainer-example {
+    font-size: 14px;
+    opacity: 0.8;
+    max-width: 90%;
+}
+
+.trainer-input-area {
+    display: flex;
+    gap: 12px;
+}
+
+.trainer-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 48px;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.trainer-input:focus {
+    outline: none;
+    border-color: #f97316;
+}
+
+.trainer-btn {
+    padding: 14px 28px;
+    white-space: nowrap;
+}
+
+.trainer-feedback {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.feedback-correct {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.feedback-wrong {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.trainer-results {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 32px 0;
+}
+
+.result-card {
+    text-align: center;
+}
+
+.result-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: #f97316;
+}
+
+.result-label {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.results-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.trainer-link {
+    transition: all 0.3s ease;
+}
+
+.trainer-link:hover {
+    transform: translateY(-4px);
+}
+
+@media (max-width: 768px) {
+    .trainer-container {
+        padding: 12px;
+    }
+    
+    .trainer-stats {
+        font-size: 14px;
+    }
+    
+    .trainer-question {
+        font-size: 40px;
+    }
+    
+    .trainer-translation {
+        font-size: 22px;
+    }
+    
+    .trainer-input-area {
+        flex-direction: column;
+    }
+    
+    .trainer-btn {
+        justify-content: center;
+    }
+    
+    .results-stats {
+        gap: 16px;
+    }
+    
+    .result-value {
+        font-size: 32px;
+    }
+}
+
+/* ========== WORD TRAINER HUB (ВЫБОР РЕЖИМА) ========== */
+.trainer-hub-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.trainer-hub-container h1 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.trainer-hub-desc {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 40px;
+}
+
+.trainer-modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.trainer-mode-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    text-decoration: none;
+    color: #1f2937;
+    transition: all 0.3s;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
+}
+
+.trainer-mode-card:not(.locked):hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    border-color: #f97316;
+}
+
+.trainer-mode-card.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.trainer-mode-card.locked:hover {
+    transform: none;
+}
+
+.trainer-mode-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.trainer-mode-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.trainer-mode-desc {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+.trainer-mode-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #d97706;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.trainer-mode-card:not(.locked) .trainer-mode-badge {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+/* ========== WORD TRAINER SESSION (РЕЖИМЫ) ========== */
+.trainer-session-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.trainer-session-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.trainer-session-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.trainer-session-header .back-link {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: #f97316;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.trainer-session-header .back-link:hover {
+    text-decoration: underline;
+}
+
+.due-info {
+    color: #f97316;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.trainer-session-stats {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.trainer-session-stats span {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.trainer-session-card-container {
+    margin-bottom: 30px;
+}
+
+.trainer-session-card-container .flashcard {
+    height: 320px;
+}
+
+.trainer-session-question {
+    font-size: 64px;
+    font-weight: 700;
+}
+
+.trainer-session-translation {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.trainer-session-transcription {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 16px;
+}
+
+.trainer-session-example {
+    font-size: 14px;
+    opacity: 0.8;
+    max-width: 90%;
+}
+
+.trainer-session-input-area {
+    display: flex;
+    gap: 12px;
+}
+
+.trainer-session-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 48px;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.trainer-session-input:focus {
+    outline: none;
+    border-color: #f97316;
+}
+
+.trainer-session-btn {
+    padding: 14px 28px;
+    white-space: nowrap;
+}
+
+.trainer-session-feedback {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.trainer-session-feedback.feedback-correct {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.trainer-session-feedback.feedback-wrong {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.trainer-session-results {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.trainer-session-results h2 {
+    margin-bottom: 24px;
+}
+
+.trainer-session-results .results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 32px 0;
+}
+
+.trainer-session-results .result-card {
+    text-align: center;
+}
+
+.trainer-session-results .result-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: #f97316;
+}
+
+.trainer-session-results .result-label {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.trainer-session-results .results-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .trainer-hub-container {
+        padding: 20px;
+    }
+    
+    .trainer-modes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .trainer-mode-card {
+        padding: 24px;
+    }
+    
+    .trainer-session-container {
+        padding: 12px;
+    }
+    
+    .trainer-session-stats {
+        font-size: 14px;
+    }
+    
+    .trainer-session-question {
+        font-size: 40px;
+    }
+    
+    .trainer-session-translation {
+        font-size: 22px;
+    }
+    
+    .trainer-session-input-area {
+        flex-direction: column;
+    }
+    
+    .trainer-session-btn {
+        justify-content: center;
+    }
+    
+    .trainer-session-results .results-stats {
+        gap: 16px;
+    }
+    
+    .trainer-session-results .result-value {
+        font-size: 32px;
+    }
+}
+
+/* ========== VOCABULARY STATS ========== */
+.vocabulary-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 16px;
+}
+
+.stat-item .stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f97316;
+}
+
+.stat-item .stat-label {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.word-progress-bar {
+    margin-top: 16px;
+}
+
+.word-progress-bar .progress-label {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .vocabulary-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ========== ADMIN LINK ========== */
+.admin-link {
+    background: rgba(220, 38, 38, 0.8);
+    padding: 6px 14px;
+    border-radius: 40px;
+    color: white !important;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.admin-link:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* ========== ADMIN DASHBOARD ========== */
+.admin-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.admin-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.admin-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.admin-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: #1f2937;
+}
+
+.admin-card p {
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+.admin-btn {
+    display: inline-block;
+    background: #f97316;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.admin-btn:hover {
+    background: #ea580c;
+    transform: translateY(-1px);
+}
+
+/* Добавьте в конец файла main.css */
+
+/* ========== DAYS COUNTER STYLES ========== */
+.welcome-title-section {
+    flex: 1;
+}
+
+.days-counter {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 40px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffedd5;
+}
+
+/* Альтернативный вариант - если хотите выровнять справа */
+.welcome-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.welcome-emoji {
+    font-size: 48px;
+    flex-shrink: 0;
+}
+
+.welcome-title-section {
+    flex: 1;
+}
+
+.welcome-title-section h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    color: white !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    background-clip: unset !important;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+    .welcome-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .days-counter {
+        font-size: 12px;
+        padding: 4px 12px;
+    }
+    
+    .welcome-title-section h1 {
+        font-size: 22px;
+    }
+}
+
+/* ========== DROPDOWN MENU STYLES - HOVER VERSION ========== */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 40px;
+    color: white !important;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.3s;
+}
+
+/* Меню открывается при наведении на dropdown */
+.dropdown:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* Показываем меню при наведении на родительский элемент */
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #1e293b !important;
+    text-decoration: none;
+    transition: all 0.2s;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background: #f8fafc;
+    color: #f97316 !important;
+    padding-left: 28px;
+}
+
+/* Небольшая задержка перед закрытием (чтобы меню не моргало) */
+.dropdown-menu {
+    transition-delay: 0.1s;
+}
+
+.dropdown:hover .dropdown-menu {
+    transition-delay: 0s;
+}
+
+/* Адаптив для мобильных - на мобильных лучше оставить клик, но можно и так */
+@media (max-width: 768px) {
+    .dropdown-menu {
+        position: fixed;
+        top: auto;
+        right: 16px;
+        left: 16px;
+        width: auto;
+        min-width: auto;
+    }
+    
+    .dropdown-btn {
+        padding: 6px 12px;
+    }
+    
+    /* На мобильных hover может работать некорректно, добавим поддержку touch */
+    .dropdown-menu {
+        transition-delay: 0s;
+    }
 }

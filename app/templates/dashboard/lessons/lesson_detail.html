@@ -23,22 +23,68 @@
         </div>
     </div>
 
-    <!-- Видео (если есть) -->
-    {% if lesson.video_url %}
-    <div class="lesson-video">
-        <div class="video-container">
-            <iframe 
-                src="{{ lesson.video_url | replace('watch?v=', 'embed/') }}" 
-                frameborder="0" 
-                allowfullscreen>
-            </iframe>
+    <!-- Вкладки -->
+    <div class="lesson-tabs">
+        <button class="tab-btn active" data-tab="theory">📖 Теория</button>
+        <button class="tab-btn" data-tab="words">📝 Слова</button>
+    </div>
+
+    <!-- Теория (видео + контент) -->
+    <div id="tab-theory" class="tab-content active">
+        {% if lesson.video_url %}
+        <div class="lesson-video">
+            <div class="video-container">
+                <iframe 
+                    src="{{ lesson.video_url | replace('watch?v=', 'embed/') }}" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="lesson-content">
+            {{ lesson.content_html | safe }}
         </div>
     </div>
-    {% endif %}
 
-    <!-- Теория -->
-    <div class="lesson-content">
-        {{ lesson.content_html | safe }}
+    <!-- Слова -->
+    <div id="tab-words" class="tab-content">
+        {% if words %}
+        <div class="words-flashcards">
+            <div class="flashcards-grid">
+                {% for word in words %}
+                <div class="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <div class="flashcard-hanzi">{{ word.hanzi }}</div>
+                            <div class="flashcard-transcription">{{ word.transcription }}</div>
+                            <div class="flashcard-hint">👆 Нажми для перевода</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div class="flashcard-translation">{{ word.translation }}</div>
+                            {% if word.audio_url %}
+                            <div class="flashcard-audio">
+                                <audio controls src="{{ word.audio_url }}"></audio>
+                            </div>
+                            {% endif %}
+                            {% if word.example_sentence %}
+                            <div class="flashcard-example">
+                                <div class="example-sentence">{{ word.example_sentence }}</div>
+                                <div class="example-translation">{{ word.example_translation }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="lesson-words-empty">
+            <p>📭 В этом уроке пока нет слов.</p>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Кнопка отметки пройденным -->
@@ -52,4 +98,36 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Табы
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+            
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            btn.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        });
+    });
+    
+    // Флипкарты — клик для переворота
+    const flashcards = document.querySelectorAll('.flashcard');
+    flashcards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Предотвращаем срабатывание если клик на аудио
+            if (e.target.tagName === 'AUDIO' || e.target.tagName === 'SOURCE') {
+                return;
+            }
+            this.classList.toggle('flipped');
+        });
+    });
+</script>
 {% endblock %}

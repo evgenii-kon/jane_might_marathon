@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from ..database import Base
+from .lesson_word_association import lesson_word_association 
 
 
 class Lesson(Base):
@@ -14,4 +15,4 @@ class Lesson(Base):
 
     week = relationship('Week', back_populates='lessons')
     user_progress = relationship("UserLessonProgress", back_populates="lesson", cascade="all, delete-orphan")
-    
+    words = relationship("Word", secondary=lesson_word_association, back_populates="lessons")    

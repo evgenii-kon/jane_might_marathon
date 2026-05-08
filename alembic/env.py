@@ -6,7 +6,15 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.database import Base
-from app.models import user, lesson, week, user_lesson_progress
+from app.models import (
+    user,
+    week,
+    lesson,
+    word,
+    lesson_word_association,
+    user_lesson_progress,
+    user_word_progress,
+)
 
 
 # this is the Alembic Config object, which provides

@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>➕ Новое слово</h2>
+
+<form method="post">
+    <p>
+        <label>Иероглиф:</label><br>
+        <input type="text" name="hanzi" required>
+    </p>
+    <p>
+        <label>Транскрипция (пиньинь):</label><br>
+        <input type="text" name="transcription" required>
+    </p>
+    <p>
+        <label>Перевод:</label><br>
+        <input type="text" name="translation" required>
+    </p>
+    <p>
+        <label>Часть речи:</label><br>
+        <input type="text" name="part_of_speech" placeholder="существительное, глагол, прилагательное...">
+    </p>
+    <p>
+        <label>Пример предложения:</label><br>
+        <textarea name="example_sentence" rows="3" cols="50"></textarea>
+    </p>
+    <p>
+        <label>Перевод примера:</label><br>
+        <textarea name="example_translation" rows="3" cols="50"></textarea>
+    </p>
+    <p>
+        <label>Ссылка на аудио:</label><br>
+        <input type="text" name="audio_url" size="50" placeholder="https://...">
+    </p>
+    <button type="submit">💾 Сохранить</button>
+    <a href="/admin/words">Отмена</a>
+</form>
+{% endblock %}

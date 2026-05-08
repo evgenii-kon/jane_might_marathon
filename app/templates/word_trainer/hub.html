@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Тренажёр слов - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="trainer-hub-container">
+    <h1>Тренажёр слов</h1>
+    <p class="trainer-hub-desc">Выберите режим тренировки</p>
+
+    <div class="trainer-modes-grid">
+        <a href="/word-trainer/daily" class="trainer-mode-card">
+            <div class="trainer-mode-icon">📅</div>
+            <div class="trainer-mode-title">Ежедневное повторение</div>
+            <div class="trainer-mode-desc">Слова, которые нужно повторить по расписанию</div>
+            <div class="trainer-mode-badge">Рекомендуется</div>
+        </a>
+
+        <a href="/word-trainer/all" class="trainer-mode-card">
+            <div class="trainer-mode-icon">📖</div>
+            <div class="trainer-mode-title">Все слова</div>
+            <div class="trainer-mode-desc">Все слова из курса подряд</div>
+            <div class="trainer-mode-badge">Для закрепления</div>
+        </a>
+
+        <div class="trainer-mode-card locked">
+            <div class="trainer-mode-icon">🔒</div>
+            <div class="trainer-mode-title">Слабые слова</div>
+            <div class="trainer-mode-desc">Слова, которые требуют повторения</div>
+            <div class="trainer-mode-badge">Скоро</div>
+        </div>
+
+        <div class="trainer-mode-card locked">
+            <div class="trainer-mode-icon">🏃</div>
+            <div class="trainer-mode-title">Марафон</div>
+            <div class="trainer-mode-desc">Все слова + повтор ошибок</div>
+            <div class="trainer-mode-badge">Скоро</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

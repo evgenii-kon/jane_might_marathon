@@ -11,6 +11,7 @@ from app.services.user_service import UserService
 from app.services.week_service import WeekService
 from app.services.lesson_service import LessonService
 from app.services.user_lesson_progress_service import UserLessonProgressService
+from app.services.word_service import WordService
 
 
 router = APIRouter(prefix='/dashboard/lessons', tags=['dashboard'])
@@ -25,6 +26,7 @@ def lesson_detail(
     ):
     lesson_service = LessonService(db)
     progress_service = UserLessonProgressService(db)
+    word_service = WordService(db)
 
 
     lesson = lesson_service.get_lesson_by_id(lesson_id)
@@ -34,11 +36,14 @@ def lesson_detail(
     is_started = progress_service.is_lesson_started(current_user.id, lesson_id)
     is_completed = progress_service.is_lesson_completed(current_user.id, lesson_id)
 
+    words = word_service.get_words_by_lesson(lesson_id)
+
     return templates.TemplateResponse('dashboard/lessons/lesson_detail.html', {
         'request': request,
         'lesson': lesson,
         'is_started': is_started,
         'is_completed': is_completed,
+        'words': words,
         'user': current_user
     })
 

@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}Тренажёр слов - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="trainer-container">
+    <div class="trainer-header">
+        <h1>📚 Тренажёр слов</h1>
+        <p class="trainer-desc">Переведи слово — карточка перевернётся сама</p>
+    </div>
+
+    <div class="trainer-stats" id="stats">
+        <span>✅ Правильно: <span id="correct-count">0</span></span>
+        <span>❌ Неправильно: <span id="wrong-count">0</span></span>
+        <span>📊 Осталось: <span id="remaining-count">0</span></span>
+    </div>
+
+    <div class="trainer-card-container">
+        <div class="flashcard" id="flashcard">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <div class="trainer-question" id="question"></div>
+                    <div class="trainer-hint">👆 Здесь будет иероглиф</div>
+                </div>
+                <div class="flashcard-back" id="answer-side">
+                    <div class="trainer-translation" id="translation"></div>
+                    <div class="trainer-transcription" id="transcription"></div>
+                    <div class="trainer-example" id="example"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="trainer-input-area">
+        <input type="text" id="user-answer" class="trainer-input" placeholder="Введите перевод..." autocomplete="off">
+        <button id="check-btn" class="btn-primary trainer-btn">✅ Проверить</button>
+    </div>
+
+    <div class="trainer-feedback" id="feedback"></div>
+
+    <div class="trainer-results" id="results" style="display: none;">
+        <h2>🎉 Сессия завершена!</h2>
+        <div class="results-stats">
+            <div class="result-card">
+                <div class="result-value" id="final-correct">0</div>
+                <div class="result-label">Правильно</div>
+            </div>
+            <div class="result-card">
+                <div class="result-value" id="final-wrong">0</div>
+                <div class="result-label">Неправильно</div>
+            </div>
+            <div class="result-card">
+                <div class="result-value" id="final-accuracy">0%</div>
+                <div class="result-label">Точность</div>
+            </div>
+        </div>
+        <div class="results-buttons">
+            <button id="repeat-wrong-btn" class="btn-primary">🔄 Повторить ошибки</button>
+            <button id="new-session-btn" class="btn-secondary">✨ Новая сессия</button>
+            <a href="/dashboard" class="btn-outline">🏠 На главную</a>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Данные слов из Python (безопасное преобразование в JSON)
+    const wordsData = {{ words | tojson }};
+
+    // Состояние сессии
+    let sessionWords = [...wordsData];
+    let currentIndex = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let isAnswered = false;
+    let wrongWords = [];
+
+    // DOM элементы
+    const questionEl = document.getElementById('question');
+    const translationEl = document.getElementById('translation');
+    const transcriptionEl = document.getElementById('transcription');
+    const exampleEl = document.getElementById('example');
+    const userAnswer = document.getElementById('user-answer');
+    const checkBtn = document.getElementById('check-btn');
+    const feedbackEl = document.getElementById('feedback');
+    const correctCountEl = document.getElementById('correct-count');
+    const wrongCountEl = document.getElementById('wrong-count');
+    const remainingCountEl = document.getElementById('remaining-count');
+    const resultsDiv = document.getElementById('results');
+    const trainerContainer = document.querySelector('.trainer-card-container');
+    const flashcard = document.getElementById('flashcard');
+
+    function updateStats() {
+        correctCountEl.textContent = correctCount;
+        wrongCountEl.textContent = wrongCount;
+        remainingCountEl.textContent = sessionWords.length - currentIndex;
+    }
+
+    function loadWord() {
+        isAnswered = false;
+        flashcard.classList.remove('flipped');
+        feedbackEl.innerHTML = '';
+        feedbackEl.className = 'trainer-feedback';
+        userAnswer.value = '';
+        userAnswer.disabled = false;
+        checkBtn.disabled = false;
+        userAnswer.focus();
+        
+        if (currentIndex >= sessionWords.length) {
+            finishSession();
+            return;
+        }
+        
+        const word = sessionWords[currentIndex];
+        questionEl.textContent = word.hanzi;
+        
+        translationEl.textContent = '';
+        transcriptionEl.textContent = '';
+        exampleEl.textContent = '';
+        
+        updateStats();
+    }
+
+    function flipCard(isCorrect) {
+        const word = sessionWords[currentIndex];
+        translationEl.textContent = word.translation;
+        transcriptionEl.textContent = word.transcription;
+        if (word.example) {
+            exampleEl.textContent = 'Пример: ' + word.example;
+        }
+        
+        flashcard.classList.add('flipped');
+        
+        if (isCorrect) {
+            flashcard.style.boxShadow = '0 0 0 3px #4CAF50';
+            setTimeout(() => { flashcard.style.boxShadow = ''; }, 500);
+        } else {
+            flashcard.style.boxShadow = '0 0 0 3px #f44336';
+            setTimeout(() => { flashcard.style.boxShadow = ''; }, 500);
+        }
+    }
+
+    function checkAnswer() {
+        if (isAnswered) return;
+        
+        const userInput = userAnswer.value.trim().toLowerCase();
+        const word = sessionWords[currentIndex];
+        const isCorrect = userInput === word.translation.toLowerCase();
+        
+        isAnswered = true;
+        
+        if (isCorrect) {
+            correctCount++;
+            feedbackEl.innerHTML = '✅ Правильно!';
+            feedbackEl.classList.add('feedback-correct');
+            flipCard(true);
+        } else {
+            wrongCount++;
+            wrongWords.push(word);
+            feedbackEl.innerHTML = '❌ Неправильно! Правильный ответ: "' + word.translation + '"';
+            feedbackEl.classList.add('feedback-wrong');
+            flipCard(false);
+        }
+        
+        userAnswer.disabled = true;
+        checkBtn.disabled = true;
+        
+        setTimeout(() => {
+            currentIndex++;
+            loadWord();
+        }, 1500);
+    }
+
+    function finishSession() {
+        const total = correctCount + wrongCount;
+        const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+        
+        document.getElementById('final-correct').textContent = correctCount;
+        document.getElementById('final-wrong').textContent = wrongCount;
+        document.getElementById('final-accuracy').textContent = accuracy + '%';
+        
+        trainerContainer.style.display = 'none';
+        resultsDiv.style.display = 'block';
+    }
+
+    function startNewSession() {
+        sessionWords = [...wordsData];
+        currentIndex = 0;
+        correctCount = 0;
+        wrongCount = 0;
+        wrongWords = [];
+        isAnswered = false;
+        
+        trainerContainer.style.display = 'block';
+        resultsDiv.style.display = 'none';
+        
+        loadWord();
+    }
+
+    function repeatWrongWords() {
+        if (wrongWords.length === 0) return;
+        
+        sessionWords = [...wrongWords];
+        currentIndex = 0;
+        correctCount = 0;
+        wrongCount = 0;
+        wrongWords = [];
+        isAnswered = false;
+        
+        trainerContainer.style.display = 'block';
+        resultsDiv.style.display = 'none';
+        
+        loadWord();
+    }
+
+    // Обработчики
+    checkBtn.addEventListener('click', checkAnswer);
+    userAnswer.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkAnswer();
+    });
+    document.getElementById('repeat-wrong-btn').addEventListener('click', repeatWrongWords);
+    document.getElementById('new-session-btn').addEventListener('click', startNewSession);
+
+    // Запуск
+    startNewSession();
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>📚 Управление уроками для слова: {{ word.hanzi }} ({{ word.translation }})</h2>
+
+<div style="display: flex; gap: 40px; flex-wrap: wrap;">
+    <!-- Форма добавления -->
+    <div style="flex: 1; min-width: 250px;">
+        <h3>➕ Добавить в урок</h3>
+        <form method="post" action="/admin/words/{{ word.id }}/lessons/add">
+            <select name="lesson_id" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                <option value="">-- Выберите урок --</option>
+                {% for lesson in lessons %}
+                    {% if lesson.id not in existing_lesson_ids %}
+                        <option value="{{ lesson.id }}">
+                            Неделя {{ lesson.week_id }} → Урок {{ lesson.order_in_week }}: {{ lesson.name }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn-primary">Добавить</button>
+        </form>
+    </div>
+
+    <!-- Список уроков, где есть слово -->
+    <div style="flex: 1; min-width: 250px;">
+        <h3>📖 Слово встречается в уроках:</h3>
+        {% if existing_lesson_ids %}
+            <ul style="list-style: none; padding: 0;">
+                {% for lesson in lessons %}
+                    {% if lesson.id in existing_lesson_ids %}
+                        <li style="padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                            <span>Неделя {{ lesson.week_id }} → Урок {{ lesson.order_in_week }}: {{ lesson.name }}</span>
+                            <form method="post" action="/admin/words/{{ word.id }}/lessons/remove" style="margin: 0;">
+                                <input type="hidden" name="lesson_id" value="{{ lesson.id }}">
+                                <button type="submit" style="background: #dc2626; color: white; border: none; border-radius: 16px; padding: 4px 12px; cursor: pointer;">✖️</button>
+                            </form>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Слово не добавлено ни в один урок.</p>
+        {% endif %}
+    </div>
+</div>
+
+<p style="margin-top: 30px;">
+    <a href="/admin/words">← Назад к списку слов</a>
+</p>
+{% endblock %}

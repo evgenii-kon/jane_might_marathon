@@ -1,0 +1,13 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>🗑️ Удаление слова</h2>
+
+<p>Вы уверены, что хотите удалить слово <strong>{{ word.hanzi }} ({{ word.translation }})</strong>?</p>
+<p style="color: red;">⚠️ Это действие необратимо!</p>
+
+<form method="post">
+    <button type="submit">✅ Да, удалить</button>
+    <a href="/admin/words">Отмена</a>
+</form>
+{% endblock %}

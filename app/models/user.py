@@ -16,3 +16,4 @@ class User(Base):
     deleted_at = Column(DateTime(timezone=True))
 
     lesson_progress = relationship("UserLessonProgress", back_populates="user", cascade="all, delete-orphan")
+    word_progress = relationship('UserWordProgress', back_populates='user', cascade='all, delete-orphan')

@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>🗂️ Админ-панель</h1>
+<p>Добро пожаловать, {{ admin.name }}!</p>
+
+<div class="admin-cards">
+    <div class="admin-card">
+        <h3>👥 Пользователи</h3>
+        <p>Управление пользователями платформы</p>
+        <a href="/admin/users" class="admin-btn">Перейти →</a>
+    </div>
+
+    <div class="admin-card">
+        <h3>📚 Недели</h3>
+        <p>Управление неделями курса</p>
+        <a href="/admin/weeks" class="admin-btn">Перейти →</a>
+    </div>
+
+    <div class="admin-card">
+        <h3>📖 Уроки</h3>
+        <p>Управление уроками</p>
+        <a href="/admin/lessons" class="admin-btn">Перейти →</a>
+    </div>
+
+    <div class="admin-card">
+        <h3>📝 Слова</h3>
+        <p>Управление словарём</p>
+        <a href="/admin/words" class="admin-btn">Перейти →</a>
+    </div>
+</div>
+{% endblock %}

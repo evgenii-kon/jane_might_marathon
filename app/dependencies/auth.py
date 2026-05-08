@@ -63,7 +63,7 @@ def get_current_admin(
     current_user: User = Depends(get_current_user)
 ) -> User:
     """Проверяет права админа"""
-    admin_emails = ["admin@school-might.com"]
+    admin_emails = ["admin@mail.com"]
     
     if current_user.email not in admin_emails:
         raise HTTPException(

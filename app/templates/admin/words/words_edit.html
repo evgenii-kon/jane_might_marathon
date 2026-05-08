@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>✏️ Редактирование слова: {{ word.hanzi }}</h2>
+
+<form method="post">
+    <p>
+        <label>Иероглиф:</label><br>
+        <input type="text" name="hanzi" value="{{ word.hanzi }}" required>
+    </p>
+    <p>
+        <label>Транскрипция (пиньинь):</label><br>
+        <input type="text" name="transcription" value="{{ word.transcription }}" required>
+    </p>
+    <p>
+        <label>Перевод:</label><br>
+        <input type="text" name="translation" value="{{ word.translation }}" required>
+    </p>
+    <p>
+        <label>Часть речи:</label><br>
+        <input type="text" name="part_of_speech" value="{{ word.part_of_speech or '' }}">
+    </p>
+    <p>
+        <label>Пример предложения:</label><br>
+        <textarea name="example_sentence" rows="3" cols="50">{{ word.example_sentence or '' }}</textarea>
+    </p>
+    <p>
+        <label>Перевод примера:</label><br>
+        <textarea name="example_translation" rows="3" cols="50">{{ word.example_translation or '' }}</textarea>
+    </p>
+    <p>
+        <label>Ссылка на аудио:</label><br>
+        <input type="text" name="audio_url" size="50" value="{{ word.audio_url or '' }}" placeholder="https://...">
+    </p>
+    <button type="submit">💾 Сохранить</button>
+    <a href="/admin/words">Отмена</a>
+</form>
+{% endblock %}

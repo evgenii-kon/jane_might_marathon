@@ -4,10 +4,16 @@
 
 {% block content %}
 <div class="dashboard-container">
+    <!-- Приветственная карточка -->
     <div class="dashboard-card welcome-card">
         <div class="welcome-header">
             <div class="welcome-emoji">🌟</div>
-            <h1>С возвращением, {{ user.name }}!</h1>
+            <div class="welcome-title-section">
+                <h1>С возвращением, {{ user.name }}!</h1>
+                <div class="days-counter">
+                    📅 Сегодня {{ days_after_start }} день со старта курса
+                </div>
+            </div>
         </div>
         <p class="welcome-text">Продолжим наше путешествие в мир китайского языка!</p>
         
@@ -23,6 +29,18 @@
             </div>
         </div>
     </div>
+
+    <!-- КАРТОЧКА ТРЕНАЖЁРА СЛОВ -->
+    <a href="/word-trainer" class="dashboard-card trainer-card-link" style="text-decoration: none; display: block;">
+        <div class="trainer-card-content">
+            <div class="trainer-card-icon">📚</div>
+            <div class="trainer-card-info">
+                <h3>Тренажёр слов</h3>
+                <p>Проверь свои знания и учи новые слова в игровой форме</p>
+            </div>
+            <div class="trainer-card-arrow">→</div>
+        </div>
+    </a>
 
     <div class="dashboard-card">
         <div class="section-header">

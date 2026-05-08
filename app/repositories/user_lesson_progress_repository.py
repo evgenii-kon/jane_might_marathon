@@ -15,7 +15,7 @@ class UserLessonProgressRepository:
             UserLessonProgress.user_id == user_id,
             UserLessonProgress.lesson_id == lesson_id
         ).first()
-
+    
 
     def create(self, user_id: int, lesson_id: int) -> UserLessonProgress:
         """Создать запись прогресса (урок начат, но не пройден)"""
@@ -36,7 +36,6 @@ class UserLessonProgressRepository:
         progress = self.get_by_user_and_lesson(user_id, lesson_id)
         
         if not progress:
-            # Если записи нет, создаём новую со статусом completed
             progress = UserLessonProgress(
                 user_id=user_id,
                 lesson_id=lesson_id,
@@ -45,21 +44,19 @@ class UserLessonProgressRepository:
             )
             self.db.add(progress)
         else:
-            # Если запись есть, обновляем
             progress.is_completed = True
             progress.completed_at = func.now()
         
         self.db.commit()
         self.db.refresh(progress)
         return progress
-    
+
 
     def mark_started(self, user_id: int, lesson_id: int) -> UserLessonProgress:
         """Отметить урок как начатый"""
         progress = self.get_by_user_and_lesson(user_id, lesson_id)
         
         if not progress:
-            # Если записи нет, создаём новую со статусом started
             progress = UserLessonProgress(
                 user_id=user_id,
                 lesson_id=lesson_id,
@@ -68,8 +65,7 @@ class UserLessonProgressRepository:
             )
             self.db.add(progress)
         else:
-            # Если запись есть, обновляем
-            progress.is_started= True
+            progress.is_started = True
         
         self.db.commit()
         self.db.refresh(progress)
@@ -80,7 +76,7 @@ class UserLessonProgressRepository:
         """Проверить, пройден ли урок"""
         progress = self.get_by_user_and_lesson(user_id, lesson_id)
         return progress is not None and progress.is_completed
-    
+
 
     def is_started(self, user_id: int, lesson_id: int) -> bool:
         """Проверить, начат ли урок"""
@@ -88,17 +84,17 @@ class UserLessonProgressRepository:
         return progress is not None and progress.is_started
 
 
-    def get_completed_lessons_by_user(self, user_id: int) -> List[int]:
+    def get_completed_lesson_ids(self, user_id: int) -> List[int]:
         """Получить список ID пройденных уроков пользователя"""
         results = self.db.query(UserLessonProgress.lesson_id).filter(
             UserLessonProgress.user_id == user_id,
             UserLessonProgress.is_completed == True
         ).all()
         return [r[0] for r in results]
-    
-    
-    def get_started_lessons_by_user(self, user_id: int) -> List[int]:
-        """Получить список ID пройденных уроков пользователя"""
+
+
+    def get_started_lesson_ids(self, user_id: int) -> List[int]:
+        """Получить список ID начатых уроков пользователя"""
         results = self.db.query(UserLessonProgress.lesson_id).filter(
             UserLessonProgress.user_id == user_id,
             UserLessonProgress.is_started == True

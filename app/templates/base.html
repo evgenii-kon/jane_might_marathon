@@ -18,8 +18,25 @@
             </div>
             <nav class="nav-links">
                 {% if user %}
-                    <a href="/dashboard">Кабинет</a>
+                    <a href="/dashboard">Главная</a>
                     <a href="/auth/me">Профиль</a>
+                    
+                    <!-- Выпадающее меню "Дополнительно" - открывается при наведении -->
+                    <div class="dropdown" id="extraDropdown">
+                        <button class="dropdown-btn">
+                            Дополнительно
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="/about">📖 О нас</a>
+                            <a href="/articles">📝 Статьи</a>
+                            <a href="/announcements">📢 Анонсы</a>
+                        </div>
+                    </div>
+                    
+                    {% if user.email == 'admin@mail.com' %}
+                        <a href="/admin" class="admin-link">Админка</a>
+                    {% endif %}
                     <a href="/auth/logout" class="btn-outline">Выйти</a>
                 {% else %}
                     <a href="/auth/login">Вход</a>
@@ -46,7 +63,7 @@
                 <a href="/contacts">Контакты</a>
             </div>
             <div class="footer-copyright">
-                © 2024 Jane Might
+                © 2025 Jane Might
             </div>
         </div>
     </footer>
