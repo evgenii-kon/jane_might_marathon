@@ -8,11 +8,9 @@
     <div class="dashboard-card welcome-card">
         <div class="welcome-header">
             <div class="welcome-emoji">🌟</div>
-            <div class="welcome-title-section">
-                <h1>С возвращением, {{ user.name }}!</h1>
-                <div class="days-counter">
-                    📅 Сегодня {{ days_after_start }} день со старта курса
-                </div>
+            <h1>С возвращением, {{ user.name }}!</h1>
+            <div class="days-counter">
+                📅 {{ days_after_start }}-й день со старта курса
             </div>
         </div>
         <p class="welcome-text">Продолжим наше путешествие в мир китайского языка!</p>
@@ -30,17 +28,32 @@
         </div>
     </div>
 
-    <!-- КАРТОЧКА ТРЕНАЖЁРА СЛОВ -->
-    <a href="/word-trainer" class="dashboard-card trainer-card-link" style="text-decoration: none; display: block;">
-        <div class="trainer-card-content">
-            <div class="trainer-card-icon">📚</div>
-            <div class="trainer-card-info">
-                <h3>Тренажёр слов</h3>
-                <p>Проверь свои знания и учи новые слова в игровой форме</p>
+    <!-- ДВЕ КАРТОЧКИ В РЯДУ -->
+    <div class="dashboard-row">
+        <!-- КАРТОЧКА ТРЕНАЖЁРА СЛОВ (уменьшенная) -->
+        <a href="/word-trainer" class="dashboard-card trainer-card-link half-width">
+            <div class="trainer-card-content">
+                <div class="trainer-card-icon">📚</div>
+                <div class="trainer-card-info">
+                    <h3>Тренажёр слов</h3>
+                    <p>Закрепляй свои знания в режиме ежедневного повторения, а также в режиме марафона по всем словам HSK-1</p>
+                </div>
+                <div class="trainer-card-arrow">→</div>
             </div>
-            <div class="trainer-card-arrow">→</div>
-        </div>
-    </a>
+        </a>
+
+        <!-- КАРТОЧКА TELEGRAM СООБЩЕСТВА -->
+        <a href="https://t.me/your_channel" target="_blank" class="dashboard-card telegram-card half-width">
+            <div class="telegram-card-content">
+                <img src="/static/images/telegram_logo.jpg" alt="Telegram" class="telegram-card-icon">
+                <div class="telegram-card-info">
+                    <h3>Telegram-сообщество</h3>
+                    <p>Общайся с другими участниками, задавай вопросы и делись успехами</p>
+                </div>
+                <div class="telegram-card-arrow">→</div>
+            </div>
+        </a>
+    </div>
 
     <div class="dashboard-card">
         <div class="section-header">

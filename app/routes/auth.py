@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, status, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
+from app.dependencies.auth import get_current_user_optional
 from sqlalchemy.orm import Session
-from typing import Annotated
+from typing import Annotated, Optional
 from ..database import get_db
 from ..services.user_service import UserService
 from ..schemas.user import UserCreate, UserUpdate
@@ -19,9 +20,10 @@ templates = Jinja2Templates(directory='app/templates')
 @router.get('/register', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def register_get(
     request: Request, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
-    return templates.TemplateResponse('auth/register.html', {'request': request})
+    return templates.TemplateResponse('auth/register.html', {'request': request, 'user': current_user})
 
 
 @router.post('/register', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -29,6 +31,7 @@ def register_post(
     user_data: Annotated[UserCreate, Form()],
     request: Request,
     db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     user_service = UserService(db)
     try:
@@ -37,7 +40,7 @@ def register_post(
     except HTTPException as e:
         return templates.TemplateResponse(
             'register.html', 
-            {'request': request, 'error': e.detail}
+            {'request': request, 'error': e.detail, 'user': current_user}
         )
 
 
@@ -46,9 +49,11 @@ def register_post(
 @router.get('/login', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def login_get(
     request: Request,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional)
+
 ):
-    return templates.TemplateResponse('auth/login.html', {'request': request})
+    return templates.TemplateResponse('auth/login.html', {'request': request, 'user': current_user})
 
 
 @router.post('/login', response_class=HTMLResponse)
@@ -56,7 +61,8 @@ def login_post(
     request: Request,
     email: str = Form(...),
     password: str = Form(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     user_service = UserService(db)
     
@@ -78,7 +84,7 @@ def login_post(
     except HTTPException:
         return templates.TemplateResponse(
             'login.html',
-            {"request": request, "error": "Invalid email or password"}
+            {"request": request, "error": "Invalid email or password", 'user': current_user}
         )
 
 
@@ -87,9 +93,11 @@ def login_post(
 @router.get('/logout', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def logout_get(
     request: Request,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional)
+
 ):
-    return templates.TemplateResponse('auth/logout.html', {'request': request})
+    return templates.TemplateResponse('auth/logout.html', {'request': request, 'user': current_user})
 
 
 @router.post('/logout')
