@@ -51,6 +51,7 @@ class LessonRepository:
         else:
             return False
         
+        
     def get_by_week_id(self, week_id: int) -> List[Lesson]:
         """Получить все уроки недели, отсортированные по порядку"""
         return self.db.query(Lesson).filter(
