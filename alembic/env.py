@@ -14,6 +14,7 @@ from app.models import (
     lesson_word_association,
     user_lesson_progress,
     user_word_progress,
+    exercise,
 )
 
 

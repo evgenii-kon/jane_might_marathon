@@ -15,4 +15,5 @@ class Lesson(Base):
 
     week = relationship('Week', back_populates='lessons')
     user_progress = relationship("UserLessonProgress", back_populates="lesson", cascade="all, delete-orphan")
-    words = relationship("Word", secondary=lesson_word_association, back_populates="lessons")    
+    words = relationship("Word", secondary=lesson_word_association, back_populates="lessons")
+    exercises = relationship("Exercise", back_populates="lesson", order_by="Exercise.order_in_lesson")
