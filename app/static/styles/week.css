@@ -1,0 +1,131 @@
+/* ========== WEEK DETAIL PAGE ========== */
+.week-detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.week-detail-nav {
+    margin-bottom: 20px;
+}
+
+.week-detail-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.week-detail-card h1 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+}
+
+.week-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+.week-progress-section {
+    margin-top: 20px;
+}
+
+.lessons-list {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.lessons-list h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+}
+
+.lesson-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: white;
+    transition: all 0.2s;
+}
+
+.lesson-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.lesson-item.lesson-completed {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.lesson-item.lesson-started {
+    background: #fef9c3;
+    border-color: #fde047;
+}
+
+.lesson-info {
+    flex: 1;
+}
+
+.lesson-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.lesson-description {
+    font-size: 14px;
+    color: #666;
+}
+
+.lesson-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lesson-link {
+    background: #f97316;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.lesson-link:hover {
+    background: #ea580c;
+}
+
+.completed-badge {
+    background: #dcfce7;
+    color: #16a34a;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.started-badge {
+    background: #fef9c3;
+    color: #ca8a04;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.pending-badge {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}

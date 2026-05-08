@@ -1,0 +1,75 @@
+/* ========== HERO SECTION ========== */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 40px;
+    padding-top: 0;
+}
+
+.hero-badge {
+    background: #ffedd5;
+    color: #ea580c;
+    padding: 6px 14px;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+
+.hero-text {
+    font-size: 18px;
+    color: #4b5563;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.hero-image {
+    position: relative;
+    text-align: center;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+}
+
+.hero-image::after {
+    content: '';
+    position: absolute;
+    bottom: -0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 30px;
+    filter: blur(8px);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f2b6d;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #6b7280;
+}

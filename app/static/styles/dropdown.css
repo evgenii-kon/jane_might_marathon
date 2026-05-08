@@ -1,0 +1,104 @@
+/* ========== DROPDOWN MENU STYLES ========== */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 40px;
+    color: white !important;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.3s;
+}
+
+.dropdown:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #1e293b !important;
+    text-decoration: none;
+    transition: all 0.2s;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background: #f8fafc;
+    color: #f97316 !important;
+    padding-left: 28px;
+}
+
+.dropdown-menu {
+    transition-delay: 0.1s;
+}
+
+.dropdown:hover .dropdown-menu {
+    transition-delay: 0s;
+}
+
+@media (max-width: 768px) {
+    .dropdown-menu {
+        position: fixed;
+        top: auto;
+        right: 16px;
+        left: 16px;
+        width: auto;
+        min-width: auto;
+    }
+    
+    .dropdown-btn {
+        padding: 6px 12px;
+    }
+    
+    .dropdown-menu {
+        transition-delay: 0s;
+    }
+}

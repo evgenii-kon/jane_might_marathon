@@ -1,0 +1,288 @@
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+        margin-bottom: 30px;
+    }
+    
+    h1 {
+        font-size: 36px;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+        margin-top: 24px;
+    }
+    
+    .author-section {
+        text-align: center;
+        justify-content: center;
+        padding: 32px;
+        gap: 24px;
+        margin: 30px 0;
+    }
+    
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nav-links {
+        justify-content: center;
+    }
+    
+    .features-grid {
+        gap: 20px;
+        margin: 30px 0;
+    }
+    
+    .cta-section {
+        padding: 32px 24px;
+        margin: 30px 0;
+    }
+    
+    .auth-card {
+        padding: 32px 24px;
+    }
+    
+    .auth-header h1 {
+        font-size: 28px;
+    }
+    
+    .dashboard-container {
+        padding: 16px;
+    }
+    
+    .weeks-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .welcome-emoji {
+        font-size: 36px;
+    }
+    
+    .lesson-container {
+        padding: 12px;
+    }
+    
+    .lesson-header h1 {
+        font-size: 22px;
+    }
+    
+    .lesson-content {
+        padding: 20px;
+    }
+    
+    .btn-complete,
+    .btn-completed {
+        width: 100%;
+    }
+    
+    .vocabulary-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .profile-actions {
+        justify-content: center;
+    }
+    
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-edit-container {
+        padding: 16px;
+    }
+    
+    .profile-edit-card {
+        padding: 24px;
+    }
+    
+    .profile-edit-actions {
+        flex-direction: column;
+    }
+    
+    .btn-save, .btn-cancel {
+        flex: auto;
+    }
+    
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    
+    .footer-bottom-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-column {
+        text-align: center;
+    }
+    
+    .footer-logo {
+        justify-content: center;
+    }
+    
+    .dashboard-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .half-width {
+        margin-bottom: 0;
+    }
+    
+    .trainer-card-icon,
+    .telegram-card-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .trainer-card-icon {
+        font-size: 32px;
+    }
+    
+    .trainer-card-info h3,
+    .telegram-card-info h3 {
+        font-size: 16px;
+    }
+    
+    .trainer-card-info p,
+    .telegram-card-info p {
+        font-size: 12px;
+    }
+    
+    .trainer-container {
+        padding: 12px;
+    }
+    
+    .trainer-stats {
+        font-size: 14px;
+    }
+    
+    .trainer-question {
+        font-size: 40px;
+    }
+    
+    .trainer-translation {
+        font-size: 22px;
+    }
+    
+    .trainer-input-area {
+        flex-direction: column;
+    }
+    
+    .results-stats {
+        gap: 16px;
+    }
+    
+    .result-value {
+        font-size: 32px;
+    }
+    
+    .trainer-hub-container {
+        padding: 20px;
+    }
+    
+    .trainer-modes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .trainer-mode-card {
+        padding: 24px;
+    }
+    
+    .flashcards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .flashcard {
+        height: 260px;
+    }
+    
+    .flashcard-hanzi {
+        font-size: 36px;
+    }
+    
+    .about-container {
+        padding: 16px;
+    }
+    
+    .about-hero h1 {
+        font-size: 32px;
+    }
+    
+    .about-subtitle {
+        font-size: 16px;
+    }
+    
+    .about-card {
+        padding: 24px;
+    }
+    
+    .about-card h2 {
+        font-size: 20px;
+    }
+    
+    .approach-item {
+        font-size: 15px;
+    }
+    
+    .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .about-stats .stat-number {
+        font-size: 28px;
+    }
+    
+    .about-cta {
+        padding: 32px 24px;
+    }
+    
+    .about-cta h2 {
+        font-size: 22px;
+    }
+    
+    .about-cta p {
+        font-size: 16px;
+    }
+    
+    .welcome-header {
+        gap: 12px;
+    }
+    
+    .welcome-emoji {
+        font-size: 36px;
+    }
+    
+    .welcome-header h1 {
+        font-size: 20px;
+        width: 100%;
+        order: 1;
+        margin-top: 8px;
+    }
+    
+    .days-counter {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .vocabulary-stats {
+        grid-template-columns: 1fr;
+    }
+}

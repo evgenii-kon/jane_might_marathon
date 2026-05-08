@@ -1,0 +1,260 @@
+/* ========== VOCABULARY TRAINER ========== */
+.trainer-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.trainer-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.trainer-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.trainer-stats {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.trainer-stats span {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.trainer-card-container {
+    margin-bottom: 30px;
+}
+
+.trainer-card-container .flashcard {
+    height: 320px;
+}
+
+.trainer-question {
+    font-size: 64px;
+    font-weight: 700;
+}
+
+.trainer-hint {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-top: 20px;
+}
+
+.trainer-translation {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.trainer-transcription {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 16px;
+}
+
+.trainer-example {
+    font-size: 14px;
+    opacity: 0.8;
+    max-width: 90%;
+}
+
+.trainer-input-area {
+    display: flex;
+    gap: 12px;
+}
+
+.trainer-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e5e7eb;
+    border-radius: 48px;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.trainer-input:focus {
+    outline: none;
+    border-color: #f97316;
+}
+
+.trainer-btn {
+    padding: 14px 28px;
+    white-space: nowrap;
+}
+
+.trainer-feedback {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.feedback-correct {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.feedback-wrong {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.trainer-results {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 32px 0;
+}
+
+.result-card {
+    text-align: center;
+}
+
+.result-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: #f97316;
+}
+
+.result-label {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.results-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Trainer Hub */
+.trainer-hub-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.trainer-hub-container h1 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.trainer-hub-desc {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 40px;
+}
+
+.trainer-modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.trainer-mode-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    text-decoration: none;
+    color: #1f2937;
+    transition: all 0.3s;
+    border: 1px solid #e5e7eb;
+}
+
+.trainer-mode-card:not(.locked):hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    border-color: #f97316;
+}
+
+.trainer-mode-card.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.trainer-mode-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.trainer-mode-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.trainer-mode-desc {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+.trainer-mode-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #d97706;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.trainer-mode-card:not(.locked) .trainer-mode-badge {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+/* Trainer Session */
+.trainer-session-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.trainer-session-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.trainer-session-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.trainer-session-header .back-link {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: #f97316;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.trainer-session-header .back-link:hover {
+    text-decoration: underline;
+}
+
+.due-info {
+    color: #f97316;
+    font-size: 14px;
+    margin-top: 8px;
+}

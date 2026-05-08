@@ -1,0 +1,498 @@
+/* ========== RESET & BASE ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    color: #1e293b;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+}
+
+/* ========== HEADER ========== */
+.header {
+    background: linear-gradient(135deg, #0f2b6d 0%, #1e40af 50%, #ea580c 100%);
+    padding: 20px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    margin-bottom: 40px;
+}
+
+.header-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    height: 48px;
+    width: auto;
+    display: block;
+}
+
+/* ========== NAVIGATION ========== */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-links a:hover {
+    color: #ffedd5;
+    transform: translateY(-1px);
+}
+
+/* ========== BUTTONS ========== */
+.btn-outline {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 20px;
+    border-radius: 40px;
+    color: white !important;
+    backdrop-filter: blur(4px);
+    outline: none;
+}
+
+.btn-outline:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: white;
+}
+
+.btn-solid {
+    background: white;
+    color: #ea580c !important;
+    padding: 8px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: none;
+    outline: none;
+}
+
+.btn-solid:hover {
+    background: #ffedd5;
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    color: white;
+    padding: 14px 36px;
+    border-radius: 48px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
+    border: none;
+    outline: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(234, 88, 12, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #f97316;
+    padding: 14px 28px;
+    border-radius: 48px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-block;
+    border: 2px solid #f97316;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    background: #f97316;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.btn-complete {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 48px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-complete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+}
+
+.btn-completed {
+    background: #9ca3af;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 48px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: default;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 48px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 14px 24px;
+    border-radius: 48px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.btn-logout {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 48px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-logout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+}
+
+.btn-cancel-logout {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 14px 24px;
+    border-radius: 48px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+}
+
+.btn-cancel-logout:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.btn-block {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+.admin-link {
+    background: rgba(220, 38, 38, 0.8);
+    padding: 6px 14px;
+    border-radius: 40px;
+    color: white !important;
+    font-weight: 600;
+}
+
+.admin-link:hover {
+    background: #dc2626;
+}
+
+/* ========== MAIN ========== */
+.main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 32px 0 32px;
+    min-height: calc(100vh - 180px);
+}
+
+/* ========== TYPOGRAPHY ========== */
+h1 {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #0f2b6d 0%, #1e40af 50%, #ea580c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ========== FOOTER ========== */
+.footer {
+    background: #0f172a;
+    color: #64748b;
+    padding: 48px 32px 24px;
+    margin-top: 60px;
+}
+
+.footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer-column h4 {
+    color: #94a3b8;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #f97316;
+    transform: translateX(4px);
+    display: inline-block;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.footer-logo img {
+    height: 40px;
+    display: block;
+}
+
+.footer-logo span {
+    font-size: 18px;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.footer-description {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #64748b;
+}
+
+.footer-bottom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-top: 24px;
+}
+
+.footer-bottom-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.footer-copyright {
+    font-size: 13px;
+    color: #475569;
+}
+
+.footer-dev {
+    font-size: 13px;
+    color: #475569;
+}
+
+/* ========== PROGRESS BARS ========== */
+.progress-bar {
+    background: #e0e0e0;
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar.small {
+    height: 6px;
+}
+
+.progress-fill {
+    background: #f97316;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+}
+
+.progress-bar-large {
+    background: #e0e0e0;
+    border-radius: 12px;
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-large .progress-fill {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12px;
+}
+
+.progress-bar-large .progress-percent {
+    font-size: 11px;
+    color: white;
+    font-weight: bold;
+}
+
+.progress-percent {
+    font-size: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Динамическая ширина */
+.w-0 { width: 0%; }
+.w-5 { width: 5%; }
+.w-10 { width: 10%; }
+.w-15 { width: 15%; }
+.w-20 { width: 20%; }
+.w-25 { width: 25%; }
+.w-30 { width: 30%; }
+.w-35 { width: 35%; }
+.w-40 { width: 40%; }
+.w-45 { width: 45%; }
+.w-50 { width: 50%; }
+.w-55 { width: 55%; }
+.w-60 { width: 60%; }
+.w-65 { width: 65%; }
+.w-70 { width: 70%; }
+.w-75 { width: 75%; }
+.w-80 { width: 80%; }
+.w-85 { width: 85%; }
+.w-90 { width: 90%; }
+.w-95 { width: 95%; }
+.w-100 { width: 100%; }
+
+/* ========== UTILITIES ========== */
+.back-link {
+    color: #f97316;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Убираем чёрную обводку */
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible,
+.btn-solid:focus,
+.btn-outline:focus,
+.btn-primary:focus,
+.btn-complete:focus,
+.lesson-link:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+button:active,
+a:active {
+    outline: none;
+}
