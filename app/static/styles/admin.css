@@ -289,3 +289,8 @@
     margin: 20px 0;
     text-align: left;
 }
+
+.article-name {
+    font-weight: 600;
+    color: #1f2937;
+}

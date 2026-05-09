@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Добавить статью - Админка{% endblock %}
+
+{% block content %}
+<div class="admin-form-container">
+    <div class="admin-header">
+        <h1>➕ Добавить статью</h1>
+        <a href="/admin/articles" class="btn-secondary">
+            ← Назад к списку
+        </a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="admin-form">
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label for="name">Название статьи *</label>
+                <input type="text" id="name" name="name" required 
+                       value="{{ form_data.name if form_data else '' }}"
+                       placeholder="Например: Как быстро выучить HSK-1">
+            </div>
+
+            <div class="form-group">
+                <label for="slug">Slug (URL) *</label>
+                <input type="text" id="slug" name="slug" required 
+                       value="{{ form_data.slug if form_data else '' }}"
+                       placeholder="например: how-to-learn-hsk-1">
+                <small>Только латиница, цифры и дефис. Без пробелов.</small>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="description">Краткое описание *</label>
+                <textarea id="description" name="description" rows="3" required 
+                          placeholder="Краткое описание статьи для превью">{{ form_data.description if form_data else '' }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="images">Изображения (URL через запятую)</label>
+                <textarea id="images" name="images" rows="3" 
+                          placeholder="/static/images/article1.jpg, /static/images/article2.jpg">{{ form_data.images if form_data else '' }}</textarea>
+                <small>Укажите ссылки на изображения через запятую</small>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="text">Полный текст статьи *</label>
+                <textarea id="text" name="text" rows="15" required 
+                          placeholder="Полный текст статьи...">{{ form_data.text if form_data else '' }}</textarea>
+                <small>Поддерживается HTML форматирование</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Сохранить статью</button>
+            <a href="/admin/articles" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

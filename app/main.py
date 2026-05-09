@@ -10,6 +10,8 @@ from .routes.admin.week import router as week_router
 from .routes.admin.word import router as word_router
 from .routes.admin.exercise import router as exercise_admin_router
 from .routes.dashboard.exercises import router as exercise_router
+from app.routes.admin.article import router as article_admin_router
+
 
 from .routes.public.public import router as public_router
 from .routes.auth import router as auth_router
@@ -45,6 +47,7 @@ app.include_router(admin_user_router)
 app.include_router(exercise_admin_router)
 app.include_router(exercise_router)
 app.include_router(word_trainer_modes_router)
+app.include_router(article_admin_router)
 
 
 

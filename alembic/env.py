@@ -16,6 +16,7 @@ from app.models import (
     user_word_progress,
     exercise,
     user_exercise_progress,
+    article,
 )
 
 

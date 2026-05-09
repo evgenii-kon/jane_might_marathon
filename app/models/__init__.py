@@ -6,3 +6,4 @@ from .user_word_progress import UserWordProgress
 from .user_lesson_progress import UserLessonProgress
 from .exercise import Exercise 
 from .user_exercise_progress import UserExerciseProgress
+from .article import Article

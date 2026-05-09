@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Удалить статью - Админка{% endblock %}
+
+{% block content %}
+<div class="admin-confirm-container">
+    <div class="confirm-card">
+        <div class="confirm-icon">⚠️</div>
+        <h1>Подтверждение удаления</h1>
+        <p>Вы действительно хотите удалить статью <strong>{{ article.name }}</strong>?</p>
+        
+        <div class="article-info">
+            <div class="info-row">
+                <span class="info-label">ID:</span>
+                <span class="info-value">{{ article.id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Название:</span>
+                <span class="info-value">{{ article.name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Slug:</span>
+                <span class="info-value">{{ article.slug }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Дата создания:</span>
+                <span class="info-value">{{ article.created_at.strftime('%d.%m.%Y %H:%M') if article.created_at else '-' }}</span>
+            </div>
+        </div>
+        
+        <p class="confirm-warning">⚠️ Это действие нельзя отменить. Статья будет удалена безвозвратно.</p>
+        
+        <div class="confirm-actions">
+            <form method="post" style="display: inline;">
+                <button type="submit" class="btn-danger">🗑️ Да, удалить</button>
+            </form>
+            <a href="/admin/articles" class="btn-secondary">Отмена</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
