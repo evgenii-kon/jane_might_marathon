@@ -19,3 +19,4 @@ class Exercise(Base):
     order_in_lesson = Column(Integer, default=0)
     
     lesson = relationship("Lesson", back_populates="exercises")
+    user_progress = relationship("UserExerciseProgress", back_populates="exercise", cascade="all, delete-orphan")
