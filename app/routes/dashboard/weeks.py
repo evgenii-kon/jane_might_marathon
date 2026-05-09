@@ -10,59 +10,53 @@ from app.models.user import User
 from app.services.user_service import UserService
 from app.services.week_service import WeekService
 from app.services.lesson_service import LessonService
+from app.services.user_exercise_progress_service import UserExerciseProgressService
 from app.services.user_lesson_progress_service import UserLessonProgressService
 
 
 router = APIRouter(prefix='/dashboard/weeks', tags = ['dashboard'])
 templates = Jinja2Templates(directory='app/templates')
 
-@router.get('/{week_id}', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+@router.get('/{week_id}', response_class=HTMLResponse)
 def week_detail(
     request: Request,
     week_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
-    ):
+):
     week_service = WeekService(db)
     lesson_service = LessonService(db)
     progress_service = UserLessonProgressService(db)
-
-    try:
-        week = week_service.get_week_by_id(week_id)
-    except HTTPException:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
-            detail=f'week with id={week_id} not found'
-            )
+    exercise_progress_service = UserExerciseProgressService(db)
     
+    week = week_service.get_week_by_id(week_id)
     lessons = lesson_service.get_lessons_by_week(week_id)
-    completed_ids = progress_service.get_completed_lesson_ids(current_user.id)
-    started_ids = progress_service.get_started_lesson_ids(current_user.id)
-
-
-    lessons_data = []
+    
+    lessons_with_progress = []
     for lesson in lessons:
-        lessons_data.append({
+        is_completed = progress_service.is_lesson_completed(current_user.id, lesson.id)
+        is_started = progress_service.is_lesson_started(current_user.id, lesson.id)
+        
+        # Получаем прогресс упражнений для урока
+        exercise_progress = exercise_progress_service.get_lesson_progress(
+            current_user.id, lesson.id
+        )
+        
+        lessons_with_progress.append({
             'id': lesson.id,
             'name': lesson.name,
             'order_in_week': lesson.order_in_week,
-            'description': getattr(lesson, 'description', None),
-            'is_completed': lesson.id in completed_ids,
-            'is_started': lesson.id in started_ids
+            'is_completed': is_completed,
+            'is_started': is_started,
+            'exercises_total': exercise_progress.total,
+            'exercises_completed': exercise_progress.completed,
+            'all_exercises_completed': exercise_progress.completed == exercise_progress.total and exercise_progress.total > 0
         })
-    
-    # Прогресс по неделе
-    completed_count = len([l for l in lessons_data if l['is_completed']])
-    progress_percent = int((completed_count / len(lessons_data)) * 100) if lessons_data else 0
-    
     
     return templates.TemplateResponse('dashboard/weeks/week_detail.html', {
         'request': request,
         'week': week,
-        'lessons': lessons_data,
-        'completed_count': completed_count,
-        'total_count': len(lessons),
-        'progress_percent': progress_percent,
+        'lessons': lessons_with_progress,
         'user': current_user
     })
 

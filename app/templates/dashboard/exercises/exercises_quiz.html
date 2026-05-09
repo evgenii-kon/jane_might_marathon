@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Упражнения - {{ lesson.name }}{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <!-- Навигация -->
+    <div class="quiz-nav">
+        <a href="/dashboard/weeks/{{ lesson.week_id }}" class="back-link">← Назад к неделе</a>
+        <a href="/dashboard/lessons/{{ lesson.id }}" class="back-link">← Назад к уроку</a>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="quiz-progress">
+        <div class="progress-header">
+            <span class="progress-label">📊 Прогресс упражнений</span>
+            <span class="progress-count">{{ completed_count }} из {{ total_count }} выполнено</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
+        </div>
+    </div>
+
+    <!-- Вопрос -->
+    <div class="quiz-card">
+        <div class="quiz-header">
+            <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
+            <span class="quiz-description">{{ exercise.question_description }}</span>
+        </div>
+        
+        <div class="quiz-question">
+            {{ exercise.question_text }}
+        </div>
+        
+        <div class="quiz-options" id="quizOptions">
+            <button class="quiz-option" data-option="1">
+                <span class="option-letter">А</span>
+                <span class="option-text">{{ exercise.option_1 }}</span>
+            </button>
+            <button class="quiz-option" data-option="2">
+                <span class="option-letter">Б</span>
+                <span class="option-text">{{ exercise.option_2 }}</span>
+            </button>
+            <button class="quiz-option" data-option="3">
+                <span class="option-letter">В</span>
+                <span class="option-text">{{ exercise.option_3 }}</span>
+            </button>
+            <button class="quiz-option" data-option="4">
+                <span class="option-letter">Г</span>
+                <span class="option-text">{{ exercise.option_4 }}</span>
+            </button>
+        </div>
+        
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        
+        <div class="quiz-next" id="quizNext" style="display: none;">
+            <button class="btn-next" id="nextBtn">Следующий вопрос →</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const lessonId = {{ lesson.id }};
+    const exerciseId = {{ exercise.id }};
+    let isAnswered = false;
+
+    const optionsContainer = document.getElementById('quizOptions');
+    const feedbackDiv = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNext');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function showFeedback(result) {
+        if (result.is_correct) {
+            feedbackDiv.innerHTML = `
+                <div class="feedback-correct">
+                    <span class="feedback-icon">✅</span>
+                    <span class="feedback-text">Правильно! Отличная работа!</span>
+                </div>
+            `;
+        } else {
+            let message = `❌ Неправильно! Правильный ответ: ${result.correct_answer_text}`;
+            if (result.explanation) {
+                message += `<br>💡 ${result.explanation}`;
+            }
+            feedbackDiv.innerHTML = `
+                <div class="feedback-wrong">
+                    <span class="feedback-icon">❌</span>
+                    <span class="feedback-text">${message}</span>
+                </div>
+            `;
+        }
+        feedbackDiv.style.display = 'block';
+    }
+
+    function highlightCorrectOption(correctOption) {
+        const btns = document.querySelectorAll('.quiz-option');
+        btns.forEach(btn => {
+            if (parseInt(btn.dataset.option) === correctOption) {
+                btn.classList.add('correct');
+            }
+        });
+    }
+
+    function disableOptions() {
+        const btns = document.querySelectorAll('.quiz-option');
+        btns.forEach(btn => {
+            btn.disabled = true;
+        });
+    }
+
+    function showNextButton() {
+        nextContainer.style.display = 'block';
+    }
+
+    function loadNextQuestion() {
+        window.location.reload();
+    }
+
+    async function handleAnswer(selectedBtn, selectedOption) {
+        if (isAnswered) return;
+        isAnswered = true;
+
+        const formData = new URLSearchParams();
+        formData.append('exercise_id', exerciseId);
+        formData.append('selected_option', selectedOption);
+
+        try {
+            const response = await fetch(`/dashboard/exercises/lesson/${lessonId}/check`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.is_correct) {
+                selectedBtn.classList.add('correct');
+            } else {
+                selectedBtn.classList.add('wrong');
+                highlightCorrectOption(result.correct_answer);
+            }
+
+            showFeedback(result);
+            disableOptions();
+
+            if (result.has_next) {
+                showNextButton();
+            } else {
+                nextBtn.textContent = 'Завершить →';
+            }
+
+        } catch (error) {
+            console.error('Ошибка:', error);
+            feedbackDiv.innerHTML = `
+                <div class="feedback-error">
+                    ❌ Ошибка при проверке ответа. Попробуйте еще раз.
+                </div>
+            `;
+            feedbackDiv.style.display = 'block';
+            isAnswered = false;
+        }
+    }
+
+    // Обработчики
+    document.querySelectorAll('.quiz-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const selectedOption = parseInt(btn.dataset.option);
+            handleAnswer(btn, selectedOption);
+        });
+    });
+
+    nextBtn.addEventListener('click', loadNextQuestion);
+</script>
+{% endblock %}

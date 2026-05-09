@@ -31,6 +31,7 @@
     margin-top: 20px;
 }
 
+/* Список уроков */
 .lessons-list {
     background: white;
     border-radius: 16px;
@@ -43,6 +44,7 @@
     font-size: 20px;
 }
 
+/* Карточка урока */
 .lesson-item {
     display: flex;
     justify-content: space-between;
@@ -84,12 +86,14 @@
     color: #666;
 }
 
+/* Действия с уроком */
 .lesson-actions {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
+/* Основная кнопка урока */
 .lesson-link {
     background: #f97316;
     color: white;
@@ -97,12 +101,57 @@
     border-radius: 8px;
     text-decoration: none;
     font-size: 14px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .lesson-link:hover {
     background: #ea580c;
+    transform: translateY(-2px);
 }
 
+/* Зелёная кнопка для пройденного урока */
+.lesson-link.completed {
+    background: #22c55e !important;
+    color: white !important;
+}
+
+.lesson-link.completed:hover {
+    background: #16a34a !important;
+}
+
+/* Кнопка упражнений */
+.exercises-link {
+    background: #8b5cf6 !important;
+}
+
+.exercises-link:hover {
+    background: #7c3aed !important;
+    transform: translateY(-2px);
+}
+
+/* Активная кнопка упражнений (доступна) */
+.exercises-link.active {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+}
+
+.exercises-link.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* Неактивная кнопка упражнений (заблокирована) */
+.exercises-link.disabled {
+    background: #9ca3af !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    pointer-events: none;
+}
+
+/* Бейджи статусов */
 .completed-badge {
     background: #dcfce7;
     color: #16a34a;
@@ -128,4 +177,43 @@
     border-radius: 6px;
     font-size: 12px;
     font-weight: 500;
+}
+
+/* Кнопка упражнений - все выполнены (зелёная) */
+.exercises-link.completed-all {
+    background: #22c55e !important;
+}
+
+.exercises-link.completed-all:hover {
+    background: #16a34a !important;
+    transform: translateY(-2px);
+}
+
+/* Кнопка упражнений - активная (фиолетовая) */
+.exercises-link.active {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+}
+
+.exercises-link.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* Кнопка упражнений - неактивная (серая) */
+.exercises-link.disabled {
+    background: #9ca3af !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    pointer-events: none;
+}
+
+/* Кнопка урока - пройден (зелёная) */
+.lesson-link.completed {
+    background: #22c55e !important;
+    color: white !important;
+}
+
+.lesson-link.completed:hover {
+    background: #16a34a !important;
 }

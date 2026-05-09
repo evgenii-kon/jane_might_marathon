@@ -15,6 +15,7 @@
 @import url('profile.css');
 @import url('admin.css');
 @import url('about.css');
+@import url('exercises.css');
 
 /* Адаптив (должен быть последним) */
 @import url('responsive.css');

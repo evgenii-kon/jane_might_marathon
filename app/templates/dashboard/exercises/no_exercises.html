@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Нет упражнений - {{ lesson.name }}{% endblock %}
+
+{% block content %}
+<div class="no-exercises-container">
+    <div class="no-exercises-card">
+        <div class="no-exercises-icon">📭</div>
+        
+        <h1>Нет упражнений</h1>
+        
+        <p class="no-exercises-message">
+            В уроке <strong>{{ lesson.name }}</strong> пока нет упражнений.
+        </p>
+        
+        <div class="no-exercises-actions">
+            <a href="/dashboard/weeks/{{ lesson.week_id }}" class="btn-primary">
+                📚 К списку уроков
+            </a>
+            <a href="/dashboard/lessons/{{ lesson.id }}" class="btn-secondary">
+                📖 К уроку
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
