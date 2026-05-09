@@ -1,0 +1,90 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Добавить упражнение - Админка{% endblock %}
+
+{% block content %}
+<div class="admin-form-container">
+    <div class="admin-header">
+        <h1>➕ Добавить упражнение</h1>
+        <a href="/admin/exercises{% if selected_lesson_id %}?lesson_id={{ selected_lesson_id }}{% endif %}" class="btn-secondary">
+            ← Назад к списку
+        </a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="admin-form">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="lesson_id">Урок *</label>
+                <select id="lesson_id" name="lesson_id" required>
+                    <option value="">Выберите урок</option>
+                    {% for lesson in lessons %}
+                        <option value="{{ lesson.id }}" {% if selected_lesson_id == lesson.id %}selected{% endif %}>
+                            {{ lesson.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="order_in_lesson">Порядок в уроке</label>
+                <input type="number" id="order_in_lesson" name="order_in_lesson" value="{{ form_data.order_in_lesson or 0 }}" min="0">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="question_description">Описание задания *</label>
+                <input type="text" id="question_description" name="question_description" required value="{{ form_data.question_description or '' }}" placeholder="Например: Выберите правильный перевод">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="question_text">Текст вопроса *</label>
+                <textarea id="question_text" name="question_text" rows="3" required placeholder="Например: apple или Я __ яблоко">{{ form_data.question_text or '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="option_1">Вариант 1 *</label>
+                <input type="text" id="option_1" name="option_1" required value="{{ form_data.option_1 or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="option_2">Вариант 2 *</label>
+                <input type="text" id="option_2" name="option_2" required value="{{ form_data.option_2 or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="option_3">Вариант 3 *</label>
+                <input type="text" id="option_3" name="option_3" required value="{{ form_data.option_3 or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="option_4">Вариант 4 *</label>
+                <input type="text" id="option_4" name="option_4" required value="{{ form_data.option_4 or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="correct_answer">Правильный ответ *</label>
+                <select id="correct_answer" name="correct_answer" required>
+                    <option value="">Выберите номер</option>
+                    <option value="1" {% if form_data.correct_answer == '1' %}selected{% endif %}>1. {{ form_data.option_1 or 'Вариант 1' }}</option>
+                    <option value="2" {% if form_data.correct_answer == '2' %}selected{% endif %}>2. {{ form_data.option_2 or 'Вариант 2' }}</option>
+                    <option value="3" {% if form_data.correct_answer == '3' %}selected{% endif %}>3. {{ form_data.option_3 or 'Вариант 3' }}</option>
+                    <option value="4" {% if form_data.correct_answer == '4' %}selected{% endif %}>4. {{ form_data.option_4 or 'Вариант 4' }}</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="explanation">Пояснение (опционально)</label>
+                <textarea id="explanation" name="explanation" rows="2" placeholder="Почему этот ответ правильный...">{{ form_data.explanation or '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Сохранить упражнение</button>
+            <a href="/admin/exercises{% if selected_lesson_id %}?lesson_id={{ selected_lesson_id }}{% endif %}" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

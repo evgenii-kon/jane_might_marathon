@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Редактировать упражнение - Админка{% endblock %}
+
+{% block content %}
+<div class="admin-form-container">
+    <div class="admin-header">
+        <h1>✏️ Редактировать упражнение #{{ exercise.id }}</h1>
+        <a href="/admin/exercises?lesson_id={{ exercise.lesson_id }}" class="btn-secondary">
+            ← Назад к списку
+        </a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="admin-form">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="lesson_id">Урок *</label>
+                <select id="lesson_id" name="lesson_id" required>
+                    {% for lesson in lessons %}
+                        <option value="{{ lesson.id }}" {% if exercise.lesson_id == lesson.id %}selected{% endif %}>
+                            {{ lesson.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="order_in_lesson">Порядок в уроке</label>
+                <input type="number" id="order_in_lesson" name="order_in_lesson" value="{{ exercise.order_in_lesson }}" min="0">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="question_description">Описание задания *</label>
+                <input type="text" id="question_description" name="question_description" required value="{{ exercise.question_description }}">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="question_text">Текст вопроса *</label>
+                <textarea id="question_text" name="question_text" rows="3" required>{{ exercise.question_text }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="option_1">Вариант 1 *</label>
+                <input type="text" id="option_1" name="option_1" required value="{{ exercise.option_1 }}">
+            </div>
+
+            <div class="form-group">
+                <label for="option_2">Вариант 2 *</label>
+                <input type="text" id="option_2" name="option_2" required value="{{ exercise.option_2 }}">
+            </div>
+
+            <div class="form-group">
+                <label for="option_3">Вариант 3 *</label>
+                <input type="text" id="option_3" name="option_3" required value="{{ exercise.option_3 }}">
+            </div>
+
+            <div class="form-group">
+                <label for="option_4">Вариант 4 *</label>
+                <input type="text" id="option_4" name="option_4" required value="{{ exercise.option_4 }}">
+            </div>
+
+            <div class="form-group">
+                <label for="correct_answer">Правильный ответ *</label>
+                <select id="correct_answer" name="correct_answer" required>
+                    <option value="1" {% if exercise.correct_answer == 1 %}selected{% endif %}>1. {{ exercise.option_1 }}</option>
+                    <option value="2" {% if exercise.correct_answer == 2 %}selected{% endif %}>2. {{ exercise.option_2 }}</option>
+                    <option value="3" {% if exercise.correct_answer == 3 %}selected{% endif %}>3. {{ exercise.option_3 }}</option>
+                    <option value="4" {% if exercise.correct_answer == 4 %}selected{% endif %}>4. {{ exercise.option_4 }}</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="explanation">Пояснение (опционально)</label>
+                <textarea id="explanation" name="explanation" rows="2">{{ exercise.explanation or '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Сохранить изменения</button>
+            <a href="/admin/exercises?lesson_id={{ exercise.lesson_id }}" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

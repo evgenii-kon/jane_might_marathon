@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Удалить упражнение - Админка{% endblock %}
+
+{% block content %}
+<div class="admin-confirm-container">
+    <div class="confirm-card">
+        <div class="confirm-icon">⚠️</div>
+        <h1>Подтверждение удаления</h1>
+        <p>Вы действительно хотите удалить упражнение?</p>
+        
+        <div class="exercise-info">
+            <div class="info-row">
+                <span class="info-label">ID:</span>
+                <span class="info-value">{{ exercise.id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Урок:</span>
+                <span class="info-value">{{ exercise.lesson_id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Описание:</span>
+                <span class="info-value">{{ exercise.question_description }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Вопрос:</span>
+                <span class="info-value">{{ exercise.question_text }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Правильный ответ:</span>
+                <span class="info-value">{{ exercise.correct_answer }}. 
+                    {% if exercise.correct_answer == 1 %}{{ exercise.option_1 }}
+                    {% elif exercise.correct_answer == 2 %}{{ exercise.option_2 }}
+                    {% elif exercise.correct_answer == 3 %}{{ exercise.option_3 }}
+                    {% else %}{{ exercise.option_4 }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <p class="confirm-warning">⚠️ Это действие нельзя отменить. Упражнение будет удалено из урока.</p>
+        
+        <div class="confirm-actions">
+            <form method="post" style="display: inline;">
+                <button type="submit" class="btn-danger">🗑️ Да, удалить</button>
+            </form>
+            <a href="/admin/exercises?lesson_id={{ exercise.lesson_id }}" class="btn-secondary">Отмена</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

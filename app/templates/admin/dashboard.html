@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>🗂️ Админ-панель</h1>
-<p>Добро пожаловать, {{ admin.name }}!</p>
+<p>Добро пожаловать, {{ admin.name }}!</p>  <!-- ← поменял user на admin -->
 
 <div class="admin-cards">
     <div class="admin-card">
@@ -27,6 +27,12 @@
         <h3>📝 Слова</h3>
         <p>Управление словарём</p>
         <a href="/admin/words" class="admin-btn">Перейти →</a>
+    </div>
+
+    <div class="admin-card">
+        <h3>✍️ Упражнения</h3>
+        <p>Управление упражнениями к урокам</p>
+        <a href="/admin/exercises" class="admin-btn">Перейти →</a>
     </div>
 </div>
 {% endblock %}

@@ -2,28 +2,49 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Админ-панель</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - HSK-1 Марафон</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles/main.css">
 </head>
 <body>
-    <h1>🔧 Админ-панель</h1>
-    <nav>
-        <a href="/admin/users">👥 Пользователи</a> |
-        <a href="/admin/weeks">📚 Недели</a> |
-        <a href="/admin/lessons">📖 Уроки</a> |
-        <a href="/admin/words">📖 Слова</a> |
-        <a href="/auth/logout">🚪 Выйти</a>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-area">
+                <a href="/admin" class="logo-link">
+                    <img src="/static/images/orange_logo.png" alt="Логотип" class="logo">
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a href="/admin">🏠 Главная</a>
+                <a href="/admin/users">👥 Пользователи</a>
+                <a href="/admin/weeks">📚 Недели</a>
+                <a href="/admin/lessons">📖 Уроки</a>
+                <a href="/admin/words">📝 Слова</a>
+                <a href="/admin/exercises">✍️ Упражнения</a>
+                <a href="/auth/logout" class="btn-outline">🚪 Выйти</a>
+            </nav>
+        </div>
+    </header>
 
-    </nav>
-    <hr>
-    
-    {% if error %}
-        <p style="color: red;">❌ {{ error }}</p>
-    {% endif %}
-    
-    {% if success %}
-        <p style="color: green;">✅ {{ success }}</p>
-    {% endif %}
-    
-    {% block content %}{% endblock %}
+    <main class="main">
+        {% if error %}
+            <div class="alert alert-error">❌ {{ error }}</div>
+        {% endif %}
+        
+        {% if success %}
+            <div class="alert alert-success">✅ {{ success }}</div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-copyright">
+                © 2025 HSK-1 Марафон. Админ-панель
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
