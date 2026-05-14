@@ -66,7 +66,7 @@ def get_dashboard(
     mastery_stats = word_trainer_service.get_mastery_stats(user.id)
     mastered_words = mastery_stats.get(5, 0)  # уровень 5 = мастер
     learned_words = sum(v for k, v in mastery_stats.items() if k >= 3)  # уровни 3-5
-    total_words = word_trainer_service.get_total_words_count()
+    total_words = word_trainer_service.get_total_words_count(current_user.id)
     
     return templates.TemplateResponse('dashboard/index.html', {
         'request': request,

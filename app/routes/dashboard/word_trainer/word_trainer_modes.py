@@ -24,7 +24,20 @@ def daily_trainer(
     Режим ежедневного повторения
     """
     service = WordTrainerService(db)
-    words = service.get_daily_session(current_user.id)
+    words_progress = service.get_daily_session(current_user.id)
+    
+    words = []
+    for wp in words_progress:
+        word = wp.word
+        words.append({
+            'id': word.id,
+            'word': word.hanzi or word.word,
+            'translation': word.translation,
+            'transcription': word.transcription,
+            'example_sentence': word.example_sentence,
+            'mastery_level': wp.mastery_level
+        })
+    
     due_count = service.get_due_count(current_user.id)
     
     return templates.TemplateResponse('word_trainer/session.html', {

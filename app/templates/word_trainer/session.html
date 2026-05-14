@@ -23,6 +23,7 @@
             <div class="flashcard-inner">
                 <div class="flashcard-front">
                     <div class="trainer-question" id="question"></div>
+                    <div class="trainer-audio" id="audio-container"></div>
                 </div>
                 <div class="flashcard-back" id="answer-side">
                     <div class="trainer-translation" id="translation"></div>
@@ -62,7 +63,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
     const wordsData = {{ words | tojson }};
     const mode = '{{ mode }}';
@@ -78,6 +81,7 @@
     const translationEl = document.getElementById('translation');
     const transcriptionEl = document.getElementById('transcription');
     const exampleEl = document.getElementById('example');
+    const audioContainer = document.getElementById('audio-container');
     const userAnswer = document.getElementById('user-answer');
     const checkBtn = document.getElementById('check-btn');
     const feedbackEl = document.getElementById('feedback');
@@ -111,18 +115,22 @@
         }
         
         const word = sessionWords[currentIndex];
-        // ИСПРАВЛЕНО: правильные названия полей
         questionEl.textContent = word.word || word.hanzi || word.text || '???';
         
         translationEl.textContent = '';
         transcriptionEl.textContent = '';
         exampleEl.textContent = '';
         
+        if (word.audio_url) {
+            audioContainer.innerHTML = '<audio controls preload="metadata" src="' + word.audio_url + '"></audio>';
+        } else {
+            audioContainer.innerHTML = '';
+        }
+        
         updateStats();
     }
 
     function showAnswer(wordData) {
-        // ИСПРАВЛЕНО: правильные названия полей
         translationEl.textContent = wordData.translation || wordData.correct_translation || '';
         transcriptionEl.textContent = wordData.transcription || '';
         
@@ -147,7 +155,6 @@
         }
         
         const word = sessionWords[currentIndex];
-        // ИСПРАВЛЕНО: правильное получение ID
         const wordId = word.id || word.word_id;
         
         isLoading = true;

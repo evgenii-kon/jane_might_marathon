@@ -19,6 +19,13 @@ class WordRepository:
         return self.db.query(Word).filter(Word.id == word_id).first()
 
 
+    def get_by_ids(self, word_ids: List[int]) -> List[Word]:
+        """Получить несколько слов по списку ID"""
+        if not word_ids:
+            return []
+        return self.db.query(Word).filter(Word.id.in_(word_ids)).all()
+
+
     def get_by_lesson(self, lesson_id: int) -> List[Word]:
         lesson = self.db.query(Lesson).filter(Lesson.id == lesson_id).first()
         return lesson.words if lesson else []

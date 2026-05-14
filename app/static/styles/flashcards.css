@@ -120,3 +120,44 @@
     color: #6b7280;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+.flashcard-audio {
+    margin: 15px 0;
+    width: 100%;
+    text-align: center;
+}
+
+.flashcard-audio audio {
+    width: 100%;
+    max-width: 200px;
+    height: 40px;
+}
+
+/* Аудиоплеер на карточках */
+.flashcard-audio {
+    margin: 15px 0;
+    width: 100%;
+}
+
+.flashcard-audio audio {
+    width: 100%;
+    height: 45px;
+    border-radius: 30px;
+    background: #f8fafc;
+}
+
+/* Стили для Chrome/Safari */
+.flashcard-audio audio::-webkit-media-controls-panel {
+    background: linear-gradient(135deg, #f8fafc, #eef2ff);
+    border-radius: 30px;
+}
+
+.flashcard-audio audio::-webkit-media-controls-play-button {
+    background-color: #f97316;
+    border-radius: 50%;
+}
+
+.flashcard-audio audio::-webkit-media-controls-timeline {
+    background-color: #e5e7eb;
+    border-radius: 10px;
+}
