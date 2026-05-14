@@ -21,6 +21,8 @@ from .routes.dashboard.lessons import router as dashboard_lessons_router
 from .routes.admin.word import router as word_router
 from .routes.dashboard.word_trainer.word_trainer import router as word_trainer_router
 from .routes.dashboard.word_trainer.word_trainer_modes import router as word_trainer_modes_router
+from .routes.public.articles import router as article_router
+
 
 
 
@@ -48,6 +50,8 @@ app.include_router(exercise_admin_router)
 app.include_router(exercise_router)
 app.include_router(word_trainer_modes_router)
 app.include_router(article_admin_router)
+app.include_router(article_router)
+app.include_router(word_trainer_router)
 
 
 

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.name }} - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="article-detail-page">
+    <div class="article-detail-container">
+        <div class="article-nav">
+            <a href="/articles" class="back-link">← Все статьи</a>
+        </div>
+
+        <div class="article-header">
+            <h1>{{ article.name }}</h1>
+            <div class="article-meta">
+                <span class="article-date">📅 {{ article.created_at.strftime('%d.%m.%Y') if article.created_at else '' }}</span>
+            </div>
+            <div class="article-description-lead">
+                {{ article.description }}
+            </div>
+        </div>
+
+        {% if article.images and article.images|length > 0 %}
+        <div class="article-images">
+            {% for img in article.images %}
+            <div class="article-image-item">
+                <img src="{{ img }}" alt="{{ article.name }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="article-content-body">
+            {{ article.text | safe }}
+        </div>
+
+        <div class="article-footer-nav">
+            <a href="/articles" class="btn-secondary">← Все статьи</a>
+            <a href="/dashboard" class="btn-primary">🏠 На главную</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Статьи - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="articles-page">
+    <div class="articles-header">
+        <h1>📝 Статьи</h1>
+        <p>Полезные материалы об изучении китайского языка</p>
+    </div>
+
+    <div class="articles-grid">
+        {% for article in articles %}
+        <div class="article-card">
+            {% if article.images and article.images[0] %}
+            <div class="article-image">
+                <img src="{{ article.images[0] }}" alt="{{ article.name }}">
+            </div>
+            {% endif %}
+            <div class="article-content">
+                <h2 class="article-title">
+                    <a href="/articles/{{ article.slug }}">{{ article.name }}</a>
+                </h2>
+                <div class="article-meta">
+                    <span class="article-date">📅 {{ article.created_at.strftime('%d.%m.%Y') if article.created_at else '' }}</span>
+                </div>
+                <p class="article-description">{{ article.description[:150] }}{% if article.description|length > 150 %}...{% endif %}</p>
+                <a href="/articles/{{ article.slug }}" class="read-more">Читать далее →</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>📭 Пока нет статей. Скоро появятся полезные материалы!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
