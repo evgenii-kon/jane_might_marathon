@@ -31,6 +31,62 @@
     margin-top: 20px;
 }
 
+/* Заблокированная неделя */
+.week-locked-info {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f8fafc;
+    border-radius: 24px;
+    margin-top: 30px;
+}
+
+.locked-icon-large {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.week-locked-info h2 {
+    font-size: 24px;
+    color: #1f2937;
+    margin-bottom: 16px;
+}
+
+.week-locked-info p {
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 32px 0;
+    flex-wrap: wrap;
+}
+
+.countdown-block {
+    text-align: center;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 16px;
+    min-width: 80px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.countdown-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: #f97316;
+    display: block;
+    line-height: 1.2;
+}
+
+.countdown-label {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+
 /* Список уроков */
 .lessons-list {
     background: white;
@@ -44,7 +100,6 @@
     font-size: 20px;
 }
 
-/* Карточка урока */
 .lesson-item {
     display: flex;
     justify-content: space-between;
@@ -86,14 +141,12 @@
     color: #666;
 }
 
-/* Действия с уроком */
 .lesson-actions {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* Основная кнопка урока */
 .lesson-link {
     background: #f97316;
     color: white;
@@ -102,9 +155,6 @@
     text-decoration: none;
     font-size: 14px;
     transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
 }
 
 .lesson-link:hover {
@@ -112,46 +162,33 @@
     transform: translateY(-2px);
 }
 
-/* Зелёная кнопка для пройденного урока */
 .lesson-link.completed {
     background: #22c55e !important;
-    color: white !important;
 }
 
 .lesson-link.completed:hover {
     background: #16a34a !important;
 }
 
-/* Кнопка упражнений */
 .exercises-link {
     background: #8b5cf6 !important;
 }
 
-.exercises-link:hover {
-    background: #7c3aed !important;
-    transform: translateY(-2px);
-}
-
-/* Активная кнопка упражнений (доступна) */
 .exercises-link.active {
     background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
 }
 
-.exercises-link.active:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-}
-
-/* Неактивная кнопка упражнений (заблокирована) */
 .exercises-link.disabled {
     background: #9ca3af !important;
     cursor: not-allowed;
     opacity: 0.6;
-    transform: none;
     pointer-events: none;
 }
 
-/* Бейджи статусов */
+.exercises-link.completed-all {
+    background: #22c55e !important;
+}
+
 .completed-badge {
     background: #dcfce7;
     color: #16a34a;
@@ -161,59 +198,49 @@
     font-weight: 500;
 }
 
-.started-badge {
-    background: #fef9c3;
-    color: #ca8a04;
-    padding: 4px 8px;
-    border-radius: 6px;
+/* Адаптив */
+@media (max-width: 768px) {
+    .countdown-timer {
+        gap: 16px;
+    }
+    
+    .countdown-block {
+        padding: 12px 16px;
+        min-width: 60px;
+    }
+    
+    .countdown-number {
+        font-size: 24px;
+    }
+    
+    .lesson-item {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    
+    .lesson-actions {
+        justify-content: flex-end;
+    }
+}
+
+.lock-days {
     font-size: 12px;
-    font-weight: 500;
+    color: #f97316;
+    background: rgba(249, 115, 22, 0.1);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
 }
 
-.pending-badge {
-    background: #fef3c7;
-    color: #d97706;
-    padding: 4px 8px;
-    border-radius: 6px;
+.lock-icon {
+    font-size: 32px;
+    opacity: 0.5;
+}
+
+.lock-text {
+    display: block;
     font-size: 12px;
-    font-weight: 500;
-}
-
-/* Кнопка упражнений - все выполнены (зелёная) */
-.exercises-link.completed-all {
-    background: #22c55e !important;
-}
-
-.exercises-link.completed-all:hover {
-    background: #16a34a !important;
-    transform: translateY(-2px);
-}
-
-/* Кнопка упражнений - активная (фиолетовая) */
-.exercises-link.active {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
-}
-
-.exercises-link.active:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-}
-
-/* Кнопка упражнений - неактивная (серая) */
-.exercises-link.disabled {
-    background: #9ca3af !important;
-    cursor: not-allowed;
-    opacity: 0.6;
-    transform: none;
-    pointer-events: none;
-}
-
-/* Кнопка урока - пройден (зелёная) */
-.lesson-link.completed {
-    background: #22c55e !important;
-    color: white !important;
-}
-
-.lesson-link.completed:hover {
-    background: #16a34a !important;
+    color: #9ca3af;
+    margin-top: 4px;
 }

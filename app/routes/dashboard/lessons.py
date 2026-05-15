@@ -12,6 +12,7 @@ from app.services.week_service import WeekService
 from app.services.lesson_service import LessonService
 from app.services.word_trainer_service import WordTrainerService
 from app.services.user_lesson_progress_service import UserLessonProgressService
+from app.services.user_week_progress_service import UserWeekProgressService
 from app.services.word_service import WordService
 
 
@@ -55,17 +56,29 @@ def lesson_detail(
 def complete_lesson(
     lesson_id: int,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-    ):
-    """Отметить урок как пройденный и вернуться к списку уроков недели"""
+    db: Session = Depends(get_db)
+):
+    """Отметить урок как пройденный"""
     progress_service = UserLessonProgressService(db)
     lesson_service = LessonService(db)
+    week_progress_service = UserWeekProgressService(db)
     
     # Получаем урок, чтобы узнать week_id
     lesson = lesson_service.get_lesson_by_id(lesson_id)
     
     # Отмечаем урок пройденным
     progress_service.mark_lesson_as_completed(current_user.id, lesson_id)
+    
+    # 🔥 Проверяем, все ли уроки недели пройдены
+    lessons_in_week = lesson_service.get_lessons_by_week(lesson.week_id)
+    all_completed = all(
+        progress_service.is_lesson_completed(current_user.id, l.id) 
+        for l in lessons_in_week
+    )
+    
+    # Если все уроки недели пройдены, отмечаем неделю как пройденную
+    if all_completed:
+        week_progress_service.mark_week_completed(current_user.id, lesson.week_id)
     
     # Редирект обратно на страницу недели
     return RedirectResponse(url=f'/dashboard/weeks/{lesson.week_id}', status_code=302)

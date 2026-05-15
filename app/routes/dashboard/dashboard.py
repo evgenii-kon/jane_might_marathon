@@ -10,6 +10,7 @@ from app.services.week_service import WeekService
 from app.services.lesson_service import LessonService
 from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.word_trainer_service import WordTrainerService
+from app.services.user_week_progress_service import UserWeekProgressService
 
 router = APIRouter(prefix='/dashboard', tags=['dashboard'])
 templates = Jinja2Templates(directory='app/templates')
@@ -21,18 +22,18 @@ def get_dashboard(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    
     # Сервисы
     week_service = WeekService(db)
     lesson_service = LessonService(db)
     progress_service = UserLessonProgressService(db)
     word_trainer_service = WordTrainerService(db)
+    week_progress_service = UserWeekProgressService(db)  # ← добавить
 
     # Данные пользователя
     user = current_user
     today = date.today()
-
     days_after_start = (today - user.created_at.date()).days
-
     
     # Все недели
     weeks = week_service.get_all_weeks()
@@ -44,11 +45,29 @@ def get_dashboard(
 
     # Прогресс по неделям
     weeks_with_progress = []
+    now = datetime.now(timezone.utc)
+    
     for week in weeks:
         week_progress = progress_service.get_week_progress(current_user.id, week.id)
         
-        # Простая логика: неделя 0 и 1 открыты, остальные заблокированы
-        is_locked = week.number > 1
+        # 🔥 Получаем opens_at для этой недели
+        user_week_progress = week_progress_service.repository.get_by_user_and_week(current_user.id, week.id)
+        
+        if user_week_progress:
+            opens_at = user_week_progress.opens_at
+            if opens_at.tzinfo is None:
+                opens_at = opens_at.replace(tzinfo=timezone.utc)
+            is_locked = now < opens_at
+            days_until_open = (opens_at - now).days + 1 if is_locked else None
+        else:
+            # Если нет записи — неделя 1 открыта, остальные по расписанию
+            if week.number == 1:
+                is_locked = False
+            else:
+                # Создаём запись для первой недели, если нет
+                week_progress_service.get_or_create(current_user.id, week.id)
+                is_locked = True
+            days_until_open = None
         
         weeks_with_progress.append({
             'id': week.id,
@@ -58,8 +77,10 @@ def get_dashboard(
             'completed_lessons': week_progress.completed_lessons,
             'progress_percent': week_progress.progress_percent,
             'is_locked': is_locked,
-            'is_completed': week_progress.is_week_completed
+            'is_completed': week_progress.is_week_completed,
+            'days_until_open': days_until_open
         })
+    
     
     # Статистика по словам
     due_today = word_trainer_service.get_due_count(user.id)

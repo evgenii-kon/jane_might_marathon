@@ -21,48 +21,30 @@
                 <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
             </div>
         </div>
-    </div>
 
-    <div class="lessons-list">
-        <h2>📖 Уроки недели</h2>
-        
-        {% for lesson in lessons %}
-        <div class="lesson-item {% if lesson.is_completed %}lesson-completed{% elif lesson.is_started %}lesson-started{% endif %}">
-            <div class="lesson-info">
-                <div class="lesson-title">{{ lesson.order_in_week }}. {{ lesson.name }}</div>
-                <div class="lesson-description">{{ lesson.description or 'Изучите новую тему' }}</div>
+        <div class="lessons-list">
+            <h2>📖 Уроки недели</h2>
+            
+            {% for lesson in lessons %}
+            <div class="lesson-item {% if lesson.is_completed %}lesson-completed{% elif lesson.is_started %}lesson-started{% endif %}">
+                <div class="lesson-info">
+                    <div class="lesson-title">{{ lesson.order_in_week }}. {{ lesson.name }}</div>
+                    <div class="lesson-description">{{ lesson.description or 'Изучите новую тему' }}</div>
+                </div>
+                <div class="lesson-actions">
+                    <a href="/dashboard/lessons/{{ lesson.id }}" class="lesson-link {% if lesson.is_completed %}completed{% endif %}">
+                        {% if lesson.is_completed %}
+                            ✅ Завершено
+                        {% elif lesson.is_started %}
+                            📖 Продолжить
+                        {% else %}
+                            🚀 Начать
+                        {% endif %}
+                    </a>
+                </div>
             </div>
-            <div class="lesson-actions">
-                <!-- Кнопка упражнений -->
-                {% if lesson.is_completed %}
-                    {% if lesson.all_exercises_completed %}
-                        <a href="/dashboard/exercises/lesson/{{ lesson.id }}" class="lesson-link exercises-link completed-all">
-                            ✅ Упражнения
-                        </a>
-                    {% else %}
-                        <a href="/dashboard/exercises/lesson/{{ lesson.id }}" class="lesson-link exercises-link active">
-                            ✍️ Упражнения
-                        </a>
-                    {% endif %}
-                {% else %}
-                    <span class="lesson-link exercises-link disabled">
-                        🔒 Упражнения (сначала пройдите урок)
-                    </span>
-                {% endif %}
-                
-                <!-- Кнопка урока -->
-                <a href="/dashboard/lessons/{{ lesson.id }}" class="lesson-link {% if lesson.is_completed %}completed{% endif %}">
-                    {% if lesson.is_completed %}
-                        ✅ Завершено
-                    {% elif lesson.is_started %}
-                        📖 Продолжить
-                    {% else %}
-                        🚀 Начать
-                    {% endif %}
-                </a>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

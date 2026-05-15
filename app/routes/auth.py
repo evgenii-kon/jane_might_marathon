@@ -6,6 +6,7 @@ from typing import Annotated, Optional
 from ..database import get_db
 from ..services.user_service import UserService
 from ..schemas.user import UserCreate, UserUpdate
+from app.services.user_week_progress_service import UserWeekProgressService
 from fastapi.templating import Jinja2Templates
 from ..dependencies.auth import get_current_user
 from ..models.user import User
@@ -34,8 +35,12 @@ def register_post(
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     user_service = UserService(db)
+    week_progress_service = UserWeekProgressService(db)
+
     try:
-        user_service.create_user(user_data)
+        new_user = user_service.create_user(user_data)
+        week_progress_service.init_user_weeks(new_user.id)
+
         return RedirectResponse(url='/auth/login', status_code=302)
     except HTTPException as e:
         return templates.TemplateResponse(

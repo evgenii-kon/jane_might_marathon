@@ -30,7 +30,7 @@
 
     <!-- ДВЕ КАРТОЧКИ В РЯДУ -->
     <div class="dashboard-row">
-        <!-- КАРТОЧКА ТРЕНАЖЁРА СЛОВ (уменьшенная) -->
+        <!-- КАРТОЧКА ТРЕНАЖЁРА СЛОВ -->
         <a href="/word-trainer" class="dashboard-card trainer-card-link half-width">
             <div class="trainer-card-content">
                 <div class="trainer-card-icon">📚</div>
@@ -69,7 +69,13 @@
                         <div class="week-title">{{ week.short_description }}</div>
                         <div class="week-lock">
                             <span class="lock-icon">🔒</span>
-                            <span class="lock-text">Откроется позже</span>
+                            <span class="lock-days">
+                                {% if week.days_until_open and week.days_until_open > 0 %}
+                                    через {{ week.days_until_open }} дн.
+                                {% else %}
+                                    скоро
+                                {% endif %}
+                            </span>
                         </div>
                     </div>
                 {% else %}

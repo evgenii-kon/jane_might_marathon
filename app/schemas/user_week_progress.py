@@ -39,6 +39,7 @@ class WeekWithProgressResponse(BaseModel):
     long_description: Optional[str] = None
     is_locked: bool
     is_completed: bool
+    days_until_open: Optional[int] = None
     opens_at: Optional[datetime] = None
     progress_percent: float = 0
     

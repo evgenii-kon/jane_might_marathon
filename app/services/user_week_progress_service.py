@@ -7,6 +7,7 @@ from app.repositories.week_repository import WeekRepository
 from app.repositories.user_repository import UserRepository
 from app.models.user import User
 from app.models.week import Week
+from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.schemas.user_week_progress import UserWeekProgressResponse, WeekWithProgressResponse
 
 
@@ -19,23 +20,22 @@ class UserWeekProgressService:
 
 
     def _calculate_opens_at(self, user_id: int, week_number: int) -> datetime:
-        """
-        Рассчитать дату открытия недели для пользователя
-        Неделя 1 открывается сразу
-        Неделя N открывается через 7 дней после регистрации
-        """
+        from datetime import datetime, timedelta, timezone
+        
         user = self.user_repo.get_by_id(user_id)
         if not user:
             raise HTTPException(404, f"User {user_id} not found")
         
-        now = datetime.now(timezone.utc)
-        
-        # Неделя 1 открыта сразу
+        # 🔥 Для первой недели — СЕЙЧАС, а не created_at
         if week_number == 1:
-            return now
+            return datetime.now(timezone.utc)
         
-        # Остальные недели: registration_date + (week_number - 1) * 7 days
-        return user.created_at + timedelta(days=(week_number - 1) * 7)
+        # Для остальных недель — от created_at
+        created_at = user.created_at
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+        
+        return created_at + timedelta(days=(week_number - 1) * 7)
 
 
     def get_or_create(self, user_id: int, week_id: int) -> UserWeekProgressResponse:
@@ -87,44 +87,61 @@ class UserWeekProgressService:
         return UserWeekProgressResponse.model_validate(progress)
 
 
-    def get_weeks_with_progress(self, user_id: int) -> List[WeekWithProgressResponse]:
-        """
-        Получить все недели с прогрессом пользователя
-        Для отображения на дашборде
-        """
-        from app.services.user_lesson_progress_service import UserLessonProgressService
+    from datetime import datetime, timezone
+
+def get_weeks_with_progress(self, user_id: int) -> List[WeekWithProgressResponse]:
+    """
+    Получить все недели с прогрессом пользователя
+    Для отображения на дашборде
+    """
+    from app.services.user_lesson_progress_service import UserLessonProgressService
+    
+    weeks = self.week_repo.get_all()
+    lesson_progress_service = UserLessonProgressService(self.db)
+    now = datetime.now(timezone.utc)
+    
+    result = []
+    for week in weeks:
+        # Получаем прогресс пользователя по этой неделе
+        user_progress = self.repository.get_by_user_and_week(user_id, week.id)
         
-        weeks = self.week_repo.get_all()
-        lesson_progress_service = UserLessonProgressService(self.db)
+        if user_progress:
+            opens_at = user_progress.opens_at
+            # Приводим к UTC если нужно
+            if opens_at.tzinfo is None:
+                opens_at = opens_at.replace(tzinfo=timezone.utc)
+            
+            is_locked = now < opens_at
+            is_completed = user_progress.is_completed
+            
+            # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
+            days_until_open = (opens_at - now).days + 1 if is_locked else None
+            
+        else:
+            # Если записи нет, создаём
+            opens_at = self._calculate_opens_at(user_id, week.number)
+            is_locked = now < opens_at
+            is_completed = False
+            
+            # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
+            days_until_open = (opens_at - now).days + 1 if is_locked else None
         
-        result = []
-        for week in weeks:
-            # Получаем прогресс пользователя по этой неделе
-            user_progress = self.repository.get_by_user_and_week(user_id, week.id)
-            
-            if user_progress:
-                is_locked = datetime.now(timezone.utc) < user_progress.opens_at
-                is_completed = user_progress.is_completed
-                opens_at = user_progress.opens_at
-            else:
-                # Если записи нет, создаём
-                opens_at = self._calculate_opens_at(user_id, week.number)
-                is_locked = datetime.now(timezone.utc) < opens_at
-                is_completed = False
-            
-            # Получаем прогресс по урокам в неделе
-            lesson_progress = lesson_progress_service.get_week_progress(user_id, week.id)
-            
-            result.append(WeekWithProgressResponse(
-                id=week.id,
-                number=week.number,
-                name=week.name,
-                short_description=week.short_description,
-                long_description=week.long_description,
-                is_locked=is_locked,
-                is_completed=is_completed,
-                opens_at=opens_at,
-                progress_percent=lesson_progress.progress_percent
-            ))
+        # Получаем прогресс по урокам в неделе
+        lesson_progress = lesson_progress_service.get_week_progress(user_id, week.id)
         
-        return result
+        result.append(WeekWithProgressResponse(
+            id=week.id,
+            number=week.number,
+            name=week.name,
+            short_description=week.short_description,
+            long_description=week.long_description,
+            is_locked=is_locked,
+            is_completed=is_completed,
+            opens_at=opens_at,
+            days_until_open=days_until_open,  # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
+            completed_lessons=lesson_progress.completed,
+            total_lessons=lesson_progress.total,
+            progress_percent=lesson_progress.progress_percent
+        ))
+    
+    return result
