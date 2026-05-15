@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from ..database import Base
 from sqlalchemy import func
@@ -14,6 +14,7 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     deleted_at = Column(DateTime(timezone=True))
+    is_admin = Column(Boolean, default=False, nullable=False)
 
     lesson_progress = relationship("UserLessonProgress", back_populates="user", cascade="all, delete-orphan")
     word_progress = relationship('UserWordProgress', back_populates='user', cascade='all, delete-orphan')

@@ -21,6 +21,7 @@ class AuthService:
             token = token[7:]
         return token
     
+    
     @staticmethod
     def extract_token_optional(request: Request) -> Optional[str]:
         """Извлекает токен из cookie (опциональный режим)"""
@@ -32,6 +33,7 @@ class AuthService:
             token = token[7:]
         return token
     
+
     @staticmethod
     def validate_token(token: str) -> dict:
         """Проверяет токен и возвращает payload (обязательный режим)"""
@@ -40,6 +42,7 @@ class AuthService:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or expired token")
         return payload
     
+
     @staticmethod
     def validate_token_optional(token: Optional[str]) -> Optional[dict]:
         """Проверяет токен и возвращает payload (опциональный режим)"""
@@ -50,6 +53,7 @@ class AuthService:
             return None
         return payload
     
+
     @staticmethod
     def get_user_id(payload: dict) -> int:
         """Извлекает user_id из payload (обязательный режим)"""
@@ -58,6 +62,7 @@ class AuthService:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid token payload")
         return user_id
     
+
     @staticmethod
     def get_user_id_optional(payload: Optional[dict]) -> Optional[int]:
         """Извлекает user_id из payload (опциональный режим)"""
@@ -65,7 +70,8 @@ class AuthService:
             return None
         user_id = payload.get("user_id")
         return user_id
-    
+
+
     @staticmethod
     def get_user_by_id(db: Session, user_id: int) -> User:
         """Получает пользователя из БД (обязательный режим)"""
@@ -75,6 +81,7 @@ class AuthService:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "User not found")
         return user
     
+
     @staticmethod
     def get_user_by_id_optional(db: Session, user_id: Optional[int]) -> Optional[User]:
         """Получает пользователя из БД (опциональный режим)"""
@@ -123,9 +130,8 @@ def get_current_admin(
     current_user: User = Depends(get_current_user)
 ) -> User:
     """Проверяет права админа"""
-    admin_emails = ["admin@mail.com"]
     
-    if current_user.email not in admin_emails:
+    if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required"

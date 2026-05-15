@@ -89,59 +89,59 @@ class UserWeekProgressService:
 
     from datetime import datetime, timezone
 
-def get_weeks_with_progress(self, user_id: int) -> List[WeekWithProgressResponse]:
-    """
-    Получить все недели с прогрессом пользователя
-    Для отображения на дашборде
-    """
-    from app.services.user_lesson_progress_service import UserLessonProgressService
-    
-    weeks = self.week_repo.get_all()
-    lesson_progress_service = UserLessonProgressService(self.db)
-    now = datetime.now(timezone.utc)
-    
-    result = []
-    for week in weeks:
-        # Получаем прогресс пользователя по этой неделе
-        user_progress = self.repository.get_by_user_and_week(user_id, week.id)
+    def get_weeks_with_progress(self, user_id: int) -> List[WeekWithProgressResponse]:
+        """
+        Получить все недели с прогрессом пользователя
+        Для отображения на дашборде
+        """
+        from app.services.user_lesson_progress_service import UserLessonProgressService
         
-        if user_progress:
-            opens_at = user_progress.opens_at
-            # Приводим к UTC если нужно
-            if opens_at.tzinfo is None:
-                opens_at = opens_at.replace(tzinfo=timezone.utc)
-            
-            is_locked = now < opens_at
-            is_completed = user_progress.is_completed
-            
-            # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
-            days_until_open = (opens_at - now).days + 1 if is_locked else None
-            
-        else:
-            # Если записи нет, создаём
-            opens_at = self._calculate_opens_at(user_id, week.number)
-            is_locked = now < opens_at
-            is_completed = False
-            
-            # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
-            days_until_open = (opens_at - now).days + 1 if is_locked else None
+        weeks = self.week_repo.get_all()
+        lesson_progress_service = UserLessonProgressService(self.db)
+        now = datetime.now(timezone.utc)
         
-        # Получаем прогресс по урокам в неделе
-        lesson_progress = lesson_progress_service.get_week_progress(user_id, week.id)
+        result = []
+        for week in weeks:
+            # Получаем прогресс пользователя по этой неделе
+            user_progress = self.repository.get_by_user_and_week(user_id, week.id)
+            
+            if user_progress:
+                opens_at = user_progress.opens_at
+                # Приводим к UTC если нужно
+                if opens_at.tzinfo is None:
+                    opens_at = opens_at.replace(tzinfo=timezone.utc)
+                
+                is_locked = now < opens_at
+                is_completed = user_progress.is_completed
+                
+                # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
+                days_until_open = (opens_at - now).days + 1 if is_locked else None
+                
+            else:
+                # Если записи нет, создаём
+                opens_at = self._calculate_opens_at(user_id, week.number)
+                is_locked = now < opens_at
+                is_completed = False
+                
+                # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
+                days_until_open = (opens_at - now).days + 1 if is_locked else None
+            
+            # Получаем прогресс по урокам в неделе
+            lesson_progress = lesson_progress_service.get_week_progress(user_id, week.id)
+            
+            result.append(WeekWithProgressResponse(
+                id=week.id,
+                number=week.number,
+                name=week.name,
+                short_description=week.short_description,
+                long_description=week.long_description,
+                is_locked=is_locked,
+                is_completed=is_completed,
+                opens_at=opens_at,
+                days_until_open=days_until_open,  # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
+                completed_lessons=lesson_progress.completed,
+                total_lessons=lesson_progress.total,
+                progress_percent=lesson_progress.progress_percent
+            ))
         
-        result.append(WeekWithProgressResponse(
-            id=week.id,
-            number=week.number,
-            name=week.name,
-            short_description=week.short_description,
-            long_description=week.long_description,
-            is_locked=is_locked,
-            is_completed=is_completed,
-            opens_at=opens_at,
-            days_until_open=days_until_open,  # 🔥 ДОБАВИТЬ ЭТУ СТРОКУ
-            completed_lessons=lesson_progress.completed,
-            total_lessons=lesson_progress.total,
-            progress_percent=lesson_progress.progress_percent
-        ))
-    
-    return result
+        return result
