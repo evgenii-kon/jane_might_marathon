@@ -3,6 +3,8 @@ from typing import List, Optional
 from ..models.user import User
 from ..schemas.user import UserCreate
 from ..database import get_db
+from app.schemas.user import UserCreate, UserUpdate
+
 
 
 class UserRepository:
@@ -45,12 +47,14 @@ class UserRepository:
             return False
 
     
-    def update(self, id: int, update_data: dict) -> Optional[User]:
+    def update(self, id: int, update_data: UserUpdate) -> Optional[User]:
         user = self.get_by_id(id)
         if not user:
             return None
         
-        for key, value in update_data.items():
+        update_dict = update_data.model_dump(exclude_unset=True)
+
+        for key, value in update_dict.items():
             setattr(user, key, value)
 
         self.db.commit()

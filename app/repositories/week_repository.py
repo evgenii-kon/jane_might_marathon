@@ -10,7 +10,7 @@ class WeekRepository:
 
 
     def get_all(self) -> List[Week]:
-        return self.db.query(Week).all()
+        return self.db.query(Week).order_by(Week.id.asc()).all()
 
 
     def get_by_id(self, week_id: int) -> Optional[Week]:

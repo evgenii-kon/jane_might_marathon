@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import List
 from ..repositories.user_repository import UserRepository
-from ..schemas.user import UserCreate, UserResponse
+from ..schemas.user import UserCreate, UserResponse, UserUpdate
 from fastapi import HTTPException, status
 from passlib.context import CryptContext
 
@@ -91,7 +91,7 @@ class UserService:
         return user
 
 
-    def update_user(self, user_id: int, user_data: dict) -> UserResponse:
+    def update_user(self, user_id: int, user_data: UserUpdate) -> UserResponse:
         if 'password' in user_data:
             password_hash = self._hash_password(user_data.pop("password")) 
             user_data['password_hash'] = password_hash

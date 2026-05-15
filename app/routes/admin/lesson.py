@@ -50,7 +50,7 @@ def create_lesson_post(
     return RedirectResponse(url='/admin/lessons', status_code=302)
 
 
-@router.get('/{lesson_id}/update', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+@router.get('/{lesson_id}/edit', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def update_lesson_get(
     request: Request,
     lesson_id: int,
@@ -67,7 +67,7 @@ def update_lesson_get(
     return templates.TemplateResponse('admin/lessons/lesson_edit.html', {'request': request, 'lesson': lesson})
 
 
-@router.post('/{lesson_id}/update', status_code=status.HTTP_200_OK)
+@router.post('/{lesson_id}/edit', status_code=status.HTTP_200_OK)
 def update_lesson_post(
     request: Request,
     lesson_id: int,
@@ -77,7 +77,7 @@ def update_lesson_post(
     ):
     lesson_service = LessonService(db)
     lesson = lesson_service.update_lesson(lesson_id, lesson_data)
-    return RedirectResponse(url='/admin/lesson/lessons_list', status_code=302)
+    return RedirectResponse(url='/admin/lessons', status_code=302)
 
 
 @router.get('/{lesson_id}/delete', response_class=HTMLResponse)

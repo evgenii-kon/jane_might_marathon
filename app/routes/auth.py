@@ -39,7 +39,7 @@ def register_post(
         return RedirectResponse(url='/auth/login', status_code=302)
     except HTTPException as e:
         return templates.TemplateResponse(
-            'register.html', 
+            'auth/register.html', 
             {'request': request, 'error': e.detail, 'user': current_user}
         )
 
@@ -83,7 +83,7 @@ def login_post(
         
     except HTTPException:
         return templates.TemplateResponse(
-            'login.html',
+            'auth/login.html',
             {"request": request, "error": "Invalid email or password", 'user': current_user}
         )
 

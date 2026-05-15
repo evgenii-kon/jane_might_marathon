@@ -51,7 +51,7 @@ def create_week_post(
     return RedirectResponse(url='/admin/weeks', status_code=status.HTTP_302_FOUND)
 
 
-@router.get('/{week_id}/update', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+@router.get('/{week_id}/edit', response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def update_week_get(
     request: Request,
     week_id: int,
@@ -68,7 +68,7 @@ def update_week_get(
     return templates.TemplateResponse('admin/weeks/weeks_edit.html', {'request': request, 'week': week})
 
 
-@router.post('/{week_id}/update', status_code=status.HTTP_200_OK)
+@router.post('/{week_id}/edit', status_code=status.HTTP_200_OK)
 def update_week_post(
     request: Request,
     week_id: int,
