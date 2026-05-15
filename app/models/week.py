@@ -15,3 +15,4 @@ class Week(Base):
     target_exercises_count =Column(Integer, nullable=False)
 
     lessons = relationship('Lesson', back_populates='week')
+    user_progress = relationship("UserWeekProgress", back_populates="week", cascade="all, delete-orphan")

@@ -18,3 +18,4 @@ class User(Base):
     lesson_progress = relationship("UserLessonProgress", back_populates="user", cascade="all, delete-orphan")
     word_progress = relationship('UserWordProgress', back_populates='user', cascade='all, delete-orphan')
     exercise_progress = relationship("UserExerciseProgress", back_populates="user", cascade="all, delete-orphan")
+    week_progress = relationship("UserWeekProgress", back_populates="user", cascade="all, delete-orphan")

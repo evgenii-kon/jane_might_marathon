@@ -5,5 +5,6 @@ from .word import Word
 from .user_word_progress import UserWordProgress
 from .user_lesson_progress import UserLessonProgress
 from .exercise import Exercise 
+from .user_week_progress import UserWeekProgress
 from .user_exercise_progress import UserExerciseProgress
 from .article import Article
