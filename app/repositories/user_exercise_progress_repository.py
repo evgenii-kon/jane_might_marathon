@@ -3,6 +3,7 @@ from typing import Optional, List
 from sqlalchemy import func
 from ..models.user_exercise_progress import UserExerciseProgress
 from ..models.exercise import Exercise
+from datetime import timezone
 
 
 class UserExerciseProgressRepository:
@@ -28,12 +29,12 @@ class UserExerciseProgressRepository:
                 user_id=user_id,
                 exercise_id=exercise_id,
                 is_completed=True,
-                completed_at=datetime.now()
+                completed_at=datetime.now(timezone.utc)
             )
             self.db.add(progress)
         else:
             progress.is_completed = True
-            progress.completed_at = datetime.now()
+            progress.completed_at = datetime.now(timezone.utc)
         
         self.db.commit()
         return progress
