@@ -16,18 +16,17 @@ class LessonUpdate(BaseModel):
     content_html: str | None = None
     video_url: str | None = None
 
-
     class Config:
-        from_attributes=True
+        from_attributes = True
 
 
 class LessonResponse(BaseModel):
     id: int
-    name: str 
+    name: str
     week_id: int
     order_in_week: int
     content_html: str
     video_url: str
 
     class Config:
-        from_attributes=True
+        from_attributes = True

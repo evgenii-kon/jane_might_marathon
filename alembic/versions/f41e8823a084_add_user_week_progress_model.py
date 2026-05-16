@@ -5,15 +5,13 @@ Revises: e2e74f665c91
 Create Date: 2026-05-15 18:26:27.642415
 
 """
-from typing import Sequence, Union
 
-from alembic import op
-import sqlalchemy as sa
+from typing import Sequence, Union
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f41e8823a084'
-down_revision: Union[str, Sequence[str], None] = 'e2e74f665c91'
+revision: str = "f41e8823a084"
+down_revision: Union[str, Sequence[str], None] = "e2e74f665c91"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

@@ -5,9 +5,9 @@ from ..database import Base
 
 class Exercise(Base):
     __tablename__ = "exercises"
-    
+
     id = Column(Integer, primary_key=True)
-    lesson_id = Column(Integer, ForeignKey("lessons.id"), nullable=False)    
+    lesson_id = Column(Integer, ForeignKey("lessons.id"), nullable=False)
     question_description = Column(String(255), nullable=False)
     question_text = Column(Text, nullable=False)
     option_1 = Column(String(255), nullable=False)
@@ -17,6 +17,8 @@ class Exercise(Base):
     correct_answer = Column(Integer, nullable=False)
     explanation = Column(Text, nullable=True)
     order_in_lesson = Column(Integer, default=0)
-    
+
     lesson = relationship("Lesson", back_populates="exercises")
-    user_progress = relationship("UserExerciseProgress", back_populates="exercise", cascade="all, delete-orphan")
+    user_progress = relationship(
+        "UserExerciseProgress", back_populates="exercise", cascade="all, delete-orphan"
+    )

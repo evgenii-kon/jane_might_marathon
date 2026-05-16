@@ -38,6 +38,7 @@ class UserWordProgressResponse(UserWordProgressBase):
 # Схемы для тренажёра
 class TrainerWordData(BaseModel):
     """Данные слова для тренажёра (с прогрессом)"""
+
     id: int
     hanzi: str
     transcription: str
@@ -77,11 +78,12 @@ class TrainerSessionResponse(BaseModel):
 
 class TrainerSessionData(BaseModel):
     """Сессия тренажёра (список слов + статистика)"""
+
     words: List[TrainerWordData]
-    due_today_count: int      # сколько слов нужно повторить сегодня
-    total_words: int          # всего слов в базе
-    mastered_count: int       # слов на уровне 5
-    new_words_count: int      # новых слов (уровень 0)
+    due_today_count: int  # сколько слов нужно повторить сегодня
+    total_words: int  # всего слов в базе
+    mastered_count: int  # слов на уровне 5
+    new_words_count: int  # новых слов (уровень 0)
 
     class Config:
         from_attributes = True

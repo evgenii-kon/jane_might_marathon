@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from app.schemas.lesson import LessonResponse 
+from app.schemas.lesson import LessonResponse
 
 
 class WeekCreate(BaseModel):

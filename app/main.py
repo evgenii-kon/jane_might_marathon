@@ -18,19 +18,14 @@ from .routes.auth import router as auth_router
 from .routes.admin.user import router as admin_user_router
 from .routes.dashboard.weeks import router as dashboard_weeks_router
 from .routes.dashboard.lessons import router as dashboard_lessons_router
-from .routes.admin.word import router as word_router
 from .routes.dashboard.word_trainer.word_trainer import router as word_trainer_router
-from .routes.dashboard.word_trainer.word_trainer_modes import router as word_trainer_modes_router
+from .routes.dashboard.word_trainer.word_trainer_modes import (
+    router as word_trainer_modes_router,
+)
 from .routes.public.articles import router as article_router
 
 
-
-
-
 from .database import init_db
-from .models.user import User
-from dotenv import load_dotenv
-import os
 
 init_db()
 
@@ -54,13 +49,11 @@ app.include_router(article_router)
 app.include_router(word_trainer_router)
 
 
-
-
-templates = Jinja2Templates('app/templates')
+templates = Jinja2Templates("app/templates")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-@app.get('/',response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-async def index(request: Request):
-    return templates.TemplateResponse('index.html', {"request": request})
 
+@app.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})

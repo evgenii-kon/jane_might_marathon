@@ -25,13 +25,14 @@ class UserWeekProgressUpdate(BaseModel):
 
 class UserWeekProgressResponse(UserWeekProgressBase):
     id: int
-    
+
     class Config:
         from_attributes = True
 
 
 class WeekWithProgressResponse(BaseModel):
     """Для отображения недели с прогрессом пользователя"""
+
     id: int
     number: int
     name: str
@@ -42,6 +43,6 @@ class WeekWithProgressResponse(BaseModel):
     days_until_open: Optional[int] = None
     opens_at: Optional[datetime] = None
     progress_percent: float = 0
-    
+
     class Config:
         from_attributes = True

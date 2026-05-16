@@ -3,8 +3,9 @@ from sqlalchemy.orm import relationship
 from ..database import Base
 from .lesson_word_association import lesson_word_association
 
+
 class Word(Base):
-    __tablename__ = 'words'
+    __tablename__ = "words"
 
     id = Column(Integer, primary_key=True)
     hanzi = Column(String(100), nullable=False)
@@ -16,6 +17,9 @@ class Word(Base):
     example_translation = Column(Text, nullable=True)
 
     # Связь с уроками (многие ко многим)
-    lessons = relationship("Lesson", secondary=lesson_word_association, back_populates="words")
-    user_progress = relationship('UserWordProgress', back_populates='word', cascade='all, delete-orphan')
-
+    lessons = relationship(
+        "Lesson", secondary=lesson_word_association, back_populates="words"
+    )
+    user_progress = relationship(
+        "UserWordProgress", back_populates="word", cascade="all, delete-orphan"
+    )

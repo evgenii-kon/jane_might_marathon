@@ -7,7 +7,6 @@ class LessonWordAssociationRepository:
     def __init__(self, db: Session):
         self.db = db
 
-
     def get_word_ids_by_lesson(self, lesson_id: int) -> List[int]:
         """Получить все ID слов, связанных с уроком"""
         result = self.db.execute(

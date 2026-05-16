@@ -5,7 +5,7 @@ from datetime import datetime
 
 class ArticleCreate(BaseModel):
     name: str = Field(..., max_length=255, min_length=3)
-    slug: str = Field(..., max_length=255, pattern=r'^[a-z0-9-]+$')
+    slug: str = Field(..., max_length=255, pattern=r"^[a-z0-9-]+$")
     description: str = Field(..., max_length=500)
     text: str = Field(..., min_length=10)
     images: List[str] = Field(default_factory=list)
@@ -28,6 +28,6 @@ class ArticleResponse(BaseModel):
     images: List[str]
     created_at: datetime
     updated_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True

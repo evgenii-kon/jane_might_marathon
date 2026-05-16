@@ -6,19 +6,6 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.database import Base
-from app.models import (
-    user,
-    week,
-    lesson,
-    word,
-    lesson_word_association,
-    user_lesson_progress,
-    user_word_progress,
-    exercise,
-    user_exercise_progress,
-    article,
-    user_week_progress,
-)
 
 
 # this is the Alembic Config object, which provides
@@ -80,9 +67,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

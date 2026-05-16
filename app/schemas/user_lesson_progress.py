@@ -6,12 +6,14 @@ from app.schemas.lesson import LessonResponse
 
 class UserLessonProgressBase(BaseModel):
     """Базовые поля прогресса урока"""
+
     is_started: bool = False
     is_completed: bool = False
 
 
 class UserLessonProgressCreate(BaseModel):
     """Создание прогресса урока"""
+
     user_id: int
     lesson_id: int
     is_started: bool = False
@@ -20,6 +22,7 @@ class UserLessonProgressCreate(BaseModel):
 
 class UserLessonProgressUpdate(BaseModel):
     """Обновление прогресса урока (частичное)"""
+
     is_started: Optional[bool] = None
     is_completed: Optional[bool] = None
     completed_at: Optional[datetime] = None
@@ -27,11 +30,11 @@ class UserLessonProgressUpdate(BaseModel):
 
 class UserLessonProgressResponse(UserLessonProgressBase):
     """Ответ с данными прогресса урока"""
+
     id: int
     user_id: int
     lesson_id: int
     completed_at: Optional[datetime] = None
-
 
     class Config:
         from_attributes = True
@@ -39,6 +42,7 @@ class UserLessonProgressResponse(UserLessonProgressBase):
 
 class LessonWithProgressResponse(LessonResponse):
     """Урок с информацией о прогрессе пользователя"""
+
     is_started: bool = False
     is_completed: bool = False
 
@@ -48,6 +52,7 @@ class LessonWithProgressResponse(LessonResponse):
 
 class WeekProgressSummary(BaseModel):
     """Сводка прогресса по неделе"""
+
     week_id: int
     week_number: int
     week_title: str
@@ -63,6 +68,7 @@ class WeekProgressSummary(BaseModel):
 
 class UserTotalProgressResponse(BaseModel):
     """Общий прогресс пользователя"""
+
     total_lessons: int
     completed_lessons: int
     started_lessons: int

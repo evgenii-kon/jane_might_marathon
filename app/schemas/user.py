@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 
+
 class UserCreate(BaseModel):
     name: str = Field(..., min_length=3)
     email: EmailStr
