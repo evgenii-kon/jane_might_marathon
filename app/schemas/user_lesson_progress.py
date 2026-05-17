@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 from app.schemas.lesson import LessonResponse
+from pydantic_settings import SettingsConfigDict
 
 
 class UserLessonProgressBase(BaseModel):
@@ -36,8 +37,8 @@ class UserLessonProgressResponse(UserLessonProgressBase):
     lesson_id: int
     completed_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class LessonWithProgressResponse(LessonResponse):
@@ -46,8 +47,8 @@ class LessonWithProgressResponse(LessonResponse):
     is_started: bool = False
     is_completed: bool = False
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class WeekProgressSummary(BaseModel):

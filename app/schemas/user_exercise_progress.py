@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+from pydantic_settings import SettingsConfigDict
 
 
 class UserExerciseProgressBase(BaseModel):
@@ -22,8 +23,8 @@ class UserExerciseProgressUpdate(BaseModel):
 class UserExerciseProgressResponse(UserExerciseProgressBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class LessonExerciseProgressResponse(BaseModel):

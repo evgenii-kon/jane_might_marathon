@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+from pydantic_settings import SettingsConfigDict
 
 
 class UserWeekProgressBase(BaseModel):
@@ -26,8 +27,8 @@ class UserWeekProgressUpdate(BaseModel):
 class UserWeekProgressResponse(UserWeekProgressBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class WeekWithProgressResponse(BaseModel):
@@ -44,5 +45,5 @@ class WeekWithProgressResponse(BaseModel):
     opens_at: Optional[datetime] = None
     progress_percent: float = 0
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+

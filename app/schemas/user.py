@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
+from pydantic_settings import SettingsConfigDict
 
 
 class UserCreate(BaseModel):
@@ -14,8 +15,8 @@ class UserResponse(BaseModel):
     name: str
     telegram: str | None
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class UserUpdate(BaseModel):
@@ -24,8 +25,8 @@ class UserUpdate(BaseModel):
     telegram: str | None = Field(None, max_length=32)
     password: str | None = Field(None, min_length=6)
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class UserLogin(BaseModel):

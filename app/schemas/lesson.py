@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field
+from pydantic_settings import SettingsConfigDict
+
 
 
 class LessonCreate(BaseModel):
@@ -16,8 +18,8 @@ class LessonUpdate(BaseModel):
     content_html: str | None = None
     video_url: str | None = None
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class LessonResponse(BaseModel):
@@ -28,5 +30,5 @@ class LessonResponse(BaseModel):
     content_html: str
     video_url: str
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+

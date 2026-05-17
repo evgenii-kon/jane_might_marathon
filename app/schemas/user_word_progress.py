@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, List
+from pydantic_settings import SettingsConfigDict
 
 
 class UserWordProgressBase(BaseModel):
@@ -31,8 +32,8 @@ class UserWordProgressResponse(UserWordProgressBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 # Схемы для тренажёра
@@ -49,8 +50,8 @@ class TrainerWordData(BaseModel):
     mastery_level: int = 0
     next_review_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class CheckAnswerRequest(BaseModel):
@@ -85,5 +86,5 @@ class TrainerSessionData(BaseModel):
     mastered_count: int  # слов на уровне 5
     new_words_count: int  # новых слов (уровень 0)
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+

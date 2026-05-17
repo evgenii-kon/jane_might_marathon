@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from app.schemas.lesson import LessonResponse
+from pydantic_settings import SettingsConfigDict
 
 
 class WeekCreate(BaseModel):
@@ -20,8 +21,8 @@ class WeekUpdate(BaseModel):
     target_words_count: Optional[int] = Field(None, ge=0)
     target_exercises_count: Optional[int] = Field(None, ge=0)
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+
 
 
 class WeekResponse(BaseModel):
@@ -34,5 +35,5 @@ class WeekResponse(BaseModel):
     target_exercises_count: int
     lessons: list[LessonResponse]
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
+

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
+from pydantic_settings import SettingsConfigDict
 
 
 class ArticleCreate(BaseModel):
@@ -29,5 +30,4 @@ class ArticleResponse(BaseModel):
     created_at: datetime
     updated_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)

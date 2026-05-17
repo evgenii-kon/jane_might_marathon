@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from pydantic_settings import SettingsConfigDict
 
 
 class ExerciseCreate(BaseModel):
@@ -41,8 +42,7 @@ class ExerciseResponse(BaseModel):
     explanation: Optional[str] = None
     order_in_lesson: int
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes = True)
 
 
 class ExerciseCheckRequest(BaseModel):

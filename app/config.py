@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 from pydantic import Field, field_validator
 
@@ -54,11 +54,12 @@ class Settings(BaseSettings):
             raise ValueError("images_dir must be inside static directory")
         return v
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
-        extra = "ignore"  # Игнорировать лишние поля в .env
+
+    model_config = SettingsConfigDict(
+        env_file = ".env", 
+        env_file_encoding = "utf-8", 
+        case_sensitive = False, 
+        extra = "ignore")
 
 
 settings = Settings()
