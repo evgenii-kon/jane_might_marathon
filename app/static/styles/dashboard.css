@@ -12,7 +12,7 @@
     margin-bottom: 24px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
-    text-decoration: none;  /* убираем подчёркивание у ссылок-карточек */
+    text-decoration: none;
     display: block;
 }
 
@@ -260,7 +260,7 @@
 .trainer-card-link,
 .rating-card,
 .telegram-card,
-.instagram-card {
+.feedback-card {   /* добавили feedback-card в общий список */
     transition: all 0.3s ease;
     text-decoration: none;
     display: block;
@@ -269,7 +269,7 @@
 .trainer-card-link:hover,
 .rating-card:hover,
 .telegram-card:hover,
-.instagram-card:hover {
+.feedback-card:hover {
     transform: translateY(-4px);
 }
 
@@ -297,19 +297,19 @@
     box-shadow: 0 12px 24px rgba(0,0,0,0.15);
 }
 
-/* Карточка Instagram (градиент Instagram) */
-.instagram-card {
-    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+/* Карточка обратной связи (фиолетовая) – исправленная, без дублей */
+.feedback-card {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 }
-.instagram-card:hover {
-    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+.feedback-card:hover {
+    box-shadow: 0 12px 24px rgba(139, 92, 246, 0.3);
 }
 
 /* Общий контент карточек */
 .trainer-card-content,
 .rating-card-content,
 .telegram-card-content,
-.instagram-card-content {
+.feedback-card-content {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -318,7 +318,7 @@
 /* Иконки (общий размер) */
 .trainer-card-icon,
 .rating-card-icon,
-.instagram-card-icon {
+.feedback-card-icon {
     font-size: 40px;
     background: white;
     width: 60px;
@@ -343,14 +343,14 @@
 .trainer-card-info,
 .rating-card-info,
 .telegram-card-info,
-.instagram-card-info {
+.feedback-card-info {
     flex: 1;
 }
 
 .trainer-card-info h3,
 .rating-card-info h3,
 .telegram-card-info h3,
-.instagram-card-info h3 {
+.feedback-card-info h3 {
     margin: 0 0 4px 0;
     font-size: 18px;
     font-weight: 600;
@@ -360,7 +360,7 @@
 .trainer-card-info p,
 .rating-card-info p,
 .telegram-card-info p,
-.instagram-card-info p {
+.feedback-card-info p {
     margin: 0;
     font-size: 13px;
     color: rgba(255,255,255,0.85);
@@ -370,7 +370,7 @@
 .trainer-card-arrow,
 .rating-card-arrow,
 .telegram-card-arrow,
-.instagram-card-arrow {
+.feedback-card-arrow {
     font-size: 20px;
     color: white;
     flex-shrink: 0;
@@ -380,7 +380,7 @@
 .trainer-card-link:hover .trainer-card-arrow,
 .rating-card:hover .rating-card-arrow,
 .telegram-card:hover .telegram-card-arrow,
-.instagram-card:hover .instagram-card-arrow {
+.feedback-card:hover .feedback-card-arrow {
     transform: translateX(4px);
 }
 
@@ -396,7 +396,7 @@
     .trainer-card-icon,
     .rating-card-icon,
     .telegram-card-icon,
-    .instagram-card-icon {
+    .feedback-card-icon {
         width: 50px;
         height: 50px;
         font-size: 32px;
@@ -404,13 +404,168 @@
     .trainer-card-info h3,
     .rating-card-info h3,
     .telegram-card-info h3,
-    .instagram-card-info h3 {
+    .feedback-card-info h3 {
         font-size: 16px;
     }
     .trainer-card-info p,
     .rating-card-info p,
     .telegram-card-info p,
-    .instagram-card-info p {
+    .feedback-card-info p {
         font-size: 12px;
     }
+}
+
+/* ========== СТИЛИ ДЛЯ СТРАНИЦЫ ОБРАТНОЙ СВЯЗИ (НЕ КОНФЛИКТУЮТ С КАРТОЧКОЙ) ========== */
+.feedback-form {
+    background: white;
+    border-radius: 32px;
+    padding: 32px;
+    box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.feedback-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.feedback-icon {
+    font-size: 48px;
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    width: 70px;
+    height: 70px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(249,115,22,0.2);
+}
+
+.feedback-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: #1f2937;
+}
+
+.feedback-header p {
+    margin: 6px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.feedback-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+    display: block;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.feedback-textarea {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 16px;
+    transition: border 0.2s, box-shadow 0.2s;
+    resize: vertical;
+    background: #fafcff;
+}
+
+.feedback-textarea:focus {
+    outline: none;
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+    background: white;
+}
+
+.feedback-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+    .feedback-form {
+        padding: 24px;
+    }
+    .feedback-header h2 {
+        font-size: 22px;
+    }
+    .feedback-icon {
+        width: 54px;
+        height: 54px;
+        font-size: 32px;
+    }
+    .feedback-label {
+        font-size: 14px;
+    }
+}
+
+/* ========== GLOBAL BUTTON STYLES ========== */
+.btn-primary,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+    box-shadow: 0 2px 6px rgba(234, 88, 12, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary.btn-link {
+    background: transparent;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+}
+
+.btn-secondary.btn-link:hover {
+    background: #f3f4f6;
+    color: #1f2937;
 }

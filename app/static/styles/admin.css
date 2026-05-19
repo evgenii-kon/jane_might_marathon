@@ -294,3 +294,194 @@
     font-weight: 600;
     color: #1f2937;
 }
+
+/* ========== FEEDBACK LIST (ADMIN) ========== */
+.feedback-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.feedback-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.feedback-list-header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.feedback-stats {
+    background: #eef2ff;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0f2b6d;
+}
+
+.feedback-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.feedback-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.feedback-table th,
+.feedback-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+.feedback-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.feedback-table tr:hover {
+    background: #f8fafc;
+}
+
+.feedback-text-preview {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #4b5563;
+}
+
+.feedback-user {
+    font-weight: 500;
+    color: #0f2b6d;
+}
+
+.feedback-date {
+    font-size: 12px;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.feedback-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-view {
+    background: #eef2ff;
+    color: #0f2b6d;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.btn-view:hover {
+    background: #0f2b6d;
+    color: white;
+}
+
+.btn-delete-feedback {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.btn-delete-feedback:hover {
+    background: #dc2626;
+    color: white;
+}
+
+/* ========== FEEDBACK DETAIL (ADMIN) ========== */
+.feedback-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.feedback-detail-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.feedback-detail-header {
+    background: linear-gradient(135deg, #0f2b6d, #1e40af);
+    padding: 24px 32px;
+    color: white;
+}
+
+.feedback-detail-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.feedback-detail-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+.feedback-detail-body {
+    padding: 32px;
+}
+
+.feedback-detail-text {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    font-size: 16px;
+    color: #1f2937;
+    white-space: pre-wrap;
+}
+
+.feedback-detail-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 24px;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .feedback-table th,
+    .feedback-table td {
+        padding: 10px 12px;
+    }
+    .feedback-text-preview {
+        max-width: 180px;
+    }
+    .feedback-detail-header {
+        padding: 20px;
+    }
+    .feedback-detail-body {
+        padding: 20px;
+    }
+    .feedback-detail-text {
+        padding: 16px;
+    }
+}

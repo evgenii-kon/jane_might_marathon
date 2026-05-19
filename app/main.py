@@ -23,6 +23,10 @@ from .routes.dashboard.word_trainer.word_trainer_modes import (
     router as word_trainer_modes_router,
 )
 from .routes.public.articles import router as article_router
+from app.routes.dashboard.feedback import router as feedback_router
+from .routes.admin.feedback import router as admin_feedback_router
+
+
 
 
 from .database import init_db
@@ -47,6 +51,9 @@ app.include_router(word_trainer_modes_router)
 app.include_router(article_admin_router)
 app.include_router(article_router)
 app.include_router(word_trainer_router)
+app.include_router(feedback_router)
+app.include_router(admin_feedback_router)
+
 
 
 templates = Jinja2Templates("app/templates")

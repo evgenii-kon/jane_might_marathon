@@ -27,3 +27,6 @@ class User(Base):
     week_progress = relationship(
         "UserWeekProgress", back_populates="user", cascade="all, delete-orphan"
     )
+    feedback = relationship(
+        'FeedBack', back_populates='user', cascade='all, delete-orphan'
+    )

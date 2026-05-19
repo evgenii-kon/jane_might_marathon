@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="feedback-detail-container">
+    <div class="feedback-detail-card">
+        <div class="feedback-detail-header">
+            <h1>Отзыв #{{ feedback.id }}</h1>
+            <div class="feedback-detail-meta">
+                <span>👤 Пользователь ID: {{ feedback.user_id }}</span>
+                <span>📅 {{ feedback.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
+            </div>
+        </div>
+        <div class="feedback-detail-body">
+            <div class="feedback-detail-text">
+                {{ feedback.text | safe }}
+            </div>
+            <div class="feedback-detail-actions">
+                <a href="/admin/feedback/{{ feedback.id }}/delete" class="btn-delete-feedback">🗑️ Удалить</a>
+                <a href="/admin/feedback/" class="btn-secondary">← Назад к списку</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

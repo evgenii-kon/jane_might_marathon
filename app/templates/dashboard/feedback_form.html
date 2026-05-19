@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Обратная связь{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="feedback-form">
+        <div class="feedback-header">
+            <div class="feedback-icon">💬</div>
+            <div>
+                <h2>Обратная связь</h2>
+                <p>Мы ценим ваше мнение</p>
+            </div>
+        </div>
+        <form method="post" action="/dashboard/feedback/">
+            {{ csrf_input | safe }}
+            <div class="form-group">
+                <label for="text" class="feedback-label">
+                    Расскажите нам о Вашем пользовательском опыте работы с курсом. 
+                    Для нас это очень важно! Мы стараемся становиться лучше с каждым днём, 
+                    именно ваши отзывы и пожелания помогают нам исправлять ошибки и внедрять 
+                    в проект новые полезные функции ❤️
+                </label>
+                <textarea id="text" name="text" rows="6" class="feedback-textarea" 
+                          required placeholder="Что вам нравится? Что можно улучшить?"></textarea>
+            </div>
+            <div class="feedback-actions">
+                <button type="submit" class="btn-primary">✉️ Отправить отзыв</button>
+                <a href="/dashboard/" class="btn-secondary">← На главную</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

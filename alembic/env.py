@@ -2,6 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from app.models import User, Week, Lesson, Word, UserWordProgress, UserLessonProgress, Exercise, UserExerciseProgress, Article, FeedBack
 
 from alembic import context
 

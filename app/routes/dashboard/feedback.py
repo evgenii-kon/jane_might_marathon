@@ -1,0 +1,37 @@
+from fastapi import APIRouter, Depends, Request, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.dependencies.auth import get_current_user
+from app.models.user import User
+from app.schemas.feedback import FeedbackCreate
+from app.services.feedback_service import FeedbackService
+
+router = APIRouter(prefix="/dashboard/feedback", tags=["dashboard_feedback"])
+templates = Jinja2Templates(directory="app/templates")
+
+
+@router.get("/", response_class=HTMLResponse)
+def feedback_form(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+):
+    """Отображает форму обратной связи"""
+    return templates.TemplateResponse("dashboard/feedback_form.html", {
+        "request": request,
+        "user": current_user,
+    })
+
+
+@router.post("/", response_class=HTMLResponse)
+def submit_feedback(
+    request: Request,
+    text: str = Form(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Обрабатывает отправку формы"""
+    service = FeedbackService(db)
+    service.create_feedback(current_user.id, FeedbackCreate(text=text))
+    return RedirectResponse(url="/dashboard/", status_code=302)

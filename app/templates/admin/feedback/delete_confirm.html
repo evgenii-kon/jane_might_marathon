@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Удаление отзыва{% endblock %}
+
+{% block content %}
+<div class="admin-confirm-container">
+    <div class="confirm-card">
+        <div class="confirm-icon">⚠️</div>
+        <h1>Подтверждение удаления</h1>
+        <p>Вы действительно хотите удалить этот отзыв?</p>
+
+        <div class="feedback-info">
+            <div class="info-row">
+                <span class="info-label">ID:</span>
+                <span class="info-value">{{ feedback.id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Пользователь ID:</span>
+                <span class="info-value">{{ feedback.user_id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Дата:</span>
+                <span class="info-value">{{ feedback.created_at.strftime('%d.%m.%Y %H:%M') if feedback.created_at else '-' }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Текст:</span>
+                <span class="info-value feedback-text-preview">{{ feedback.text }}</span>
+            </div>
+        </div>
+
+        <p class="confirm-warning">⚠️ Это действие нельзя отменить. Отзыв будет удалён безвозвратно.</p>
+
+        <div class="confirm-actions">
+            <form method="post" action="/admin/feedback/{{ feedback.id }}/delete" style="display: inline;">
+                <button type="submit" class="btn-danger">🗑️ Да, удалить</button>
+            </form>
+            <a href="/admin/feedback" class="btn-secondary">Отмена</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

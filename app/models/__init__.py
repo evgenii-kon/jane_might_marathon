@@ -8,3 +8,4 @@ from .exercise import Exercise
 from .user_week_progress import UserWeekProgress
 from .user_exercise_progress import UserExerciseProgress
 from .article import Article
+from .feedback import FeedBack

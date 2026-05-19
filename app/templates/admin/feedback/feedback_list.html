@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="feedback-list-container">
+    <div class="feedback-list-header">
+        <h1>📝 Обратная связь</h1>
+        <div class="feedback-stats">Всего: {{ feedbacks|length }}</div>
+    </div>
+
+    <div class="feedback-table-wrapper">
+        <table class="feedback-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Пользователь ID</th>
+                    <th>Сообщение</th>
+                    <th>Дата</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fb in feedbacks %}
+                <tr>
+                    <td>{{ fb.id }}</td>
+                    <td>{{ fb.user_id }}</td>
+                    <td class="feedback-text-preview">{{ fb.text[:80] }}{% if fb.text|length > 80 %}...{% endif %}</td>
+                    <td class="feedback-date">{{ fb.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td class="feedback-actions">
+                        <a href="/admin/feedback/{{ fb.id }}" class="btn-view">👁️ Просмотр</a>
+                        <form method="post" action="/admin/feedback/{{ fb.id }}/delete" style="display: inline;">
+                            <button type="submit" class="btn-delete-feedback" onclick="return confirm('Удалить этот отзыв?')">🗑️ Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-state">Нет отзывов.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
