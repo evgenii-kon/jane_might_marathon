@@ -36,6 +36,7 @@ def daily_trainer(
                 "translation": word.translation,
                 "transcription": word.transcription,
                 "example_sentence": word.example_sentence,
+                "audio_url": word.audio_url, 
                 "mastery_level": wp.mastery_level,
             }
         )

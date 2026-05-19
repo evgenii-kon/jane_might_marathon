@@ -12,69 +12,88 @@
         {% endif %}
     </div>
 
+    <!-- Блок статистики (два состояния) -->
     <div class="trainer-stats" id="stats">
-        <span>✅ Правильно: <span id="correct-count">0</span></span>
-        <span>❌ Неправильно: <span id="wrong-count">0</span></span>
-        <span>📊 Осталось: <span id="remaining-count">0</span></span>
+        <div id="stats-normal" style="display: flex; gap: 20px; justify-content: space-around; width: 100%;">
+            <span>✅ Правильно: <span id="correct-count">0</span></span>
+            <span>❌ Неправильно: <span id="wrong-count">0</span></span>
+            <span>📊 Осталось: <span id="remaining-count">0</span></span>
+        </div>
+        <div id="stats-start" style="display: none; text-align: center; width: 100%;">
+            📊 Доступно слов для повторения: <span id="total-words-count">0</span>
+        </div>
     </div>
 
-    <div class="trainer-card-container">
-        <div class="flashcard" id="flashcard">
-            <div class="flashcard-inner">
-                <div class="flashcard-front" id="card-front">
-                    <div id="logo-container" {% if mode != 'all' %}style="display: none;"{% endif %}>
-                        <img src="/static/images/orange_logo.png" alt="Логотип" class="start-logo">
+    <!-- Основной блок тренажёра (виден, когда есть слова) -->
+    <div id="trainer-main">
+        <div class="trainer-card-container">
+            <div class="flashcard" id="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front" id="card-front">
+                        <div id="logo-container" {% if mode != 'all' %}style="display: none;"{% endif %}>
+                            <img src="/static/images/orange_logo.png" alt="Логотип" class="start-logo">
+                        </div>
+                        <div id="question-container" {% if mode == 'all' %}style="display: none;"{% endif %}>
+                            <div class="trainer-question" id="question"></div>
+                            <div id="audio-container"></div>
+                        </div>
                     </div>
-                    <div id="question-container" {% if mode == 'all' %}style="display: none;"{% endif %}>
-                        <div class="trainer-question" id="question"></div>
-                        <div id="audio-container"></div>
+                    <div class="flashcard-back">
+                        <div class="trainer-translation" id="translation"></div>
+                        <div class="trainer-transcription" id="transcription"></div>
+                        <div class="trainer-example" id="example"></div>
                     </div>
                 </div>
-                <div class="flashcard-back">
-                    <div class="trainer-translation" id="translation"></div>
-                    <div class="trainer-transcription" id="transcription"></div>
-                    <div class="trainer-example" id="example"></div>
+            </div>
+        </div>
+
+        <div class="trainer-controls">
+            {% if mode == 'all' %}
+            <div class="start-controls" id="start-controls">
+                <button id="start-training-btn" class="btn-primary">Начать тренировку</button>
+                <a href="/word-trainer" class="btn-secondary">Назад к режимам</a>
+            </div>
+            {% endif %}
+
+            <div class="input-controls" id="input-controls" style="display: none;">
+                <input type="text" id="user-answer" class="trainer-input" placeholder="Введите перевод..." autocomplete="off">
+                <button id="action-btn" class="btn-primary trainer-btn">✅ Проверить</button>
+            </div>
+        </div>
+
+        <div class="trainer-feedback" id="feedback"></div>
+
+        <div class="trainer-results" id="results" style="display: none;">
+            <h2>🎉 Сессия завершена!</h2>
+            <div class="results-stats">
+                <div class="result-card">
+                    <div class="result-value" id="final-correct">0</div>
+                    <div class="result-label">Правильно</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="final-wrong">0</div>
+                    <div class="result-label">Неправильно</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="final-accuracy">0%</div>
+                    <div class="result-label">Точность</div>
                 </div>
             </div>
+            <div class="results-buttons">
+                <button id="new-session-btn" class="btn-primary">🔄 Новая сессия</button>
+                <a href="/word-trainer" class="btn-secondary">🏠 Выбрать режим</a>
+            </div>
         </div>
     </div>
 
-    <div class="trainer-controls">
-        {% if mode == 'all' %}
-        <div class="start-controls" id="start-controls">
-            <button id="start-training-btn" class="btn-primary">Начать тренировку</button>
-            <a href="/word-trainer" class="btn-secondary">Назад к режимам</a>
+    <!-- Карточка для ежедневного режима, когда нет слов -->
+    <div id="no-words-card" style="display: none; text-align: center; padding: 40px 20px;">
+        <div style="margin-bottom: 20px;">
+            <img src="/static/images/orange_logo.png" alt="Логотип" style="width: 120px;">
         </div>
-        {% endif %}
-
-        <div class="input-controls" id="input-controls" style="display: none;">
-            <input type="text" id="user-answer" class="trainer-input" placeholder="Введите перевод..." autocomplete="off">
-            <button id="action-btn" class="btn-primary trainer-btn">✅ Проверить</button>
-        </div>
-    </div>
-
-    <div class="trainer-feedback" id="feedback"></div>
-
-    <div class="trainer-results" id="results" style="display: none;">
-        <h2>🎉 Сессия завершена!</h2>
-        <div class="results-stats">
-            <div class="result-card">
-                <div class="result-value" id="final-correct">0</div>
-                <div class="result-label">Правильно</div>
-            </div>
-            <div class="result-card">
-                <div class="result-value" id="final-wrong">0</div>
-                <div class="result-label">Неправильно</div>
-            </div>
-            <div class="result-card">
-                <div class="result-value" id="final-accuracy">0%</div>
-                <div class="result-label">Точность</div>
-            </div>
-        </div>
-        <div class="results-buttons">
-            <button id="new-session-btn" class="btn-primary">🔄 Новая сессия</button>
-            <a href="/word-trainer" class="btn-secondary">🏠 Выбрать режим</a>
-        </div>
+        <h3>Все слова для повторения сегодня изучены!</h3>
+        <p>Для тренировки можете обратиться к режиму «Все слова»</p>
+        <a href="/word-trainer" class="btn-primary" style="margin-top: 20px; display: inline-block;">Назад к режимам</a>
     </div>
 </div>
 {% endblock %}
@@ -84,6 +103,16 @@
     const wordsData = {{ words | tojson }};
     const mode = '{{ mode }}';
 
+    // ЕСЛИ ЕЖЕДНЕВНЫЙ РЕЖИМ И НЕТ СЛОВ – ПОКАЗЫВАЕМ СПЕЦИАЛЬНУЮ КАРТОЧКУ
+    if (mode === 'daily' && (!wordsData || wordsData.length === 0)) {
+        document.getElementById('trainer-main').style.display = 'none';
+        document.getElementById('no-words-card').style.display = 'block';
+        document.getElementById('stats').style.display = 'none';
+        // Останавливаем выполнение, чтобы не инициализировать тренажёр
+        throw new Error('No words for daily session');
+    }
+
+    // ---------- ИНИЦИАЛИЗАЦИЯ ТРЕНАЖЁРА (ЕСЛИ СЛОВА ЕСТЬ) ----------
     let sessionWords = [...wordsData];
     let currentIndex = 0;
     let correctCount = 0;
@@ -104,23 +133,24 @@
     const userAnswer = document.getElementById('user-answer');
     const actionBtn = document.getElementById('action-btn');
     const feedbackEl = document.getElementById('feedback');
-    const correctCountEl = document.getElementById('correct-count');
-    const wrongCountEl = document.getElementById('wrong-count');
-    const remainingCountEl = document.getElementById('remaining-count');
     const resultsDiv = document.getElementById('results');
     const trainerContainer = document.querySelector('.trainer-card-container');
 
+    let correctCountEl = document.getElementById('correct-count');
+    let wrongCountEl = document.getElementById('wrong-count');
+    let remainingCountEl = document.getElementById('remaining-count');
+
     function updateStats() {
-        correctCountEl.textContent = correctCount;
-        wrongCountEl.textContent = wrongCount;
-        remainingCountEl.textContent = sessionWords.length - currentIndex;
+        if (correctCountEl) correctCountEl.textContent = correctCount;
+        if (wrongCountEl) wrongCountEl.textContent = wrongCount;
+        if (remainingCountEl) remainingCountEl.textContent = sessionWords.length - currentIndex;
     }
 
     function updateStatsAfterAnswer() {
-        correctCountEl.textContent = correctCount;
-        wrongCountEl.textContent = wrongCount;
+        if (correctCountEl) correctCountEl.textContent = correctCount;
+        if (wrongCountEl) wrongCountEl.textContent = wrongCount;
         const remaining = sessionWords.length - currentIndex - 1;
-        remainingCountEl.textContent = remaining >= 0 ? remaining : 0;
+        if (remainingCountEl) remainingCountEl.textContent = remaining >= 0 ? remaining : 0;
     }
 
     function showFront() {
@@ -134,9 +164,8 @@
     function createAudioButton(url) {
         if (!url) return null;
         const btn = document.createElement('button');
-        btn.type = 'button';
         btn.className = 'audio-play-btn';
-        btn.textContent = '▶ Слушать';
+        btn.textContent = '🔊 Слушать';
         const audio = new Audio(url);
         audio.preload = 'metadata';
         btn.addEventListener('click', (e) => {
@@ -146,11 +175,11 @@
                 btn.textContent = '⏸ Пауза';
             } else {
                 audio.pause();
-                btn.textContent = '▶ Слушать';
+                btn.textContent = '🔊 Слушать';
             }
         });
         audio.onended = () => {
-            btn.textContent = '▶ Слушать';
+            btn.textContent = '🔊 Слушать';
         };
         return btn;
     }
@@ -280,7 +309,7 @@
             isLoading = false;
         } catch (error) {
             console.error('Ошибка:', error);
-            feedbackEl.innerHTML = '❌ ' + error.message;
+            feedbackEl.innerHTML = '❌ Ошибка соединения. Проверьте интернет.';
             feedbackEl.classList.add('feedback-wrong');
             isLoading = false;
             userAnswer.disabled = false;
@@ -306,6 +335,15 @@
         isLoading = false;
         waitingForNext = false;
         sessionActive = true;
+
+        const statsNormal = document.getElementById('stats-normal');
+        const statsStart = document.getElementById('stats-start');
+        if (statsNormal) statsNormal.style.display = 'flex';
+        if (statsStart) statsStart.style.display = 'none';
+
+        correctCountEl = document.getElementById('correct-count');
+        wrongCountEl = document.getElementById('wrong-count');
+        remainingCountEl = document.getElementById('remaining-count');
 
         if (mode === 'daily') {
             loadCurrentWord();
@@ -350,6 +388,13 @@
             logoContainer.style.display = 'block';
             questionContainer.style.display = 'none';
             showFront();
+            const statsNormal = document.getElementById('stats-normal');
+            const statsStart = document.getElementById('stats-start');
+            if (statsNormal) statsNormal.style.display = 'none';
+            if (statsStart) {
+                statsStart.style.display = 'block';
+                document.getElementById('total-words-count').textContent = sessionWords.length;
+            }
         }
     }
 
@@ -365,6 +410,14 @@
             questionContainer.style.display = 'none';
             sessionActive = false;
             showFront();
+
+            const statsNormal = document.getElementById('stats-normal');
+            const statsStart = document.getElementById('stats-start');
+            if (statsNormal) statsNormal.style.display = 'none';
+            if (statsStart) {
+                statsStart.style.display = 'block';
+                document.getElementById('total-words-count').textContent = sessionWords.length;
+            }
         }
     }
 
@@ -372,8 +425,6 @@
     if (startBtn) {
         startBtn.addEventListener('click', () => {
             if (sessionWords.length === 0) return;
-            document.getElementById('start-controls').style.display = 'none';
-            document.getElementById('input-controls').style.display = 'flex';
             startNewSession();
         });
     }
@@ -406,6 +457,14 @@
                 feedbackEl.innerHTML = '';
                 userAnswer.value = '';
                 actionBtn.textContent = '✅ Проверить';
+
+                const statsNormal = document.getElementById('stats-normal');
+                const statsStart = document.getElementById('stats-start');
+                if (statsNormal) statsNormal.style.display = 'none';
+                if (statsStart) {
+                    statsStart.style.display = 'block';
+                    document.getElementById('total-words-count').textContent = sessionWords.length;
+                }
             } else {
                 startNewSession();
             }
