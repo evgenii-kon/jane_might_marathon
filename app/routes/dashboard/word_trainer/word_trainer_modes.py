@@ -68,7 +68,7 @@ def all_words_trainer(
     words = service.get_all_words_session(current_user.id)
     words_schemas = [
         WordResponse.model_validate(word) for word in words
-    ]  # List[WordResponse]
+    ]
     words_dicts = [word.model_dump() for word in words_schemas]
 
     return templates.TemplateResponse(

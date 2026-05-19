@@ -21,11 +21,16 @@
     <div class="trainer-card-container">
         <div class="flashcard" id="flashcard">
             <div class="flashcard-inner">
-                <div class="flashcard-front">
-                    <div class="trainer-question" id="question"></div>
-                    <div class="trainer-audio" id="audio-container"></div>
+                <div class="flashcard-front" id="card-front">
+                    <div id="logo-container" {% if mode != 'all' %}style="display: none;"{% endif %}>
+                        <img src="/static/images/orange_logo.png" alt="Логотип" class="start-logo">
+                    </div>
+                    <div id="question-container" {% if mode == 'all' %}style="display: none;"{% endif %}>
+                        <div class="trainer-question" id="question"></div>
+                        <div id="audio-container"></div>
+                    </div>
                 </div>
-                <div class="flashcard-back" id="answer-side">
+                <div class="flashcard-back">
                     <div class="trainer-translation" id="translation"></div>
                     <div class="trainer-transcription" id="transcription"></div>
                     <div class="trainer-example" id="example"></div>
@@ -34,9 +39,18 @@
         </div>
     </div>
 
-    <div class="trainer-input-area">
-        <input type="text" id="user-answer" class="trainer-input" placeholder="Введите перевод..." autocomplete="off">
-        <button id="check-btn" class="btn-primary trainer-btn">✅ Проверить</button>
+    <div class="trainer-controls">
+        {% if mode == 'all' %}
+        <div class="start-controls" id="start-controls">
+            <button id="start-training-btn" class="btn-primary">Начать тренировку</button>
+            <a href="/word-trainer" class="btn-secondary">Назад к режимам</a>
+        </div>
+        {% endif %}
+
+        <div class="input-controls" id="input-controls" style="display: none;">
+            <input type="text" id="user-answer" class="trainer-input" placeholder="Введите перевод..." autocomplete="off">
+            <button id="action-btn" class="btn-primary trainer-btn">✅ Проверить</button>
+        </div>
     </div>
 
     <div class="trainer-feedback" id="feedback"></div>
@@ -76,21 +90,25 @@
     let wrongCount = 0;
     let isAnswered = false;
     let isLoading = false;
+    let sessionActive = false;
+    let waitingForNext = false;
 
+    const flashcard = document.getElementById('flashcard');
+    const logoContainer = document.getElementById('logo-container');
+    const questionContainer = document.getElementById('question-container');
     const questionEl = document.getElementById('question');
+    const audioContainer = document.getElementById('audio-container');
     const translationEl = document.getElementById('translation');
     const transcriptionEl = document.getElementById('transcription');
     const exampleEl = document.getElementById('example');
-    const audioContainer = document.getElementById('audio-container');
     const userAnswer = document.getElementById('user-answer');
-    const checkBtn = document.getElementById('check-btn');
+    const actionBtn = document.getElementById('action-btn');
     const feedbackEl = document.getElementById('feedback');
     const correctCountEl = document.getElementById('correct-count');
     const wrongCountEl = document.getElementById('wrong-count');
     const remainingCountEl = document.getElementById('remaining-count');
     const resultsDiv = document.getElementById('results');
     const trainerContainer = document.querySelector('.trainer-card-container');
-    const flashcard = document.getElementById('flashcard');
 
     function updateStats() {
         correctCountEl.textContent = correctCount;
@@ -98,75 +116,106 @@
         remainingCountEl.textContent = sessionWords.length - currentIndex;
     }
 
-    function loadWord() {
-        isAnswered = false;
-        isLoading = false;
-        flashcard.classList.remove('flipped');
-        feedbackEl.innerHTML = '';
-        feedbackEl.className = 'trainer-feedback';
-        userAnswer.value = '';
-        userAnswer.disabled = false;
-        checkBtn.disabled = false;
-        userAnswer.focus();
-        
-        if (currentIndex >= sessionWords.length) {
-            finishSession();
-            return;
-        }
-        
-        const word = sessionWords[currentIndex];
-        questionEl.textContent = word.word || word.hanzi || word.text || '???';
-        
-        translationEl.textContent = '';
-        transcriptionEl.textContent = '';
-        exampleEl.textContent = '';
-        
-        if (word.audio_url) {
-            audioContainer.innerHTML = '<audio controls preload="metadata" src="' + word.audio_url + '"></audio>';
-        } else {
-            audioContainer.innerHTML = '';
-        }
-        
-        updateStats();
+    function updateStatsAfterAnswer() {
+        correctCountEl.textContent = correctCount;
+        wrongCountEl.textContent = wrongCount;
+        const remaining = sessionWords.length - currentIndex - 1;
+        remainingCountEl.textContent = remaining >= 0 ? remaining : 0;
     }
 
-    function showAnswer(wordData) {
-        translationEl.textContent = wordData.translation || wordData.correct_translation || '';
-        transcriptionEl.textContent = wordData.transcription || '';
-        
-        const example = wordData.example_sentence || wordData.example;
-        if (example) {
-            exampleEl.textContent = 'Пример: ' + example;
-        } else {
-            exampleEl.textContent = '';
-        }
-        
+    function showFront() {
+        flashcard.classList.remove('flipped');
+    }
+
+    function showBack() {
         flashcard.classList.add('flipped');
     }
 
+    function createAudioButton(url) {
+        if (!url) return null;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'audio-play-btn';
+        btn.textContent = '▶ Слушать';
+        const audio = new Audio(url);
+        audio.preload = 'metadata';
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (audio.paused) {
+                audio.play();
+                btn.textContent = '⏸ Пауза';
+            } else {
+                audio.pause();
+                btn.textContent = '▶ Слушать';
+            }
+        });
+        audio.onended = () => {
+            btn.textContent = '▶ Слушать';
+        };
+        return btn;
+    }
+
+    function loadCurrentWord() {
+        if (currentIndex >= sessionWords.length) return;
+        const word = sessionWords[currentIndex];
+        questionEl.textContent = word.word || word.hanzi || word.text || '???';
+        audioContainer.innerHTML = '';
+        if (word.audio_url) {
+            const audioBtn = createAudioButton(word.audio_url);
+            if (audioBtn) audioContainer.appendChild(audioBtn);
+        }
+    }
+
+    function loadAnswer(wordData) {
+        translationEl.textContent = wordData.translation || wordData.correct_translation || '';
+        transcriptionEl.textContent = wordData.transcription || '';
+        const example = wordData.example_sentence || wordData.example;
+        exampleEl.textContent = example ? 'Пример: ' + example : '';
+    }
+
+    function goToNextWord() {
+        if (!waitingForNext) return;
+        currentIndex++;
+        if (currentIndex < sessionWords.length) {
+            loadCurrentWord();
+            showFront();
+            isAnswered = false;
+            waitingForNext = false;
+            userAnswer.disabled = false;
+            userAnswer.value = '';
+            userAnswer.focus();
+            feedbackEl.innerHTML = '';
+            feedbackEl.className = 'trainer-feedback';
+            actionBtn.textContent = '✅ Проверить';
+            updateStats();
+        } else {
+            finishSession();
+        }
+    }
+
     async function checkAnswer() {
-        if (isAnswered || isLoading) return;
-        
+        if (!sessionActive || isAnswered || isLoading || waitingForNext) return;
+
         const userInput = userAnswer.value.trim();
         if (!userInput) {
             feedbackEl.innerHTML = '⚠️ Введите перевод';
             feedbackEl.classList.add('feedback-wrong');
             return;
         }
-        
+
         const word = sessionWords[currentIndex];
         const wordId = word.id || word.word_id;
-        
+
         isLoading = true;
         userAnswer.disabled = true;
-        checkBtn.disabled = true;
-        
+        actionBtn.disabled = true;
+
         try {
             const formData = new URLSearchParams();
             formData.append('word_id', wordId);
             formData.append('user_answer', userInput);
             formData.append('mode', mode);
-            
+
             const response = await fetch('/word-trainer/check', {
                 method: 'POST',
                 headers: {
@@ -174,7 +223,7 @@
                 },
                 body: formData
             });
-            
+
             if (!response.ok) {
                 let errorText = `Ошибка сервера: ${response.status}`;
                 try {
@@ -187,21 +236,21 @@
                 } catch(e) {}
                 throw new Error(errorText);
             }
-            
+
             const data = await response.json();
-            
+
             if (data.error) {
                 feedbackEl.innerHTML = '❌ ' + data.error;
                 feedbackEl.classList.add('feedback-wrong');
                 isLoading = false;
                 userAnswer.disabled = false;
-                checkBtn.disabled = false;
+                actionBtn.disabled = false;
                 userAnswer.focus();
                 return;
             }
-            
+
             isAnswered = true;
-            
+
             if (data.is_correct) {
                 correctCount++;
                 feedbackEl.innerHTML = '✅ Правильно!';
@@ -212,45 +261,40 @@
                 feedbackEl.innerHTML = `❌ Неправильно! Правильный ответ: "${correctAnswer}"`;
                 feedbackEl.classList.add('feedback-wrong');
             }
-            
-            showAnswer(data);
-            
+
+            loadAnswer(data);
+            showBack();
+
             if (data.is_correct) {
                 flashcard.style.boxShadow = '0 0 0 3px #4CAF50';
             } else {
                 flashcard.style.boxShadow = '0 0 0 3px #f44336';
             }
             setTimeout(() => { flashcard.style.boxShadow = ''; }, 500);
-            
-            updateStats();
-            
-            setTimeout(() => {
-                currentIndex++;
-                loadWord();
-            }, 1500);
-            
+
+            updateStatsAfterAnswer();
+
+            waitingForNext = true;
+            actionBtn.textContent = '➡️ Дальше';
+            actionBtn.disabled = false;
+            isLoading = false;
         } catch (error) {
             console.error('Ошибка:', error);
             feedbackEl.innerHTML = '❌ ' + error.message;
             feedbackEl.classList.add('feedback-wrong');
-            
             isLoading = false;
             userAnswer.disabled = false;
-            checkBtn.disabled = false;
+            actionBtn.disabled = false;
             userAnswer.focus();
         }
     }
 
-    function finishSession() {
-        const total = correctCount + wrongCount;
-        const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
-        
-        document.getElementById('final-correct').textContent = correctCount;
-        document.getElementById('final-wrong').textContent = wrongCount;
-        document.getElementById('final-accuracy').textContent = accuracy + '%';
-        
-        trainerContainer.style.display = 'none';
-        resultsDiv.style.display = 'block';
+    function onActionButtonClick() {
+        if (waitingForNext) {
+            goToNextWord();
+        } else {
+            checkAnswer();
+        }
     }
 
     function startNewSession() {
@@ -260,26 +304,114 @@
         wrongCount = 0;
         isAnswered = false;
         isLoading = false;
-        
+        waitingForNext = false;
+        sessionActive = true;
+
+        if (mode === 'daily') {
+            loadCurrentWord();
+            showFront();
+        } else if (mode === 'all') {
+            logoContainer.style.display = 'none';
+            questionContainer.style.display = 'block';
+            loadCurrentWord();
+            showFront();
+        }
+
+        updateStats();
+        feedbackEl.innerHTML = '';
+        feedbackEl.className = 'trainer-feedback';
+        userAnswer.value = '';
+        userAnswer.disabled = false;
+        actionBtn.disabled = false;
+        actionBtn.textContent = '✅ Проверить';
+        userAnswer.focus();
         trainerContainer.style.display = 'block';
         resultsDiv.style.display = 'none';
-        
-        loadWord();
     }
 
-    checkBtn.addEventListener('click', checkAnswer);
+    function finishSession() {
+        const total = correctCount + wrongCount;
+        const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+        document.getElementById('final-correct').textContent = correctCount;
+        document.getElementById('final-wrong').textContent = wrongCount;
+        document.getElementById('final-accuracy').textContent = accuracy + '%';
+
+        trainerContainer.style.display = 'none';
+        resultsDiv.style.display = 'block';
+        sessionActive = false;
+        waitingForNext = false;
+
+        feedbackEl.innerHTML = '';
+        feedbackEl.className = 'trainer-feedback';
+        userAnswer.value = '';
+        actionBtn.textContent = '✅ Проверить';
+
+        if (mode === 'all') {
+            logoContainer.style.display = 'block';
+            questionContainer.style.display = 'none';
+            showFront();
+        }
+    }
+
+    function init() {
+        if (mode === 'daily') {
+            const startControls = document.getElementById('start-controls');
+            if (startControls) startControls.style.display = 'none';
+            document.getElementById('input-controls').style.display = 'flex';
+            startNewSession();
+        } else if (mode === 'all') {
+            document.getElementById('input-controls').style.display = 'none';
+            logoContainer.style.display = 'block';
+            questionContainer.style.display = 'none';
+            sessionActive = false;
+            showFront();
+        }
+    }
+
+    const startBtn = document.getElementById('start-training-btn');
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            if (sessionWords.length === 0) return;
+            document.getElementById('start-controls').style.display = 'none';
+            document.getElementById('input-controls').style.display = 'flex';
+            startNewSession();
+        });
+    }
+
+    actionBtn.addEventListener('click', onActionButtonClick);
     userAnswer.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && sessionActive && !waitingForNext && !isAnswered && !isLoading) {
             e.preventDefault();
             checkAnswer();
         }
     });
-    
+
     const newSessionBtn = document.getElementById('new-session-btn');
     if (newSessionBtn) {
-        newSessionBtn.addEventListener('click', startNewSession);
+        newSessionBtn.addEventListener('click', () => {
+            if (mode === 'all') {
+                logoContainer.style.display = 'block';
+                questionContainer.style.display = 'none';
+                document.getElementById('start-controls').style.display = 'flex';
+                document.getElementById('input-controls').style.display = 'none';
+                sessionActive = false;
+                waitingForNext = false;
+                showFront();
+                currentIndex = 0;
+                correctCount = 0;
+                wrongCount = 0;
+                updateStats();
+                resultsDiv.style.display = 'none';
+                trainerContainer.style.display = 'block';
+                feedbackEl.innerHTML = '';
+                userAnswer.value = '';
+                actionBtn.textContent = '✅ Проверить';
+            } else {
+                startNewSession();
+            }
+        });
     }
 
-    startNewSession();
+    init();
 </script>
 {% endblock %}

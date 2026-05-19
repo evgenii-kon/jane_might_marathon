@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime, timezone
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
 from app.repositories.word_repository import WordRepository
 from app.repositories.lesson_word_association_repository import (
@@ -42,6 +43,7 @@ class WordTrainerService:
         )
         return 0
 
+
     def get_daily_session(
         self, user_id: int, limit: int = 30
     ) -> List[UserWordProgress]:
@@ -50,21 +52,28 @@ class WordTrainerService:
         """
         return self.progress_repo.get_words_for_review(user_id, limit)
 
+
     def get_due_count(self, user_id: int) -> int:
         """
         Получить количество слов, ожидающих повторения сегодня
         """
         return self.progress_repo.get_review_count_today(user_id)
 
+
     def get_all_words_session(self, user_id: int) -> List[Word]:
         """
-        Получить все слова, которые есть в прогрессе пользователя
-        (только из уроков, которые он открыл)
+        Получить все слова
         """
-        word_ids = self.progress_repo.get_existing_word_ids(user_id)
+        word_ids = self.word_repo.get_all()
         if not word_ids:
             return []
-        return self.word_repo.get_by_ids(word_ids)
+        return word_ids
+    
+    
+    def get_daily_session(self, user_id: int, limit: int = 30) -> List[UserWordProgress]:
+        """Возвращает список прогрессов слов для повторения"""
+        return self.progress_repo.get_words_for_review(user_id, limit)
+
 
     def update_mastery(
         self, user_id: int, word_id: int, is_correct: bool
@@ -74,17 +83,20 @@ class WordTrainerService:
         """
         return self.progress_repo.update_mastery(user_id, word_id, is_correct)
 
+
     def get_mastery_stats(self, user_id: int) -> dict:
         """
         Получить статистику уровней mastery пользователя
         """
         return self.progress_repo.get_mastery_stats(user_id)
 
+
     def get_review_count_today(self, user_id: int) -> int:
         """
         Получить количество слов, запланированных на повторение сегодня
         """
         return self.progress_repo.get_review_count_today(user_id)
+
 
     def get_total_words_count(self, user_id: int) -> int:
         """

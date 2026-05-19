@@ -17,6 +17,7 @@ class UserWordProgressRepository:
     def __init__(self, db: Session):
         self.db = db
 
+
     def get_or_create(self, user_id: int, word_id: int) -> UserWordProgress:
         progress = (
             self.db.query(UserWordProgress)
@@ -37,6 +38,7 @@ class UserWordProgressRepository:
             self.db.refresh(progress)
 
         return progress
+
 
     def update_mastery(
         self, user_id: int, word_id: int, is_correct: bool
@@ -60,6 +62,7 @@ class UserWordProgressRepository:
         self.db.refresh(progress)
         return progress
 
+
     def get_words_for_review(
         self, user_id: int, limit: int = 30
     ) -> List[UserWordProgress]:
@@ -75,6 +78,7 @@ class UserWordProgressRepository:
             .all()
         )
         return results
+
 
     def get_existing_word_ids(self, user_id: int) -> List[int]:
         """Получить ID слов, которые уже есть в прогрессе пользователя"""
