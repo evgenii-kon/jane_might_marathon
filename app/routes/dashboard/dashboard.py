@@ -28,7 +28,7 @@ def get_dashboard(
     lesson_service = LessonService(db)
     progress_service = UserLessonProgressService(db)
     word_trainer_service = WordTrainerService(db)
-    week_progress_service = UserWeekProgressService(db)  # ← добавить
+    week_progress_service = UserWeekProgressService(db)
 
     # Данные пользователя
     user = current_user

@@ -13,17 +13,6 @@
             Вы успешно прошли все упражнения урока <strong>{{ lesson.name }}</strong>.
         </p>
         
-        <div class="completed-stats">
-            <div class="stat-card">
-                <div class="stat-value">{{ progress.completed }}/{{ progress.total }}</div>
-                <div class="stat-label">упражнений выполнено</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">{{ progress.percent }}%</div>
-                <div class="stat-label">результат</div>
-            </div>
-        </div>
-        
         <div class="completed-actions">
             <a href="/dashboard" class="btn-primary">
                 🏠 На главную
@@ -31,8 +20,6 @@
             <a href="/dashboard/weeks/{{ lesson.week_id }}" class="btn-secondary">
                 📚 К списку уроков
             </a>
-            <a href="/dashboard/lessons/{{ lesson.id }}" class="btn-outline-lesson">
-                📖 Повторить урок
             </a>
         </div>
     </div>

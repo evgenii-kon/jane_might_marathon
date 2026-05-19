@@ -28,7 +28,8 @@ class LessonResponse(BaseModel):
     week_id: int
     order_in_week: int
     content_html: str
-    video_url: str
+    video_url: str | None = None
+
 
     model_config = SettingsConfigDict(from_attributes = True)
 

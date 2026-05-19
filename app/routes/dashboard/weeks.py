@@ -34,39 +34,8 @@ def week_detail(
     if not week:
         raise HTTPException(404, "Week not found")
 
-    # Получаем прогресс пользователя по этой неделе
-    user_week_progress = week_progress_service.get_or_create(current_user.id, week_id)
+    #user_week_progress = week_progress_service.get_or_create(current_user.id, week_id)
 
-    # 🔥 Исправляем часовой пояс: убеждаемся, что opens_at с часовым поясом
-    now = datetime.now(timezone.utc)
-    opens_at = user_week_progress.opens_at
-
-    # Если opens_at без часового пояса, добавляем UTC
-    if opens_at.tzinfo is None:
-        from datetime import timezone as tz
-
-        opens_at = opens_at.replace(tzinfo=tz.utc)
-
-    is_locked = now < opens_at
-
-    if is_locked:
-        # Если неделя заблокирована, показываем страницу с таймером
-        return templates.TemplateResponse(
-            "dashboard/weeks/week_detail.html",
-            {
-                "request": request,
-                "week": week,
-                "is_locked": True,
-                "opens_at": opens_at,
-                "total_count": 0,
-                "completed_count": 0,
-                "progress_percent": 0,
-                "lessons": [],
-                "user": current_user,
-            },
-        )
-
-    # Если неделя открыта, показываем уроки
     lessons = lesson_service.get_lessons_by_week(week_id)
     lessons_with_progress = []
     for lesson in lessons:
