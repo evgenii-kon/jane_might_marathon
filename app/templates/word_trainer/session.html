@@ -103,16 +103,13 @@
     const wordsData = {{ words | tojson }};
     const mode = '{{ mode }}';
 
-    // ЕСЛИ ЕЖЕДНЕВНЫЙ РЕЖИМ И НЕТ СЛОВ – ПОКАЗЫВАЕМ СПЕЦИАЛЬНУЮ КАРТОЧКУ
     if (mode === 'daily' && (!wordsData || wordsData.length === 0)) {
         document.getElementById('trainer-main').style.display = 'none';
         document.getElementById('no-words-card').style.display = 'block';
         document.getElementById('stats').style.display = 'none';
-        // Останавливаем выполнение, чтобы не инициализировать тренажёр
         throw new Error('No words for daily session');
     }
 
-    // ---------- ИНИЦИАЛИЗАЦИЯ ТРЕНАЖЁРА (ЕСЛИ СЛОВА ЕСТЬ) ----------
     let sessionWords = [...wordsData];
     let currentIndex = 0;
     let correctCount = 0;
@@ -135,6 +132,10 @@
     const feedbackEl = document.getElementById('feedback');
     const resultsDiv = document.getElementById('results');
     const trainerContainer = document.querySelector('.trainer-card-container');
+    const inputControls = document.getElementById('input-controls');
+    const startControls = document.getElementById('start-controls');
+    const statsNormal = document.getElementById('stats-normal');
+    const statsStart = document.getElementById('stats-start');
 
     let correctCountEl = document.getElementById('correct-count');
     let wrongCountEl = document.getElementById('wrong-count');
@@ -336,8 +337,10 @@
         waitingForNext = false;
         sessionActive = true;
 
-        const statsNormal = document.getElementById('stats-normal');
-        const statsStart = document.getElementById('stats-start');
+        // Скрыть стартовые кнопки и показать поле ввода
+        if (startControls) startControls.style.display = 'none';
+        if (inputControls) inputControls.style.display = 'flex';
+
         if (statsNormal) statsNormal.style.display = 'flex';
         if (statsStart) statsStart.style.display = 'none';
 
@@ -385,34 +388,30 @@
         actionBtn.textContent = '✅ Проверить';
 
         if (mode === 'all') {
+            if (inputControls) inputControls.style.display = 'none';
             logoContainer.style.display = 'block';
             questionContainer.style.display = 'none';
             showFront();
-            const statsNormal = document.getElementById('stats-normal');
-            const statsStart = document.getElementById('stats-start');
             if (statsNormal) statsNormal.style.display = 'none';
             if (statsStart) {
                 statsStart.style.display = 'block';
                 document.getElementById('total-words-count').textContent = sessionWords.length;
             }
+        } else {
+            if (inputControls) inputControls.style.display = 'none';
         }
     }
 
     function init() {
         if (mode === 'daily') {
-            const startControls = document.getElementById('start-controls');
             if (startControls) startControls.style.display = 'none';
-            document.getElementById('input-controls').style.display = 'flex';
             startNewSession();
         } else if (mode === 'all') {
-            document.getElementById('input-controls').style.display = 'none';
+            if (inputControls) inputControls.style.display = 'none';
             logoContainer.style.display = 'block';
             questionContainer.style.display = 'none';
             sessionActive = false;
             showFront();
-
-            const statsNormal = document.getElementById('stats-normal');
-            const statsStart = document.getElementById('stats-start');
             if (statsNormal) statsNormal.style.display = 'none';
             if (statsStart) {
                 statsStart.style.display = 'block';
@@ -443,8 +442,8 @@
             if (mode === 'all') {
                 logoContainer.style.display = 'block';
                 questionContainer.style.display = 'none';
-                document.getElementById('start-controls').style.display = 'flex';
-                document.getElementById('input-controls').style.display = 'none';
+                if (startControls) startControls.style.display = 'flex';
+                if (inputControls) inputControls.style.display = 'none';
                 sessionActive = false;
                 waitingForNext = false;
                 showFront();
@@ -457,9 +456,6 @@
                 feedbackEl.innerHTML = '';
                 userAnswer.value = '';
                 actionBtn.textContent = '✅ Проверить';
-
-                const statsNormal = document.getElementById('stats-normal');
-                const statsStart = document.getElementById('stats-start');
                 if (statsNormal) statsNormal.style.display = 'none';
                 if (statsStart) {
                     statsStart.style.display = 'block';

@@ -1,0 +1,71 @@
+.rating-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.rating-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.filter-btn {
+    background: #f3f4f6;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.filter-btn.active {
+    background: #f97316;
+    color: white;
+}
+.rating-table-wrapper {
+    overflow-x: auto;
+}
+.rating-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.rating-table th,
+.rating-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+.rating-table th {
+    background: #f8fafc;
+    font-weight: 600;
+}
+.word-hanzi {
+    font-size: 18px;
+    font-weight: 500;
+}
+.mastery-stars {
+    display: flex;
+    gap: 4px;
+}
+.star {
+    font-size: 16px;
+}
+.star.filled {
+    color: #f97316;
+}
+.star.empty {
+    color: #e5e7eb;
+}
+.btn-small {
+    background: #f97316;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 12px;
+}
+.btn-small:hover {
+    background: #ea580c;
+}

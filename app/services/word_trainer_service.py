@@ -105,3 +105,26 @@ class WordTrainerService:
         """
         word_ids = self.progress_repo.get_existing_word_ids(user_id)
         return len(word_ids)
+
+    def get_word_ranking(self, user_id: int) -> List[dict]:
+        """Возвращает список всех слов с прогрессом пользователя (mastery, correct/wrong)"""
+        all_words = self.word_repo.get_all()
+        progresses = self.progress_repo.get_all_by_user(user_id)
+        progress_map = {p.word_id: p for p in progresses}
+        
+        ranking = []
+        for word in all_words:
+            prog = progress_map.get(word.id)
+            ranking.append({
+                'id': word.id,
+                'hanzi': word.hanzi,
+                'transcription': word.transcription,
+                'translation': word.translation,
+                'mastery_level': prog.mastery_level if prog else 0,
+                'correct_count': prog.correct_count if prog else 0,
+                'wrong_count': prog.wrong_count if prog else 0,
+                'audio_url': word.audio_url,
+            })
+        # Сортировка по mastery (по убыванию)
+        ranking.sort(key=lambda x: x['mastery_level'], reverse=True)
+        return ranking

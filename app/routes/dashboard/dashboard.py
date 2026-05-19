@@ -110,3 +110,19 @@ def get_dashboard(
             "total_words": total_words,
         },
     )
+
+
+@router.get('/words/rating', response_class=HTMLResponse)
+def word_rating(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    from app.services.word_trainer_service import WordTrainerService
+    service = WordTrainerService(db)
+    words = service.get_word_ranking(current_user.id)
+    return templates.TemplateResponse('dashboard/words/rating.html', {
+        'request': request,
+        'words': words,
+        'user': current_user
+    })

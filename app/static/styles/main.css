@@ -17,6 +17,7 @@
 @import url('about.css');
 @import url('exercises.css');
 @import url('articles.css');
+@import url('word_raiting.css');
 
 /* Адаптив (должен быть последним) */
 @import url('responsive.css');

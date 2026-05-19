@@ -28,21 +28,33 @@
         </div>
     </div>
 
-    <!-- ДВЕ КАРТОЧКИ В РЯДУ -->
+    <!-- ПЕРВЫЙ РЯД: Тренажёр слов | Рейтинг слов -->
     <div class="dashboard-row">
-        <!-- КАРТОЧКА ТРЕНАЖЁРА СЛОВ -->
         <a href="/word-trainer" class="dashboard-card trainer-card-link half-width">
             <div class="trainer-card-content">
                 <div class="trainer-card-icon">📚</div>
                 <div class="trainer-card-info">
                     <h3>Тренажёр слов</h3>
-                    <p>Закрепляй свои знания в режиме ежедневного повторения, а также в режиме марафона по всем словам HSK-1</p>
+                    <p>Закрепляй свои знания в режимах ежедневного повторения и марафона</p>
                 </div>
                 <div class="trainer-card-arrow">→</div>
             </div>
         </a>
 
-        <!-- КАРТОЧКА TELEGRAM СООБЩЕСТВА -->
+        <a href="/dashboard/words/rating" class="dashboard-card rating-card half-width">
+            <div class="rating-card-content">
+                <div class="rating-card-icon">🏆</div>
+                <div class="rating-card-info">
+                    <h3>Рейтинг слов</h3>
+                    <p>Отслеживай прогресс и уровень mastery для каждого слова HSK-1</p>
+                </div>
+                <div class="rating-card-arrow">→</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- ВТОРОЙ РЯД: Telegram | Instagram -->
+    <div class="dashboard-row">
         <a href="https://t.me/your_channel" target="_blank" class="dashboard-card telegram-card half-width">
             <div class="telegram-card-content">
                 <img src="/static/images/telegram_logo.jpg" alt="Telegram" class="telegram-card-icon">
@@ -53,8 +65,20 @@
                 <div class="telegram-card-arrow">→</div>
             </div>
         </a>
+
+        <a href="https://instagram.com/your_page" target="_blank" class="dashboard-card instagram-card half-width">
+            <div class="instagram-card-content">
+                <div class="instagram-card-icon">📷</div>
+                <div class="instagram-card-info">
+                    <h3>Instagram</h3>
+                    <p>Следи за новостями, полезными советами и вдохновением</p>
+                </div>
+                <div class="instagram-card-arrow">→</div>
+            </div>
+        </a>
     </div>
 
+    <!-- Недели марафона (без изменений) -->
     <div class="dashboard-card">
         <div class="section-header">
             <h2>📚 Недели марафона</h2>

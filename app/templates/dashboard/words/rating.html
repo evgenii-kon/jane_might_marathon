@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Рейтинг слов - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="rating-container">
+    <h1>📊 Рейтинг слов</h1>
+    <p>Ваш прогресс по каждому слову HSK-1</p>
+
+    <div class="rating-filters">
+        <button class="filter-btn active" data-filter="all">Все слова</button>
+        <button class="filter-btn" data-filter="low">Низкий уровень (0-2)</button>
+        <button class="filter-btn" data-filter="mid">Средний уровень (3-4)</button>
+        <button class="filter-btn" data-filter="mastered">Выучено (5)</button>
+    </div>
+
+    <div class="rating-table-wrapper">
+        <table class="rating-table">
+            <thead>
+                <tr>
+                    <th>Иероглиф</th>
+                    <th>Транскрипция</th>
+                    <th>Перевод</th>
+                    <th>Уровень</th>
+                    <th>✅/❌</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for word in words %}
+                <tr class="word-row" data-mastery="{{ word.mastery_level }}">
+                    <td class="word-hanzi">{{ word.hanzi }}</td>
+                    <td class="word-transcription">{{ word.transcription }}</td>
+                    <td class="word-translation">{{ word.translation }}</td>
+                    <td class="word-mastery">
+                        <div class="mastery-stars">
+                            {% for i in range(1,6) %}
+                                {% if i <= word.mastery_level %}
+                                    <span class="star filled">★</span>
+                                {% else %}
+                                    <span class="star empty">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td class="word-stats">{{ word.correct_count }}/{{ word.correct_count + word.wrong_count }}</td>
+                    <td class="word-action">
+                        <a href="/word-trainer/all?word_id={{ word.id }}" class="btn-small">Повторить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const rows = document.querySelectorAll('.word-row');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            rows.forEach(row => {
+                const mastery = parseInt(row.dataset.mastery);
+                if (filter === 'all') row.style.display = '';
+                else if (filter === 'low' && mastery <= 2) row.style.display = '';
+                else if (filter === 'mid' && (mastery === 3 || mastery === 4)) row.style.display = '';
+                else if (filter === 'mastered' && mastery === 5) row.style.display = '';
+                else row.style.display = 'none';
+            });
+        });
+    });
+</script>
+{% endblock %}

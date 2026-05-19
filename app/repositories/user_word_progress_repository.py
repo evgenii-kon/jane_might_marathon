@@ -78,6 +78,10 @@ class UserWordProgressRepository:
             .all()
         )
         return results
+    
+
+    def get_all_by_user(self, user_id: int) -> List[UserWordProgress]:
+        return self.db.query(UserWordProgress).filter(UserWordProgress.user_id == user_id).all()
 
 
     def get_existing_word_ids(self, user_id: int) -> List[int]:

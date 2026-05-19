@@ -11,6 +11,9 @@
     padding: 24px;
     margin-bottom: 24px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;  /* убираем подчёркивание у ссылок-карточек */
+    display: block;
 }
 
 /* Welcome Card */
@@ -184,6 +187,10 @@
 .week-lock {
     text-align: center;
     padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
 }
 
 .lock-icon {
@@ -191,11 +198,13 @@
     opacity: 0.5;
 }
 
-.lock-text {
-    display: block;
-    font-size: 12px;
-    color: #9ca3af;
-    margin-top: 4px;
+.lock-days {
+    font-size: 13px;
+    font-weight: 500;
+    color: #f97316;
+    background: rgba(249, 115, 22, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
 }
 
 /* Vocabulary Stats */
@@ -235,67 +244,7 @@
     margin-bottom: 8px;
 }
 
-/* Trainer Card */
-.trainer-card-link {
-    background: linear-gradient(135deg, #f97316, #ea580c);
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: block;
-}
-
-.trainer-card-link:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(234, 88, 12, 0.3);
-}
-
-.trainer-card-content {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.trainer-card-icon {
-    font-size: 40px;
-    background: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.trainer-card-info {
-    flex: 1;
-}
-
-.trainer-card-info h3 {
-    margin: 0 0 4px 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: white;
-}
-
-.trainer-card-info p {
-    margin: 0;
-    color: rgba(255,255,255,0.85);
-    font-size: 13px;
-}
-
-.trainer-card-arrow {
-    font-size: 20px;
-    color: white;
-    flex-shrink: 0;
-    transition: transform 0.3s ease;
-}
-
-.trainer-card-link:hover .trainer-card-arrow {
-    transform: translateX(4px);
-}
-
-/* Dashboard Row */
+/* ========== ОБЩИЕ СТИЛИ ДЛЯ КАРТОЧЕК В РЯДУ ========== */
 .dashboard-row {
     display: flex;
     gap: 24px;
@@ -307,23 +256,79 @@
     margin-bottom: 0;
 }
 
-/* Telegram Card */
-.telegram-card {
-    background: linear-gradient(135deg, #1e3a8a, #0f2b6d);
+/* База для всех карточек-ссылок */
+.trainer-card-link,
+.rating-card,
+.telegram-card,
+.instagram-card {
     transition: all 0.3s ease;
     text-decoration: none;
     display: block;
 }
 
-.telegram-card:hover {
+.trainer-card-link:hover,
+.rating-card:hover,
+.telegram-card:hover,
+.instagram-card:hover {
     transform: translateY(-4px);
+}
+
+/* Карточка тренажёра слов (оранжевая) */
+.trainer-card-link {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+}
+.trainer-card-link:hover {
+    box-shadow: 0 12px 24px rgba(234, 88, 12, 0.3);
+}
+
+/* Карточка рейтинга слов (золотистая) */
+.rating-card {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+.rating-card:hover {
+    box-shadow: 0 12px 24px rgba(245, 158, 11, 0.3);
+}
+
+/* Карточка Telegram (синяя) */
+.telegram-card {
+    background: linear-gradient(135deg, #1e3a8a, #0f2b6d);
+}
+.telegram-card:hover {
     box-shadow: 0 12px 24px rgba(0,0,0,0.15);
 }
 
-.telegram-card-content {
+/* Карточка Instagram (градиент Instagram) */
+.instagram-card {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+}
+.instagram-card:hover {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+/* Общий контент карточек */
+.trainer-card-content,
+.rating-card-content,
+.telegram-card-content,
+.instagram-card-content {
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+/* Иконки (общий размер) */
+.trainer-card-icon,
+.rating-card-icon,
+.instagram-card-icon {
+    font-size: 40px;
+    background: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    flex-shrink: 0;
 }
 
 .telegram-card-icon {
@@ -334,58 +339,78 @@
     flex-shrink: 0;
 }
 
-.telegram-card-info {
+/* Текстовые блоки */
+.trainer-card-info,
+.rating-card-info,
+.telegram-card-info,
+.instagram-card-info {
     flex: 1;
 }
 
-.telegram-card-info h3 {
+.trainer-card-info h3,
+.rating-card-info h3,
+.telegram-card-info h3,
+.instagram-card-info h3 {
     margin: 0 0 4px 0;
     font-size: 18px;
     font-weight: 600;
     color: white;
 }
 
-.telegram-card-info p {
+.trainer-card-info p,
+.rating-card-info p,
+.telegram-card-info p,
+.instagram-card-info p {
     margin: 0;
-    color: rgba(255,255,255,0.8);
     font-size: 13px;
+    color: rgba(255,255,255,0.85);
 }
 
-.telegram-card-arrow {
+/* Стрелки */
+.trainer-card-arrow,
+.rating-card-arrow,
+.telegram-card-arrow,
+.instagram-card-arrow {
     font-size: 20px;
     color: white;
     flex-shrink: 0;
     transition: transform 0.3s ease;
 }
 
-.telegram-card:hover .telegram-card-arrow {
+.trainer-card-link:hover .trainer-card-arrow,
+.rating-card:hover .rating-card-arrow,
+.telegram-card:hover .telegram-card-arrow,
+.instagram-card:hover .instagram-card-arrow {
     transform: translateX(4px);
 }
 
-.week-card.locked {
-    opacity: 0.7;
-    background: #f9fafb;
-}
-
-.week-lock {
-    text-align: center;
-    padding: 12px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-}
-
-.lock-icon {
-    font-size: 32px;
-    opacity: 0.5;
-}
-
-.lock-days {
-    font-size: 13px;
-    font-weight: 500;
-    color: #f97316;
-    background: rgba(249, 115, 22, 0.1);
-    padding: 4px 12px;
-    border-radius: 20px;
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    .dashboard-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .half-width {
+        margin-bottom: 0;
+    }
+    .trainer-card-icon,
+    .rating-card-icon,
+    .telegram-card-icon,
+    .instagram-card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 32px;
+    }
+    .trainer-card-info h3,
+    .rating-card-info h3,
+    .telegram-card-info h3,
+    .instagram-card-info h3 {
+        font-size: 16px;
+    }
+    .trainer-card-info p,
+    .rating-card-info p,
+    .telegram-card-info p,
+    .instagram-card-info p {
+        font-size: 12px;
+    }
 }
