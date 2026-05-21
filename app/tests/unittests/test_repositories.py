@@ -5,11 +5,6 @@ from app.repositories.lesson_repository import LessonRepository
 from app.repositories.word_repository import WordRepository
 from app.repositories.exercise_repository import ExerciseRepository
 from app.repositories.article_repository import ArticleRepository
-from app.repositories.user_word_progress_repository import UserWordProgressRepository
-from app.repositories.user_lesson_progress_repository import UserLessonProgressRepository
-from app.repositories.user_exercise_progress_repository import UserExerciseProgressRepository
-from app.repositories.user_week_progress_repository import UserWeekProgressRepository
-from app.repositories.lesson_word_association_repository import LessonWordAssociationRepository
 
 from app.models.user import User
 from app.models.week import Week
@@ -17,19 +12,11 @@ from app.models.lesson import Lesson
 from app.models.word import Word
 from app.models.exercise import Exercise
 from app.models.article import Article
-from app.models.user_word_progress import UserWordProgress
-from app.models.user_lesson_progress import UserLessonProgress
-from app.models.user_exercise_progress import UserExerciseProgress
-from app.models.user_week_progress import UserWeekProgress
 from app.schemas.week import WeekCreate
 from app.schemas.user import UserUpdate
 from app.schemas.lesson import LessonCreate
-from app.schemas.lesson import LessonCreate
-from app.models.lesson import Lesson
 from app.schemas.exercise import ExerciseCreate
-from app.repositories.article_repository import ArticleRepository
-from app.models.article import Article
-from app.schemas.article import ArticleCreate, ArticleUpdate
+from app.schemas.article import ArticleCreate
 
 
 

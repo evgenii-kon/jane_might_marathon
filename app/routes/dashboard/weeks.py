@@ -5,7 +5,6 @@ from fastapi.templating import Jinja2Templates
 from app.database import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
-from datetime import datetime, timezone
 
 from app.services.week_service import WeekService
 from app.services.lesson_service import LessonService

@@ -1,14 +1,10 @@
 import pytest
-from datetime import datetime, timezone
 from app.models.user import User
 from app.models.week import Week
 from app.models.lesson import Lesson
-from app.models.word import Word
-from app.models.user_word_progress import UserWordProgress
 from app.models.user_lesson_progress import UserLessonProgress
 from app.models.exercise import Exercise
 from app.models.user_exercise_progress import UserExerciseProgress
-from app.models.article import Article
 
 
 class TestUserModel:

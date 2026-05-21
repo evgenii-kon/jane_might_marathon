@@ -21,6 +21,7 @@ class UserLessonProgressService:
         self.repository = UserLessonProgressRepository(db)
         self.lesson_repository = LessonRepository(db)
 
+
     def mark_lesson_as_completed(
         self, user_id: int, lesson_id: int
     ) -> UserLessonProgressResponse:
@@ -35,6 +36,7 @@ class UserLessonProgressService:
         progress = self.repository.mark_completed(user_id, lesson_id)
         return UserLessonProgressResponse.model_validate(progress)
 
+
     def mark_lesson_as_started(
         self, user_id: int, lesson_id: int
     ) -> UserLessonProgressResponse:
@@ -46,13 +48,16 @@ class UserLessonProgressService:
         progress = self.repository.mark_started(user_id, lesson_id)
         return UserLessonProgressResponse.model_validate(progress)
 
+
     def is_lesson_started(self, user_id: int, lesson_id: int) -> bool:
         """Проверить, начат ли урок"""
         return self.repository.is_started(user_id, lesson_id)
 
+
     def is_lesson_completed(self, user_id: int, lesson_id: int) -> bool:
         """Проверить, пройден ли урок"""
         return self.repository.is_completed(user_id, lesson_id)
+
 
     def get_next_lesson_in_week(
         self, week_id: int, current_order: int
@@ -91,6 +96,7 @@ class UserLessonProgressService:
             progress_percent=progress_percent,
         )
 
+
     def get_week_progress(self, user_id: int, week_id: int) -> WeekProgressSummary:
         """Получить прогресс по урокам в конкретной неделе"""
         lessons = self.lesson_repository.get_by_week_id(week_id)
@@ -116,17 +122,21 @@ class UserLessonProgressService:
         """Получить список ID пройденных уроков пользователя"""
         return self.repository.get_completed_lesson_ids(user_id)
 
+
     def get_started_lesson_ids(self, user_id: int) -> List[int]:
         """Получить список ID начатых уроков пользователя"""
         return self.repository.get_started_lesson_ids(user_id)
+
 
     def get_completed_count_by_user(self, user_id: int) -> int:
         """Получить количество пройденных уроков пользователя"""
         return self.repository.get_completed_count_by_user(user_id)
 
+
     def get_completed_count_by_week(self, user_id: int, week_id: int) -> int:
         """Получить количество пройденных уроков в неделе"""
         return self.repository.get_completed_count_by_week(user_id, week_id)
+
 
     def get_lessons_with_progress(
         self, user_id: int, week_id: int

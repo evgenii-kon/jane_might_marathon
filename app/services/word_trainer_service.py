@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import datetime, timezone
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
 from app.repositories.word_repository import WordRepository
 from app.repositories.lesson_word_association_repository import (

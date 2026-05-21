@@ -7,10 +7,6 @@ import os
 # Импортируем общую Base из приложения
 from app.database import Base
 # Импортируем все модели, чтобы они попали в Base.metadata
-from app.models import (
-    user, week, lesson, word, user_word_progress,
-    user_lesson_progress, exercise, user_exercise_progress, article
-)
 
 load_dotenv('.env.test')
 
