@@ -1,59 +1,60 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import func, select
 from typing import Optional, List
 from ..models.lesson import Lesson
 from ..schemas.lesson import LessonCreate
 
-
 class LessonRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_all(self) -> List[Lesson]:
-        return self.db.query(Lesson).all()
+    async def get_all(self) -> List[Lesson]:
+        result = await self.db.execute(select(Lesson))
+        return result.scalars().all()
 
-    def get_by_id(self, lesson_id: int) -> Optional[Lesson]:
-        return self.db.query(Lesson).filter(Lesson.id == lesson_id).first()
+    async def get_by_id(self, lesson_id: int) -> Optional[Lesson]:
+        result = await self.db.execute(select(Lesson).where(Lesson.id == lesson_id))
+        return result.scalar_one_or_none()
 
-    def get_by_name(self, lesson_name: str) -> Optional[Lesson]:
-        return self.db.query(Lesson).filter(Lesson.name == lesson_name).first()
+    async def get_by_name(self, lesson_name: str) -> Optional[Lesson]:
+        result = await self.db.execute(select(Lesson).where(Lesson.name == lesson_name))
+        return result.scalar_one_or_none()
 
-    def create(self, lesson_data: LessonCreate) -> Lesson:
+    async def create(self, lesson_data: LessonCreate) -> Lesson:
         new_lesson = Lesson(**lesson_data.model_dump())
         self.db.add(new_lesson)
-        self.db.commit()
-        self.db.refresh(new_lesson)
+        await self.db.commit()
+        await self.db.refresh(new_lesson)
         return new_lesson
 
-    def update(self, lesson_id: int, update_data: dict) -> Optional[Lesson]:
-        lesson = self.get_by_id(lesson_id)
+    async def update(self, lesson_id: int, update_data: dict) -> Optional[Lesson]:
+        lesson = await self.get_by_id(lesson_id)
         if not lesson:
             return None
-
         for key, value in update_data.items():
             setattr(lesson, key, value)
-
-        self.db.commit()
-        self.db.refresh(lesson)
+        await self.db.commit()
+        await self.db.refresh(lesson)
         return lesson
 
-    def delete(self, lesson_id: int) -> bool:
-        lesson = self.db.query(Lesson).filter(Lesson.id == lesson_id).first()
+    async def delete(self, lesson_id: int) -> bool:
+        lesson = await self.get_by_id(lesson_id)
         if lesson:
-            self.db.delete(lesson)
-            self.db.commit()
+            await self.db.delete(lesson)
+            await self.db.commit()
             return True
-        else:
-            return False
+        return False
 
-    def get_by_week_id(self, week_id: int) -> List[Lesson]:
+    async def get_by_week_id(self, week_id: int) -> List[Lesson]:
         """Получить все уроки недели, отсортированные по порядку"""
-        return (
-            self.db.query(Lesson)
-            .filter(Lesson.week_id == week_id)
+        result = await self.db.execute(
+            select(Lesson)
+            .where(Lesson.week_id == week_id)
             .order_by(Lesson.order_in_week)
-            .all()
         )
+        return result.scalars().all()
 
-    def get_count(self) -> int:
+    async def get_count(self) -> int:
         """Получить общее количество уроков"""
-        return self.db.query(Lesson).count()
+        result = await self.db.execute(select(func.count(Lesson.id)))
+        return result.scalar_one()

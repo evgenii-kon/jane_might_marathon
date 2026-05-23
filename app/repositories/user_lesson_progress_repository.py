@@ -1,59 +1,59 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func
 from typing import Optional, List
+from datetime import datetime, timezone
 from app.models.user_lesson_progress import UserLessonProgress
 from app.models.lesson import Lesson
 
 
 class UserLessonProgressRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_by_user_and_lesson(
+    async def get_by_user_and_lesson(
         self, user_id: int, lesson_id: int
     ) -> Optional[UserLessonProgress]:
-        return (
-            self.db.query(UserLessonProgress)
-            .filter(
+        result = await self.db.execute(
+            select(UserLessonProgress).where(
                 UserLessonProgress.user_id == user_id,
-                UserLessonProgress.lesson_id == lesson_id,
+                UserLessonProgress.lesson_id == lesson_id
             )
-            .first()
         )
+        return result.scalar_one_or_none()
 
-    def create(self, user_id: int, lesson_id: int) -> UserLessonProgress:
+    async def create(self, user_id: int, lesson_id: int) -> UserLessonProgress:
         """Создать запись прогресса (урок начат, но не пройден)"""
         progress = UserLessonProgress(
             user_id=user_id, lesson_id=lesson_id, is_completed=False, completed_at=None
         )
         self.db.add(progress)
-        self.db.commit()
-        self.db.refresh(progress)
+        await self.db.commit()
+        await self.db.refresh(progress)
         return progress
 
-    def mark_completed(self, user_id: int, lesson_id: int) -> UserLessonProgress:
+    async def mark_completed(self, user_id: int, lesson_id: int) -> UserLessonProgress:
         """Отметить урок как пройденный"""
-        progress = self.get_by_user_and_lesson(user_id, lesson_id)
+        progress = await self.get_by_user_and_lesson(user_id, lesson_id)
 
         if not progress:
             progress = UserLessonProgress(
                 user_id=user_id,
                 lesson_id=lesson_id,
                 is_completed=True,
-                completed_at=func.now(),
+                completed_at=datetime.now(timezone.utc),
             )
             self.db.add(progress)
         else:
             progress.is_completed = True
-            progress.completed_at = func.now()
+            progress.completed_at = datetime.now(timezone.utc)
 
-        self.db.commit()
-        self.db.refresh(progress)
+        await self.db.commit()
+        await self.db.refresh(progress)
         return progress
 
-    def mark_started(self, user_id: int, lesson_id: int) -> UserLessonProgress:
+    async def mark_started(self, user_id: int, lesson_id: int) -> UserLessonProgress:
         """Отметить урок как начатый"""
-        progress = self.get_by_user_and_lesson(user_id, lesson_id)
+        progress = await self.get_by_user_and_lesson(user_id, lesson_id)
 
         if not progress:
             progress = UserLessonProgress(
@@ -66,66 +66,62 @@ class UserLessonProgressRepository:
         else:
             progress.is_started = True
 
-        self.db.commit()
-        self.db.refresh(progress)
+        await self.db.commit()
+        await self.db.refresh(progress)
         return progress
 
-    def is_completed(self, user_id: int, lesson_id: int) -> bool:
+    async def is_completed(self, user_id: int, lesson_id: int) -> bool:
         """Проверить, пройден ли урок"""
-        progress = self.get_by_user_and_lesson(user_id, lesson_id)
+        progress = await self.get_by_user_and_lesson(user_id, lesson_id)
         return progress is not None and progress.is_completed
 
-    def is_started(self, user_id: int, lesson_id: int) -> bool:
+    async def is_started(self, user_id: int, lesson_id: int) -> bool:
         """Проверить, начат ли урок"""
-        progress = self.get_by_user_and_lesson(user_id, lesson_id)
+        progress = await self.get_by_user_and_lesson(user_id, lesson_id)
         return progress is not None and progress.is_started
 
-    def get_completed_lesson_ids(self, user_id: int) -> List[int]:
+    async def get_completed_lesson_ids(self, user_id: int) -> List[int]:
         """Получить список ID пройденных уроков пользователя"""
-        results = (
-            self.db.query(UserLessonProgress.lesson_id)
-            .filter(
+        result = await self.db.execute(
+            select(UserLessonProgress.lesson_id)
+            .where(
                 UserLessonProgress.user_id == user_id,
                 UserLessonProgress.is_completed == True,
             )
-            .all()
         )
-        return [r[0] for r in results]
+        return result.scalars().all()
 
-    def get_started_lesson_ids(self, user_id: int) -> List[int]:
+    async def get_started_lesson_ids(self, user_id: int) -> List[int]:
         """Получить список ID начатых уроков пользователя"""
-        results = (
-            self.db.query(UserLessonProgress.lesson_id)
-            .filter(
+        result = await self.db.execute(
+            select(UserLessonProgress.lesson_id)
+            .where(
                 UserLessonProgress.user_id == user_id,
                 UserLessonProgress.is_started == True,
             )
-            .all()
         )
-        return [r[0] for r in results]
+        return result.scalars().all()
 
-    def get_completed_count_by_user(self, user_id: int) -> int:
+    async def get_completed_count_by_user(self, user_id: int) -> int:
         """Получить количество пройденных уроков пользователя"""
-        return (
-            self.db.query(func.count(UserLessonProgress.id))
-            .filter(
+        result = await self.db.execute(
+            select(func.count(UserLessonProgress.id))
+            .where(
                 UserLessonProgress.user_id == user_id,
                 UserLessonProgress.is_completed == True,
             )
-            .scalar()
-            or 0
         )
+        return result.scalar_one() or 0
 
-    def get_completed_count_by_week(self, user_id: int, week_id: int) -> int:
+    async def get_completed_count_by_week(self, user_id: int, week_id: int) -> int:
         """Получить количество пройденных уроков в конкретной неделе"""
-        return (
-            self.db.query(func.count(UserLessonProgress.id))
+        result = await self.db.execute(
+            select(func.count(UserLessonProgress.id))
             .join(Lesson, Lesson.id == UserLessonProgress.lesson_id)
-            .filter(
+            .where(
                 UserLessonProgress.user_id == user_id,
                 Lesson.week_id == week_id,
                 UserLessonProgress.is_completed == True,
             )
-            .scalar()
-            or 0
         )
+        return result.scalar_one() or 0

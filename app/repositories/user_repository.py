@@ -1,44 +1,49 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from typing import List, Optional
 from ..models.user import User
 from app.schemas.user import UserUpdate
 
 
 class UserRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_all(self) -> List[User]:
-        return self.db.query(User).all()
+    async def get_all(self) -> List[User]:
+        result = await self.db.execute(select(User))
+        return result.scalars().all()
 
-    def get_by_id(self, id: int) -> Optional[User]:
-        return self.db.query(User).filter(User.id == id).first()
+    async def get_by_id(self, id: int) -> Optional[User]:
+        result = await self.db.execute(select(User).where(User.id == id))
+        return result.scalar_one_or_none()
 
-    def get_by_name(self, name: str) -> Optional[User]:
-        return self.db.query(User).filter(User.name == name).first()
+    async def get_by_name(self, name: str) -> Optional[User]:
+        result = await self.db.execute(select(User).where(User.name == name))
+        return result.scalar_one_or_none()
 
-    def get_by_email(self, email: str) -> Optional[User]:
-        return self.db.query(User).filter(User.email == email).first()
+    async def get_by_email(self, email: str) -> Optional[User]:
+        result = await self.db.execute(select(User).where(User.email == email))
+        return result.scalar_one_or_none()
 
-    def create(self, data: dict) -> User:
+    async def create(self, data: dict) -> User:
         """передается data: dict а не pydantic модель для того чтобы захешировать пароль"""
         new_user = User(**data)
         self.db.add(new_user)
-        self.db.commit()
-        self.db.refresh(new_user)
+        await self.db.commit()
+        await self.db.refresh(new_user)
         return new_user
 
-    def delete(self, id: int) -> bool:
-        user = self.db.query(User).filter(User.id == id).first()
+    async def delete(self, id: int) -> bool:
+        user = await self.get_by_id(id)
         if user:
-            self.db.delete(user)
-            self.db.commit()
+            await self.db.delete(user)
+            await self.db.commit()
             return True
         else:
             return False
 
-    def update(self, id: int, update_data: UserUpdate) -> Optional[User]:
-        user = self.get_by_id(id)
+    async def update(self, id: int, update_data: UserUpdate) -> Optional[User]:
+        user = await self.get_by_id(id)
         if not user:
             return None
 
@@ -47,6 +52,6 @@ class UserRepository:
         for key, value in update_dict.items():
             setattr(user, key, value)
 
-        self.db.commit()
-        self.db.refresh(user)
+        await self.db.commit()
+        await self.db.refresh(user)
         return user

@@ -1,84 +1,96 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, delete
 from typing import List, Optional
 from app.models.word import Word
 from app.models.lesson import Lesson
+from app.models.lesson_word_association import lesson_word_association
 
 
 class WordRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_all(self) -> List[Word]:
-        return self.db.query(Word).all()
+    async def get_all(self) -> List[Word]:
+        result = await self.db.execute(select(Word))
+        return result.scalars().all()
 
-    def get_by_id(self, word_id: int) -> Optional[Word]:
-        return self.db.query(Word).filter(Word.id == word_id).first()
+    async def get_by_id(self, word_id: int) -> Optional[Word]:
+        result = await self.db.execute(select(Word).where(Word.id == word_id))
+        return result.scalar_one_or_none()
 
-    def get_by_ids(self, word_ids: List[int]) -> List[Word]:
+    async def get_by_ids(self, word_ids: List[int]) -> List[Word]:
         """Получить несколько слов по списку ID"""
         if not word_ids:
             return []
-        return self.db.query(Word).filter(Word.id.in_(word_ids)).all()
+        result = await self.db.execute(select(Word).where(Word.id.in_(word_ids)))
+        return result.scalars().all()
 
-    def get_by_lesson(self, lesson_id: int) -> List[Word]:
-        lesson = self.db.query(Lesson).filter(Lesson.id == lesson_id).first()
-        return lesson.words if lesson else []
+    async def get_by_lesson(self, lesson_id: int) -> List[Word]:
+        """Получить слова, связанные с уроком, через ассоциативную таблицу"""
+        result = await self.db.execute(
+            select(Word)
+            .join(lesson_word_association, Word.id == lesson_word_association.c.word_id)
+            .where(lesson_word_association.c.lesson_id == lesson_id)
+        )
+        return result.scalars().all()
 
-    def get_lesson_ids(self, word_id: int) -> List[int]:
-        word = self.get_by_id(word_id)
-        if not word:
-            return []
-        return [lesson.id for lesson in word.lessons]
+    async def get_lesson_ids(self, word_id: int) -> List[int]:
+        """Получить ID уроков, в которых используется слово"""
+        result = await self.db.execute(
+            select(lesson_word_association.c.lesson_id)
+            .where(lesson_word_association.c.word_id == word_id)
+        )
+        return result.scalars().all()
 
-    def create(self, word_data: dict) -> Word:
+    async def create(self, word_data: dict) -> Word:
         word = Word(**word_data)
         self.db.add(word)
-        self.db.commit()
-        self.db.refresh(word)
+        await self.db.commit()
+        await self.db.refresh(word)
         return word
 
-    def update(self, word_id: int, update_data: dict) -> Optional[Word]:
-        word = self.get_by_id(word_id)
+    async def update(self, word_id: int, update_data: dict) -> Optional[Word]:
+        word = await self.get_by_id(word_id)
         if not word:
             return None
-
         for key, value in update_data.items():
             setattr(word, key, value)
-
-        self.db.commit()
-        self.db.refresh(word)
+        await self.db.commit()
+        await self.db.refresh(word)
         return word
 
-    def delete(self, word_id: int) -> bool:
-        word = self.get_by_id(word_id)
+    async def delete(self, word_id: int) -> bool:
+        word = await self.get_by_id(word_id)
         if word:
-            self.db.delete(word)
-            self.db.commit()
+            await self.db.delete(word)
+            await self.db.commit()
             return True
         return False
 
-    def add_to_lesson(self, word_id: int, lesson_id: int) -> bool:
-        word = self.get_by_id(word_id)
-        lesson = self.db.query(Lesson).filter(Lesson.id == lesson_id).first()
+    async def add_to_lesson(self, word_id: int, lesson_id: int) -> bool:
+        """Добавить слово в урок (создать запись в ассоциации)"""
+        # Проверяем, существует ли уже связь
+        result = await self.db.execute(
+            select(lesson_word_association).where(
+                lesson_word_association.c.word_id == word_id,
+                lesson_word_association.c.lesson_id == lesson_id,
+            )
+        )
+        if result.first():
+            return True  # уже есть
 
-        if not word or not lesson:
-            return False
-
-        if word not in lesson.words:
-            lesson.words.append(word)
-            self.db.commit()
+        # Вставляем новую связь
+        stmt = lesson_word_association.insert().values(word_id=word_id, lesson_id=lesson_id)
+        await self.db.execute(stmt)
+        await self.db.commit()
         return True
 
-    def remove_from_lesson(self, word_id: int, lesson_id: int) -> bool:
-        from app.models.lesson import Lesson
-
-        word = self.get_by_id(word_id)
-        lesson = self.db.query(Lesson).filter(Lesson.id == lesson_id).first()
-
-        if not word or not lesson:
-            return False
-
-        if word in lesson.words:
-            lesson.words.remove(word)
-            self.db.commit()
-        return True
+    async def remove_from_lesson(self, word_id: int, lesson_id: int) -> bool:
+        """Удалить слово из урока"""
+        stmt = delete(lesson_word_association).where(
+            lesson_word_association.c.word_id == word_id,
+            lesson_word_association.c.lesson_id == lesson_id,
+        )
+        result = await self.db.execute(stmt)
+        await self.db.commit()
+        return result.rowcount > 0

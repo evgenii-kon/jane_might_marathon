@@ -21,13 +21,13 @@ class Settings(BaseSettings):
     @property
     def database_url(self) -> str:
         """Формирование URL для подключения к БД (синхронная версия)"""
-        # Убрал +asyncpg, оставил только psycopg2 (синхронный драйвер)
         return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-
+    
     @property
-    def database_url_sync(self) -> str:
-        """Синхронный URL для миграций и подключения"""
-        return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    def database_url_async(self) -> str:
+        """Формирование URL для подключения к БД (асинхронная версия)"""
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
 
     # CORS settings
     cors_origins: List[str] = [

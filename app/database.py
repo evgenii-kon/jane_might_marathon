@@ -1,29 +1,21 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm  import declarative_base
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.orm import declarative_base
 from .config import settings
 
-engine = create_engine(settings.database_url)
+engine = create_async_engine(settings.database_url_async, echo=True)
 
-if not database_exists(engine.url):
-    create_database(engine.url)
-
-new_session = sessionmaker(engine, expire_on_commit=False)
+AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 Base = declarative_base()
 
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
-def init_db():
-    Base.metadata.create_all(bind=engine)
+async def drop_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
 
-def drop_db():
-    Base.metadata.drop_all(bind=engine)
-
-
-def get_db():
-    db = new_session()
-    try:
-        yield db
-    finally:
-        db.close()
+async def get_db() -> AsyncSession:
+    async with AsyncSessionLocal() as session:
+        yield session

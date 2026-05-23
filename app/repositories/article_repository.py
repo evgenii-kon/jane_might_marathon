@@ -1,56 +1,63 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func
 from typing import Optional, List
 from ..models.article import Article
 from ..schemas.article import ArticleCreate
 
-
 class ArticleRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-    def get_all(self) -> List[Article]:
+    async def get_all(self) -> List[Article]:
         """Получить все статьи"""
-        return self.db.query(Article).order_by(Article.created_at.desc()).all()
+        result = await self.db.execute(
+            select(Article).order_by(Article.created_at.desc())
+        )
+        return result.scalars().all()
 
-    def get_by_id(self, article_id: int) -> Optional[Article]:
+    async def get_by_id(self, article_id: int) -> Optional[Article]:
         """Получить статью по ID"""
-        return self.db.query(Article).filter(Article.id == article_id).first()
+        result = await self.db.execute(
+            select(Article).where(Article.id == article_id)
+        )
+        return result.scalar_one_or_none()
 
-    def get_by_slug(self, slug: str) -> Optional[Article]:
+    async def get_by_slug(self, slug: str) -> Optional[Article]:
         """Получить статью по slug"""
-        return self.db.query(Article).filter(Article.slug == slug).first()
+        result = await self.db.execute(
+            select(Article).where(Article.slug == slug)
+        )
+        return result.scalar_one_or_none()
 
-    def create(self, article_data: ArticleCreate) -> Article:
+    async def create(self, article_data: ArticleCreate) -> Article:
         """Создать новую статью"""
         new_article = Article(**article_data.model_dump())
         self.db.add(new_article)
-        self.db.commit()
-        self.db.refresh(new_article)
+        await self.db.commit()
+        await self.db.refresh(new_article)
         return new_article
 
-    def update(self, article_id: int, update_data: dict) -> Optional[Article]:
+    async def update(self, article_id: int, update_data: dict) -> Optional[Article]:
         """Обновить статью"""
-        article = self.get_by_id(article_id)
+        article = await self.get_by_id(article_id)
         if not article:
             return None
-
         for key, value in update_data.items():
             setattr(article, key, value)
-
-        self.db.commit()
-        self.db.refresh(article)
+        await self.db.commit()
+        await self.db.refresh(article)
         return article
 
-    def delete(self, article_id: int) -> bool:
+    async def delete(self, article_id: int) -> bool:
         """Удалить статью"""
-        article = self.get_by_id(article_id)
+        article = await self.get_by_id(article_id)
         if not article:
             return False
-
-        self.db.delete(article)
-        self.db.commit()
+        await self.db.delete(article)
+        await self.db.commit()
         return True
 
-    def count(self) -> int:
+    async def count(self) -> int:
         """Получить количество статей"""
-        return self.db.query(Article).count()
+        result = await self.db.execute(select(func.count()).select_from(Article))
+        return result.scalar_one()

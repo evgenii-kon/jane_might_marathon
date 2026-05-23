@@ -1,4 +1,5 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func
 from datetime import datetime, timezone, timedelta
 from typing import List
 from app.models.user_word_progress import UserWordProgress
@@ -14,18 +15,17 @@ class UserWordProgressRepository:
         5: 60,  # мастер
     }
 
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
 
-
-    def get_or_create(self, user_id: int, word_id: int) -> UserWordProgress:
-        progress = (
-            self.db.query(UserWordProgress)
-            .filter(
-                UserWordProgress.user_id == user_id, UserWordProgress.word_id == word_id
+    async def get_or_create(self, user_id: int, word_id: int) -> UserWordProgress:
+        result = await self.db.execute(
+            select(UserWordProgress).where(
+                UserWordProgress.user_id == user_id,
+                UserWordProgress.word_id == word_id
             )
-            .first()
         )
+        progress = result.scalar_one_or_none()
 
         if not progress:
             progress = UserWordProgress(
@@ -34,16 +34,15 @@ class UserWordProgressRepository:
                 next_review_at=datetime.now(timezone.utc),
             )
             self.db.add(progress)
-            self.db.commit()
-            self.db.refresh(progress)
+            await self.db.commit()
+            await self.db.refresh(progress)
 
         return progress
 
-
-    def update_mastery(
+    async def update_mastery(
         self, user_id: int, word_id: int, is_correct: bool
     ) -> UserWordProgress:
-        progress = self.get_or_create(user_id, word_id)
+        progress = await self.get_or_create(user_id, word_id)
 
         if is_correct:
             progress.correct_count += 1
@@ -58,42 +57,39 @@ class UserWordProgressRepository:
             days=interval_days
         )
 
-        self.db.commit()
-        self.db.refresh(progress)
+        await self.db.commit()
+        await self.db.refresh(progress)
         return progress
 
-
-    def get_words_for_review(
+    async def get_words_for_review(
         self, user_id: int, limit: int = 30
     ) -> List[UserWordProgress]:
         now = datetime.now(timezone.utc)
-        results = (
-            self.db.query(UserWordProgress)
-            .filter(
+        result = await self.db.execute(
+            select(UserWordProgress)
+            .where(
                 UserWordProgress.user_id == user_id,
                 UserWordProgress.next_review_at <= now,
             )
             .order_by(UserWordProgress.next_review_at.asc())
             .limit(limit)
-            .all()
         )
-        return results
-    
+        return result.scalars().all()
 
-    def get_all_by_user(self, user_id: int) -> List[UserWordProgress]:
-        return self.db.query(UserWordProgress).filter(UserWordProgress.user_id == user_id).all()
+    async def get_all_by_user(self, user_id: int) -> List[UserWordProgress]:
+        result = await self.db.execute(
+            select(UserWordProgress).where(UserWordProgress.user_id == user_id)
+        )
+        return result.scalars().all()
 
-
-    def get_existing_word_ids(self, user_id: int) -> List[int]:
+    async def get_existing_word_ids(self, user_id: int) -> List[int]:
         """Получить ID слов, которые уже есть в прогрессе пользователя"""
-        results = (
-            self.db.query(UserWordProgress.word_id)
-            .filter(UserWordProgress.user_id == user_id)
-            .all()
+        result = await self.db.execute(
+            select(UserWordProgress.word_id).where(UserWordProgress.user_id == user_id)
         )
-        return [r[0] for r in results]
+        return result.scalars().all()
 
-    def create_many(self, user_id: int, word_ids: List[int]) -> int:
+    async def create_many(self, user_id: int, word_ids: List[int]) -> int:
         """Создать прогресс для нескольких слов"""
         if not word_ids:
             return 0
@@ -112,37 +108,30 @@ class UserWordProgressRepository:
             )
             progresses.append(progress)
 
-        self.db.add_all(progresses)
-        self.db.commit()
+        self.db.add_all(progresses)   # синхронный метод
+        await self.db.commit()
         return len(progresses)
 
-    def get_all_by_user(self, user_id: int) -> List[UserWordProgress]:
-        return (
-            self.db.query(UserWordProgress)
-            .filter(UserWordProgress.user_id == user_id)
-            .all()
-        )
-
-    def get_review_count_today(self, user_id: int) -> int:
+    async def get_review_count_today(self, user_id: int) -> int:
         now = datetime.now(timezone.utc)
-        return (
-            self.db.query(UserWordProgress)
-            .filter(
+        result = await self.db.execute(
+            select(func.count(UserWordProgress.id))
+            .where(
                 UserWordProgress.user_id == user_id,
                 UserWordProgress.next_review_at <= now,
             )
-            .count()
         )
+        return result.scalar_one() or 0
 
-    def get_mastery_stats(self, user_id: int) -> dict:
-        results = (
-            self.db.query(UserWordProgress.mastery_level)
-            .filter(UserWordProgress.user_id == user_id)
-            .all()
+    async def get_mastery_stats(self, user_id: int) -> dict:
+        result = await self.db.execute(
+            select(UserWordProgress.mastery_level)
+            .where(UserWordProgress.user_id == user_id)
         )
+        levels = result.scalars().all()
 
         stats = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
-        for (level,) in results:
+        for level in levels:
             stats[level] = stats.get(level, 0) + 1
 
         return stats
