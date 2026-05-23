@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
 from app.repositories.word_repository import WordRepository
@@ -10,28 +10,28 @@ from app.models.user_word_progress import UserWordProgress
 
 
 class WordTrainerService:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
         self.progress_repo = UserWordProgressRepository(db)
         self.word_repo = WordRepository(db)
         self.lesson_word_repo = LessonWordAssociationRepository(db)
 
-    def add_lesson_words_to_progress(self, user_id: int, lesson_id: int) -> int:
+    async def add_lesson_words_to_progress(self, user_id: int, lesson_id: int) -> int:
         """
         Добавить все слова урока в прогресс пользователя (если ещё не добавлены)
         """
-        word_ids = self.lesson_word_repo.get_word_ids_by_lesson(lesson_id)
+        word_ids = await self.lesson_word_repo.get_word_ids_by_lesson(lesson_id)
 
         if not word_ids:
             print(f"В уроке {lesson_id} нет слов")
             return 0
 
-        existing_word_ids = self.progress_repo.get_existing_word_ids(user_id)
+        existing_word_ids = await self.progress_repo.get_existing_word_ids(user_id)
 
         new_word_ids = [wid for wid in word_ids if wid not in existing_word_ids]
 
         if new_word_ids:
-            added_count = self.progress_repo.create_many(user_id, new_word_ids)
+            added_count = await self.progress_repo.create_many(user_id, new_word_ids)
             print(
                 f"✅ Добавлено {added_count} новых слов из урока {lesson_id} для пользователя {user_id}"
             )
@@ -42,75 +42,61 @@ class WordTrainerService:
         )
         return 0
 
-
-    def get_daily_session(
+    async def get_daily_session(
         self, user_id: int, limit: int = 30
     ) -> List[UserWordProgress]:
         """
         Получить слова для ежедневного повторения
         """
-        return self.progress_repo.get_words_for_review(user_id, limit)
+        return await self.progress_repo.get_words_for_review(user_id, limit)
 
-
-    def get_due_count(self, user_id: int) -> int:
+    async def get_due_count(self, user_id: int) -> int:
         """
         Получить количество слов, ожидающих повторения сегодня
         """
-        return self.progress_repo.get_review_count_today(user_id)
+        return await self.progress_repo.get_review_count_today(user_id)
 
-
-    def get_all_words_session(self, user_id: int) -> List[Word]:
+    async def get_all_words_session(self, user_id: int) -> List[Word]:
         """
         Получить все слова
         """
-        word_ids = self.word_repo.get_all()
-        if not word_ids:
-            return []
-        return word_ids
-    
-    
-    def get_daily_session(self, user_id: int, limit: int = 30) -> List[UserWordProgress]:
-        """Возвращает список прогрессов слов для повторения"""
-        return self.progress_repo.get_words_for_review(user_id, limit)
+        words = await self.word_repo.get_all()
+        return words
 
-
-    def update_mastery(
+    async def update_mastery(
         self, user_id: int, word_id: int, is_correct: bool
     ) -> UserWordProgress:
         """
         Обновить уровень владения словом после ответа пользователя
         """
-        return self.progress_repo.update_mastery(user_id, word_id, is_correct)
+        return await self.progress_repo.update_mastery(user_id, word_id, is_correct)
 
-
-    def get_mastery_stats(self, user_id: int) -> dict:
+    async def get_mastery_stats(self, user_id: int) -> dict:
         """
         Получить статистику уровней mastery пользователя
         """
-        return self.progress_repo.get_mastery_stats(user_id)
+        return await self.progress_repo.get_mastery_stats(user_id)
 
-
-    def get_review_count_today(self, user_id: int) -> int:
+    async def get_review_count_today(self, user_id: int) -> int:
         """
         Получить количество слов, запланированных на повторение сегодня
         """
-        return self.progress_repo.get_review_count_today(user_id)
+        return await self.progress_repo.get_review_count_today(user_id)
 
-
-    def get_total_words_count(self, user_id: int) -> int:
+    async def get_total_words_count(self, user_id: int) -> int:
         """
         Получить общее количество слов в прогрессе пользователя
         (все слова из уроков, которые он открыл)
         """
-        word_ids = self.progress_repo.get_existing_word_ids(user_id)
+        word_ids = await self.progress_repo.get_existing_word_ids(user_id)
         return len(word_ids)
 
-    def get_word_ranking(self, user_id: int) -> List[dict]:
+    async def get_word_ranking(self, user_id: int) -> List[dict]:
         """Возвращает список всех слов с прогрессом пользователя (mastery, correct/wrong)"""
-        all_words = self.word_repo.get_all()
-        progresses = self.progress_repo.get_all_by_user(user_id)
+        all_words = await self.word_repo.get_all()
+        progresses = await self.progress_repo.get_all_by_user(user_id)
         progress_map = {p.word_id: p for p in progresses}
-        
+
         ranking = []
         for word in all_words:
             prog = progress_map.get(word.id)

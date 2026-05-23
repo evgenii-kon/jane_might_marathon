@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from fastapi import status, HTTPException
 from ..repositories.exercise_repository import ExerciseRepository
@@ -11,17 +11,17 @@ from ..schemas.exercise import (
 
 
 class ExerciseService:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.repository = ExerciseRepository(db)
 
-    def get_all_exercises(self) -> List[ExerciseResponse]:
+    async def get_all_exercises(self) -> List[ExerciseResponse]:
         """Получить все упражнения"""
-        exercises = self.repository.get_all()
+        exercises = await self.repository.get_all()
         return [ExerciseResponse.model_validate(e) for e in exercises]
 
-    def get_exercise_by_id(self, exercise_id: int) -> ExerciseResponse:
+    async def get_exercise_by_id(self, exercise_id: int) -> ExerciseResponse:
         """Получить упражнение по ID"""
-        exercise = self.repository.get_by_id(exercise_id)
+        exercise = await self.repository.get_by_id(exercise_id)
         if not exercise:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -29,25 +29,22 @@ class ExerciseService:
             )
         return ExerciseResponse.model_validate(exercise)
 
-    def get_exercises_by_lesson(self, lesson_id: int) -> List[ExerciseResponse]:
+    async def get_exercises_by_lesson(self, lesson_id: int) -> List[ExerciseResponse]:
         """Получить все упражнения урока (отсортированные)"""
-        exercises = self.repository.get_by_lesson(lesson_id)
+        exercises = await self.repository.get_by_lesson(lesson_id)
         return [ExerciseResponse.model_validate(e) for e in exercises]
 
-    def create_exercise(self, exercise_data: ExerciseCreate) -> ExerciseResponse:
+    async def create_exercise(self, exercise_data: ExerciseCreate) -> ExerciseResponse:
         """Создать новое упражнение"""
-        # Проверяем, существует ли урок с таким ID (опционально)
-        # lesson_service = LessonService(self.db)
-        # lesson_service.get_lesson_by_id(exercise_data.lesson_id)
 
-        new_exercise = self.repository.create(exercise_data)
+        new_exercise = await self.repository.create(exercise_data)
         return ExerciseResponse.model_validate(new_exercise)
 
-    def update_exercise(
+    async def update_exercise(
         self, exercise_id: int, exercise_data: ExerciseUpdate
     ) -> ExerciseResponse:
         """Обновить упражнение"""
-        exercise_exist_check = self.repository.get_by_id(exercise_id)
+        exercise_exist_check = await self.repository.get_by_id(exercise_id)
         if not exercise_exist_check:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -55,7 +52,7 @@ class ExerciseService:
             )
 
         update_dict = exercise_data.model_dump(exclude_unset=True)
-        exercise = self.repository.update(exercise_id, update_dict)
+        exercise = await self.repository.update(exercise_id, update_dict)
 
         if not exercise:
             raise HTTPException(
@@ -65,26 +62,26 @@ class ExerciseService:
 
         return ExerciseResponse.model_validate(exercise)
 
-    def delete_exercise(self, exercise_id: int) -> bool:
+    async def delete_exercise(self, exercise_id: int) -> bool:
         """Удалить упражнение"""
-        exercise_exist_check = self.repository.get_by_id(exercise_id)
+        exercise_exist_check = await self.repository.get_by_id(exercise_id)
         if not exercise_exist_check:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Exercise with id={exercise_id} not found",
             )
 
-        return self.repository.delete(exercise_id)
+        return await self.repository.delete(exercise_id)
 
-    def get_exercises_count_by_lesson(self, lesson_id: int) -> int:
+    async def get_exercises_count_by_lesson(self, lesson_id: int) -> int:
         """Получить количество упражнений в уроке"""
-        return self.repository.get_count_by_lesson(lesson_id)
+        return await self.repository.get_count_by_lesson(lesson_id)
 
-    def check_answer(
+    async def check_answer(
         self, exercise_id: int, selected_option: int
     ) -> ExerciseCheckResponse:
         """Проверить ответ пользователя"""
-        exercise = self.repository.get_by_id(exercise_id)
+        exercise = await self.repository.get_by_id(exercise_id)
         if not exercise:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
