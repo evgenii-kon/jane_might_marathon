@@ -17,11 +17,11 @@ class UserWordProgress(Base):
     correct_count = Column(Integer, default=0)
     wrong_count = Column(Integer, default=0)
 
-    last_reviewed_at = Column(DateTime, nullable=True)
-    next_review_at = Column(DateTime, nullable=True)
+    last_reviewed_at = Column(DateTime(timezone=True), nullable=True)
+    next_review_at = Column(DateTime(timezone=True), nullable=True)
 
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, onupdate=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     user = relationship("User", back_populates="word_progress", lazy="selectin")
     word = relationship("Word", back_populates="user_progress", lazy="selectin")
