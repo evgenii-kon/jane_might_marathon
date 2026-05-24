@@ -9,7 +9,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def admin_dashboard(request: Request, admin: User = Depends(get_current_admin)):
+async def admin_dashboard(request: Request, admin: User = Depends(get_current_admin)):
     """
     Главная страница админ-панели
     """

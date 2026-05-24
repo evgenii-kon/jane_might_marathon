@@ -9,7 +9,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def word_trainer_hub(request: Request, current_user: User = Depends(get_current_user)):
+async def word_trainer_hub(request: Request, current_user: User = Depends(get_current_user)):
     """
     Страница выбора режима тренажёра
     """

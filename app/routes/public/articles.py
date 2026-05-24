@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.dependencies.auth import get_current_user_optional
@@ -13,14 +13,14 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def list_articles(
+async def list_articles(
     request: Request,
     current_user: User | None = Depends(get_current_user_optional),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Список всех статей"""
     service = ArticleService(db)
-    articles = service.get_all_articles()
+    articles =await service.get_all_articles()
 
     return templates.TemplateResponse(
         "public/articles/list.html",
@@ -29,17 +29,17 @@ def list_articles(
 
 
 @router.get("/{slug}", response_class=HTMLResponse)
-def article_detail(
+async def article_detail(
     request: Request,
     slug: str,
     current_user: User | None = Depends(get_current_user_optional),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Детальная страница статьи"""
     service = ArticleService(db)
 
     try:
-        article = service.get_article_by_slug(slug)
+        article = await service.get_article_by_slug(slug)
     except HTTPException:
         raise HTTPException(status_code=404, detail="Article not found")
 

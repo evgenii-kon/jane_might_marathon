@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
 from app.database import get_db
@@ -18,14 +18,14 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def list_users(
+async def list_users(
     request: Request,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Список всех пользователей (только для админа)"""
     user_service = UserService(db)
-    users = user_service.get_all_users()
+    users = await user_service.get_all_users()
 
     return templates.TemplateResponse(
         "admin/users/users_list.html",
@@ -37,26 +37,26 @@ def list_users(
 
 
 @router.get("/create", response_class=HTMLResponse)
-def create_user_form(
+async def create_user_form(
     request: Request,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Форма создания пользователя"""
     return templates.TemplateResponse(
-        "admin/users/user_create.html", {"request": request}
+        "admin/users/user_create.html", {"request": request, "admin": admin}
     )
 
 
 @router.post("/create", response_class=HTMLResponse)
-def create_user(
+async def create_user(
     request: Request,
     name: str = Form(...),
     email: str = Form(...),
     password: str = Form(...),
     telegram: Optional[str] = Form(None),
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Создание пользователя (админ)"""
     user_service = UserService(db)
@@ -65,11 +65,12 @@ def create_user(
         user_data = UserCreate(
             name=name, email=email, password=password, telegram=telegram
         )
-        user_service.create_user(user_data)
+        await user_service.create_user(user_data)
         return RedirectResponse(url="/admin/users", status_code=302)
     except HTTPException as e:
         return templates.TemplateResponse(
-            "admin/users/user_create.html", {"request": request, "error": e.detail}
+            "admin/users/user_create.html",
+            {"request": request, "error": e.detail, "admin": admin}
         )
 
 
@@ -77,26 +78,27 @@ def create_user(
 
 
 @router.get("/{user_id}/edit", response_class=HTMLResponse)
-def edit_user_form(
+async def edit_user_form(
     request: Request,
     user_id: int,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Форма редактирования пользователя (админ)"""
     user_service = UserService(db)
 
     try:
-        user = user_service.get_user_by_id(user_id)
+        user = await user_service.get_user_by_id(user_id)
         return templates.TemplateResponse(
-            "admin/users/users_edit.html", {"request": request, "user": user}
+            "admin/users/users_edit.html",
+            {"request": request, "user": user, "admin": admin}
         )
     except HTTPException:
         return RedirectResponse(url="/admin/users", status_code=302)
 
 
 @router.post("/{user_id}/edit", response_class=HTMLResponse)
-def edit_user(
+async def edit_user(
     request: Request,
     user_id: int,
     name: str = Form(...),
@@ -104,7 +106,7 @@ def edit_user(
     telegram: Optional[str] = Form(None),
     password: Optional[str] = Form(None),
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Обновление пользователя (админ)"""
     user_service = UserService(db)
@@ -116,13 +118,13 @@ def edit_user(
             telegram=telegram,
             password=password if password else None,
         )
-        user_service.update_user(user_id, update_data)
+        await user_service.update_user(user_id, update_data)
         return RedirectResponse(url="/admin/users", status_code=302)
     except HTTPException as e:
-        user = user_service.get_user_by_id(user_id)
+        user = await user_service.get_user_by_id(user_id)
         return templates.TemplateResponse(
             "admin/users/users_edit.html",
-            {"request": request, "user": user, "error": e.detail},
+            {"request": request, "user": user, "error": e.detail, "admin": admin},
         )
 
 
@@ -130,28 +132,29 @@ def edit_user(
 
 
 @router.get("/{user_id}/delete", response_class=HTMLResponse)
-def delete_user_form(
+async def delete_user_form(
     request: Request,
     user_id: int,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Форма подтверждения удаления пользователя"""
     user_service = UserService(db)
-    user = user_service.get_user_by_id(user_id)
+    user = await user_service.get_user_by_id(user_id)
 
     return templates.TemplateResponse(
-        "admin/users/delete.html", {"request": request, "user": user}
+        "admin/users/delete.html",
+        {"request": request, "user": user, "admin": admin}
     )
 
 
 @router.post("/{user_id}/delete")
-def delete_user(
+async def delete_user(
     user_id: int,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """Удаление пользователя (админ)"""
     user_service = UserService(db)
-    user_service.delete_user(user_id)
+    await user_service.delete_user(user_id)
     return RedirectResponse(url="/admin/users", status_code=302)

@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.dependencies.auth import get_current_admin
 from app.models.user import User
@@ -12,28 +12,34 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def list_feedback(
+async def list_feedback(
     request: Request,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     service = FeedbackService(db)
+    feedbacks = await service.get_all()
     return templates.TemplateResponse("admin/feedback/feedback_list.html", {
         "request": request,
-        "feedbacks": service.get_all(),
+        "feedbacks": feedbacks,
         "user": admin
     })
 
 
 @router.get("/{feedback_id}", response_class=HTMLResponse)
-def view_feedback(
+async def view_feedback(
     request: Request,
     feedback_id: int,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     service = FeedbackService(db)
-    feedback = service.get_by_id(feedback_id)
+    try:
+        feedback = await service.get_by_id(feedback_id)
+    except HTTPException as e:
+        if e.status_code == 404:
+            return RedirectResponse(url="/admin/feedback", status_code=302)
+        raise
     if not feedback:
         return RedirectResponse(url="/admin/feedback", status_code=302)
     return templates.TemplateResponse("admin/feedback/feedback_detail.html", {
@@ -44,25 +50,30 @@ def view_feedback(
 
 
 @router.post("/{feedback_id}/delete")
-def delete_feedback(
+async def delete_feedback(
     feedback_id: int,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     service = FeedbackService(db)
-    service.delete(feedback_id)
+    await service.delete(feedback_id)
     return RedirectResponse(url="/admin/feedback", status_code=302)
 
 
 @router.get("/{feedback_id}/delete", response_class=HTMLResponse)
-def delete_feedback_confirm(
+async def delete_feedback_confirm(
     request: Request,
     feedback_id: int,
     admin: User = Depends(get_current_admin),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     service = FeedbackService(db)
-    feedback = service.get_by_id(feedback_id)
+    try:
+        feedback = await service.get_by_id(feedback_id)
+    except HTTPException as e:
+        if e.status_code == 404:
+            return RedirectResponse(url="/admin/feedback", status_code=302)
+        raise
     return templates.TemplateResponse("admin/feedback/delete_confirm.html", {
         "request": request,
         "feedback": feedback,

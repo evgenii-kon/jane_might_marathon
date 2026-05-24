@@ -10,7 +10,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-def index(
+async def index(
     request: Request,
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
@@ -20,7 +20,7 @@ def index(
 
 
 @router.get("/about", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-def about(
+async def about(
     request: Request,
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
