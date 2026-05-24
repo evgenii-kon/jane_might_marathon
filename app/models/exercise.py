@@ -20,5 +20,5 @@ class Exercise(Base):
 
     lesson = relationship("Lesson", back_populates="exercises")
     user_progress = relationship(
-        "UserExerciseProgress", back_populates="exercise", cascade="all, delete-orphan"
+        "UserExerciseProgress", back_populates="exercise", cascade="all, delete-orphan", lazy="selectin"
     )

@@ -23,5 +23,5 @@ class UserWordProgress(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-    user = relationship("User", back_populates="word_progress")
-    word = relationship("Word", back_populates="user_progress")
+    user = relationship("User", back_populates="word_progress", lazy="selectin")
+    word = relationship("Word", back_populates="user_progress", lazy="selectin")

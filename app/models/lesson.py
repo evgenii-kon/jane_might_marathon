@@ -13,13 +13,13 @@ class Lesson(Base):
     content_html = Column(String, nullable=False)
     video_url = Column(String, nullable=True)
 
-    week = relationship("Week", back_populates="lessons")
+    week = relationship("Week", back_populates="lessons", lazy="selectin")
     user_progress = relationship(
-        "UserLessonProgress", back_populates="lesson", cascade="all, delete-orphan"
+        "UserLessonProgress", back_populates="lesson", lazy="selectin", cascade="all, delete-orphan"
     )
     words = relationship(
-        "Word", secondary=lesson_word_association, back_populates="lessons"
+        "Word", secondary=lesson_word_association, back_populates="lessons", lazy="selectin"
     )
     exercises = relationship(
-        "Exercise", back_populates="lesson", order_by="Exercise.order_in_lesson"
+        "Exercise", back_populates="lesson", lazy="selectin", order_by="Exercise.order_in_lesson"
     )

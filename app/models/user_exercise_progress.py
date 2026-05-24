@@ -15,5 +15,5 @@ class UserExerciseProgress(Base):
         DateTime(timezone=True), server_default=func.now(), nullable=True
     )
 
-    user = relationship("User", back_populates="exercise_progress")
-    exercise = relationship("Exercise", back_populates="user_progress")
+    user = relationship("User", back_populates="exercise_progress", lazy="selectin")
+    exercise = relationship("Exercise", back_populates="user_progress", lazy="selectin")

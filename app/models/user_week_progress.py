@@ -13,5 +13,5 @@ class UserWeekProgress(Base):
     is_completed = Column(Boolean, default=False)
     completed_at = Column(DateTime(timezone=True), nullable=True)
 
-    user = relationship("User", back_populates="week_progress")
-    week = relationship("Week", back_populates="user_progress")
+    user = relationship("User", back_populates="week_progress", lazy="selectin")
+    week = relationship("Week", back_populates="user_progress", lazy="selectin")

@@ -14,7 +14,7 @@ class Week(Base):
     target_words_count = Column(Integer, nullable=False)
     target_exercises_count = Column(Integer, nullable=False)
 
-    lessons = relationship("Lesson", back_populates="week")
+    lessons = relationship("Lesson", back_populates="week", lazy="selectin")
     user_progress = relationship(
-        "UserWeekProgress", back_populates="week", cascade="all, delete-orphan"
+        "UserWeekProgress", back_populates="week", cascade="all, delete-orphan", lazy="selectin"
     )

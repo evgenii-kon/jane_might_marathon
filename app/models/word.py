@@ -18,8 +18,8 @@ class Word(Base):
 
     # Связь с уроками (многие ко многим)
     lessons = relationship(
-        "Lesson", secondary=lesson_word_association, back_populates="words"
+        "Lesson", secondary=lesson_word_association, back_populates="words", lazy="selectin"
     )
     user_progress = relationship(
-        "UserWordProgress", back_populates="word", cascade="all, delete-orphan"
+        "UserWordProgress", back_populates="word", cascade="all, delete-orphan", lazy="selectin"
     )
