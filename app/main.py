@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from slowapi.middleware import SlowAPIMiddleware
-
+from starlette.middleware.sessions import SessionMiddleware
 
 from .routes.admin.dashboard import router as admin_router
 from .routes.dashboard.dashboard import router as dashboard_router
@@ -27,23 +27,26 @@ from .routes.admin.feedback import router as admin_feedback_router
 
 from .csrf import CSRFMiddleware, get_csrf_token
 from app.utils.rate_limiter import limiter
-
-
 from .database import init_db, engine
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # При старте приложения
     await init_db()
     yield
-    # При остановке приложения
     await engine.dispose()
 
+
 app = FastAPI(lifespan=lifespan)
-app.add_middleware(CSRFMiddleware) 
+
+# Порядок важен: Session должен быть зарегистрирован раньше CSRF,
+# но add_middleware добавляет в стек в обратном порядке —
+# поэтому Session пишем последним, он выполнится первым
+app.add_middleware(CSRFMiddleware)
+app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(SessionMiddleware, secret_key="73490b3dbacad4b8e2dccbe815199f13")
 
 app.state.limiter = limiter
-app.add_middleware(SlowAPIMiddleware)
 
 app.include_router(admin_router)
 app.include_router(dashboard_router)
@@ -63,7 +66,6 @@ app.include_router(article_router)
 app.include_router(word_trainer_router)
 app.include_router(feedback_router)
 app.include_router(admin_feedback_router)
-
 
 templates = Jinja2Templates("app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

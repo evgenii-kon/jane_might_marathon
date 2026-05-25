@@ -12,6 +12,7 @@ from app.dependencies.auth import get_current_user_optional, get_current_user
 from app.models.user import User
 from app.utils.jwt import create_access_token
 from app.utils.rate_limiter import limiter
+from app.csrf import get_csrf_token 
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -31,7 +32,7 @@ async def register_get(
         "auth/register.html", {
             "request": request, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -55,7 +56,11 @@ async def register_post(
     except HTTPException as e:
         return templates.TemplateResponse(
             "auth/register.html",
-            {"request": request, "error": e.detail, "user": current_user},
+            {
+                "request": request, 
+                "error": e.detail, 
+                "user": current_user,
+                "csrf_token": get_csrf_token(request)},
         )
 
 
@@ -72,7 +77,7 @@ async def login_get(
         "auth/login.html", {
             "request": request, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -110,6 +115,7 @@ async def login_post(
                 "request": request,
                 "error": "Invalid email or password",
                 "user": current_user,
+                "csrf_token": get_csrf_token(request)
             },
         )
 
@@ -127,7 +133,7 @@ async def logout_get(
         "auth/logout.html", {
             "request": request, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -168,6 +174,7 @@ async def get_profile(
             "total_lessons": total_lessons,
             "completed_lessons": completed_lessons,
             "progress_percent": progress_percent,
+            "csrf_token": get_csrf_token(request)
         },
     )
 
@@ -181,7 +188,7 @@ async def edit_profile_get(
         "auth/user_edit_form.html", {
             "request": request, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -200,7 +207,12 @@ async def edit_profile_post(
     except HTTPException as e:
         return templates.TemplateResponse(
             "auth/user_edit_form.html",
-            {"request": request, "user": current_user, "error": e.detail},
+            {
+                "request": request, 
+                "user": current_user, 
+                "error": e.detail,
+                "csrf_token": get_csrf_token(request),
+                },
         )
 
 
@@ -216,7 +228,7 @@ async def delete_account_get(
         "auth/delete_user_confirm.html", {
             "request": request, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 

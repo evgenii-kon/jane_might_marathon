@@ -8,6 +8,8 @@ from app.dependencies.auth import get_current_admin
 from app.models.user import User
 from app.services.article_service import ArticleService
 from app.schemas.article import ArticleCreate, ArticleUpdate
+from app.csrf import get_csrf_token 
+
 
 router = APIRouter(prefix="/admin/articles", tags=["admin_articles"])
 templates = Jinja2Templates(directory="app/templates")
@@ -37,7 +39,7 @@ async def create_article_form(
         {
             "request": request, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             },
     )
 
@@ -76,6 +78,7 @@ async def create_article(
                     "images": images,
                 },
                 "user": current_user,
+                "csrf_token": get_csrf_token(request)
             },
         )
 
@@ -97,7 +100,7 @@ async def edit_article_form(
             "article": article,
             "images_str": images_str,
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
         },
     )
 
@@ -142,6 +145,7 @@ async def edit_article(
                     "images": images,
                 },
                 "user": current_user,
+                "csrf_token": get_csrf_token(request)
             },
         )
 
@@ -161,7 +165,7 @@ async def delete_article_confirm(
             "request": request,
             "article": article, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             },
     )
 

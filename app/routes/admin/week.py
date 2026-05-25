@@ -9,6 +9,8 @@ from app.schemas.week import WeekCreate, WeekUpdate
 from app.services.week_service import WeekService
 from app.dependencies.auth import get_current_admin
 from app.models.user import User
+from app.csrf import get_csrf_token 
+
 
 router = APIRouter(prefix="/admin/weeks", tags=["admin", "week"])
 templates = Jinja2Templates(directory="app/templates")
@@ -39,7 +41,7 @@ async def create_week_get(
         {
             "request": request, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -76,7 +78,7 @@ async def update_week_get(
             "request": request, 
             "week": week, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -109,7 +111,7 @@ async def delete_week_get(
             "request": request, 
             "week": week, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 

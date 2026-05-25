@@ -11,9 +11,12 @@ from app.services.word_trainer_service import WordTrainerService
 from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.user_week_progress_service import UserWeekProgressService
 from app.services.word_service import WordService
+from app.csrf import get_csrf_token 
+
 
 router = APIRouter(prefix="/dashboard/lessons", tags=["dashboard"])
 templates = Jinja2Templates(directory="app/templates")
+
 
 
 @router.get("/{lesson_id}", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -47,7 +50,7 @@ async def lesson_detail(
             "is_completed": is_completed,
             "words": words,
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
         },
     )
 

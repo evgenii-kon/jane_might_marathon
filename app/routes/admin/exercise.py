@@ -12,6 +12,8 @@ from app.schemas.exercise import ExerciseCreate, ExerciseUpdate
 
 router = APIRouter(prefix="/admin/exercises", tags=["admin_exercises"])
 templates = Jinja2Templates(directory="app/templates")
+from app.csrf import get_csrf_token 
+
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -66,7 +68,7 @@ async def create_exercise_form(
             "selected_lesson_id": lesson_id,
             "user": current_user,
             "form_data": {},
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
         },
     )
 
@@ -132,6 +134,7 @@ async def create_exercise(
                     "order_in_lesson": order_in_lesson,
                 },
                 "user": current_user,
+                "csrf_token": get_csrf_token(request)
             },
         )
 
@@ -157,7 +160,7 @@ async def edit_exercise_form(
             "exercise": exercise,
             "lessons": lessons,
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
         },
     )
 
@@ -225,6 +228,7 @@ async def edit_exercise(
                     "order_in_lesson": order_in_lesson,
                 },
                 "user": current_user,
+                "csrf_token": get_csrf_token(request)
             },
         )
 
@@ -246,7 +250,7 @@ async def delete_exercise_confirm(
             "request": request, 
             "exercise": exercise, 
             "user": current_user,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             },
     )
 

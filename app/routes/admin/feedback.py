@@ -9,6 +9,8 @@ from app.services.feedback_service import FeedbackService
 
 router = APIRouter(prefix="/admin/feedback", tags=["admin_feedback"])
 templates = Jinja2Templates(directory="app/templates")
+from app.csrf import get_csrf_token 
+
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -23,7 +25,7 @@ async def list_feedback(
         "request": request,
         "feedbacks": feedbacks,
         "user": admin,
-        "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+        "csrf_token": get_csrf_token(request),
     })
 
 
@@ -79,5 +81,5 @@ async def delete_feedback_confirm(
         "request": request,
         "feedback": feedback,
         "user": admin,
-        "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+        "csrf_token": get_csrf_token(request),
     })

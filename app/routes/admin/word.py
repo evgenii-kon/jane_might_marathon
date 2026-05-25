@@ -10,6 +10,8 @@ from app.models.user import User
 from app.services.word_service import WordService
 from app.services.lesson_service import LessonService
 from app.schemas.word import WordCreate, WordUpdate
+from app.csrf import get_csrf_token 
+
 
 router = APIRouter(prefix="/admin/words", tags=["admin", "word"])
 templates = Jinja2Templates(directory="app/templates")
@@ -40,7 +42,7 @@ async def create_word_get(
         {
             "request": request, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -77,7 +79,7 @@ async def update_word_get(
             "request": request, 
             "word": word, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -110,7 +112,7 @@ async def delete_word_get(
             "request": request, 
             "word": word, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -149,7 +151,7 @@ async def manage_word_lessons(
             "lessons": all_lessons,
             "existing_lesson_ids": existing_lesson_ids,
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
         },
     )
 

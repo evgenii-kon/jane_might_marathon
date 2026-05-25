@@ -12,6 +12,8 @@ from app.services.lesson_service import LessonService
 
 router = APIRouter(prefix="/admin/lessons", tags=["admin", "lesson"])
 templates = Jinja2Templates(directory="app/templates")
+from app.csrf import get_csrf_token 
+
 
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -38,7 +40,7 @@ async def create_lesson_get(
         "admin/lessons/lesson_create.html", {
             "request": request, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -75,7 +77,7 @@ async def update_lesson_get(
             "request": request, 
             "lesson": lesson, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -108,7 +110,7 @@ async def delete_lesson_get(
             "request": request, 
             "lesson": lesson, 
             "user": current_admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 

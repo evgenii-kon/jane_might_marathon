@@ -12,6 +12,8 @@ from app.models.user import User
 
 router = APIRouter(prefix="/admin/users", tags=["admin", "users"])
 templates = Jinja2Templates(directory="app/templates")
+from app.csrf import get_csrf_token 
+
 
 
 # ============ СПИСОК ПОЛЬЗОВАТЕЛЕЙ ============
@@ -47,7 +49,7 @@ async def create_user_form(
         "admin/users/user_create.html", {
             "request": request, 
             "admin": admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
@@ -74,7 +76,11 @@ async def create_user(
     except HTTPException as e:
         return templates.TemplateResponse(
             "admin/users/user_create.html",
-            {"request": request, "error": e.detail, "admin": admin}
+            {
+                "request": request, 
+                "error": e.detail, "admin": admin,
+                "csrf_token": get_csrf_token(request),
+                }
         )
 
 
@@ -99,7 +105,7 @@ async def edit_user_form(
                 "request": request, 
                 "user": user, 
                 "admin": admin,
-                "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+                "csrf_token": get_csrf_token(request),
                 }
         )
     except HTTPException:
@@ -133,7 +139,13 @@ async def edit_user(
         user = await user_service.get_user_by_id(user_id)
         return templates.TemplateResponse(
             "admin/users/users_edit.html",
-            {"request": request, "user": user, "error": e.detail, "admin": admin},
+            {
+                "request": request, 
+                "user": user, 
+                "error": e.detail, 
+                "admin": admin,
+                "csrf_token": get_csrf_token(request),
+                },
         )
 
 
@@ -157,7 +169,7 @@ async def delete_user_form(
             "request": request, 
             "user": user, 
             "admin": admin,
-            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            "csrf_token": get_csrf_token(request),
             }
     )
 
