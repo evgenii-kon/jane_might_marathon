@@ -44,7 +44,11 @@ async def create_user_form(
 ):
     """Форма создания пользователя"""
     return templates.TemplateResponse(
-        "admin/users/user_create.html", {"request": request, "admin": admin}
+        "admin/users/user_create.html", {
+            "request": request, 
+            "admin": admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -91,7 +95,12 @@ async def edit_user_form(
         user = await user_service.get_user_by_id(user_id)
         return templates.TemplateResponse(
             "admin/users/users_edit.html",
-            {"request": request, "user": user, "admin": admin}
+            {
+                "request": request, 
+                "user": user, 
+                "admin": admin,
+                "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+                }
         )
     except HTTPException:
         return RedirectResponse(url="/admin/users", status_code=302)
@@ -144,7 +153,12 @@ async def delete_user_form(
 
     return templates.TemplateResponse(
         "admin/users/delete.html",
-        {"request": request, "user": user, "admin": admin}
+        {
+            "request": request, 
+            "user": user, 
+            "admin": admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 

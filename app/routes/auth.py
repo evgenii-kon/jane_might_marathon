@@ -26,7 +26,11 @@ async def register_get(
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
     return templates.TemplateResponse(
-        "auth/register.html", {"request": request, "user": current_user}
+        "auth/register.html", {
+            "request": request, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -62,7 +66,11 @@ async def login_get(
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
     return templates.TemplateResponse(
-        "auth/login.html", {"request": request, "user": current_user}
+        "auth/login.html", {
+            "request": request, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -112,7 +120,11 @@ async def logout_get(
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
     return templates.TemplateResponse(
-        "auth/logout.html", {"request": request, "user": current_user}
+        "auth/logout.html", {
+            "request": request, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -162,7 +174,11 @@ async def edit_profile_get(
     current_user: User = Depends(get_current_user),
 ):
     return templates.TemplateResponse(
-        "auth/user_edit_form.html", {"request": request, "user": current_user}
+        "auth/user_edit_form.html", {
+            "request": request, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -193,7 +209,11 @@ async def delete_account_get(
     current_user: User = Depends(get_current_user),
 ):
     return templates.TemplateResponse(
-        "auth/delete_user_confirm.html", {"request": request, "user": current_user}
+        "auth/delete_user_confirm.html", {
+            "request": request, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 

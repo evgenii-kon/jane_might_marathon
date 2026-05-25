@@ -11,6 +11,7 @@
     <p style="color: red;">⚠️ Вместе с неделей будут удалены все уроки внутри неё!</p>
     
     <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <button type="submit">✅ Да, удалить</button>
         <a href="/admin/weeks">Отмена</a>
     </form>

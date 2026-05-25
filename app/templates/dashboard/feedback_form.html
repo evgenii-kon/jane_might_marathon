@@ -13,7 +13,7 @@
             </div>
         </div>
         <form method="post" action="/dashboard/feedback/">
-            {{ csrf_input | safe }}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div class="form-group">
                 <label for="text" class="feedback-label">
                     Расскажите нам о Вашем пользовательском опыте работы с курсом. 

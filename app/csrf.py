@@ -1,40 +1,36 @@
-"""
-CSRF защита для FastAPI + Jinja2
-"""
-
 import secrets
 from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.types import ASGIApp
 
 
 class CSRFMiddleware(BaseHTTPMiddleware):
-    """Middleware для проверки CSRF токена"""
-
     async def dispatch(self, request: Request, call_next):
-        # Для GET запросов — устанавливаем токен в cookies
         if request.method == "GET":
-            response = await call_next(request)
             token = secrets.token_urlsafe(32)
+            request.state.csrf_token = token
+            response = await call_next(request)
             response.set_cookie(
-                key="csrftoken",  # ← единое имя
+                key="csrftoken",
                 value=token,
-                httponly=False,  # ← Должен быть False, чтобы JS мог читать
+                httponly=False,
                 samesite="lax",
                 secure=False,
                 max_age=3600,
             )
             return response
 
-        # Для POST запросов — проверяем токен
         if request.method == "POST":
-            # Получаем токен из cookies
-            cookie_token = request.cookies.get("csrftoken")  # ← единое имя
+            cookie_token = request.cookies.get("csrftoken")
 
-            # Получаем токен из формы
-            form = await request.form()
-            form_token = form.get("csrf_token")
+            # Читаем тело один раз и кешируем его в _body,
+            # тогда повторный вызов request.form() в роуте
+            # прочитает из кеша, а не из уже закрытого стрима
+            body = await request.body()
+            request._body = body  # ← вот главная строчка
 
-            # Также проверяем заголовок (для AJAX)
+            form_data = await request.form()
+            form_token = form_data.get("csrf_token")
             if not form_token:
                 form_token = request.headers.get("X-CSRFToken")
 
@@ -46,10 +42,5 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
-def csrf_context_processor(request: Request) -> dict:
-    """Контекстный процессор — передаёт токен в шаблон"""
-    token = request.cookies.get("csrftoken", "")  # ← единое имя
-    return {
-        "csrf_input": f'<input type="hidden" name="csrf_token" value="{token}">',
-        "csrf_token": token,
-    }
+def get_csrf_token(request: Request) -> str:
+    return getattr(request.state, "csrf_token", request.cookies.get("csrftoken", ""))

@@ -32,6 +32,7 @@
 
         <div class="confirm-actions">
             <form method="post" action="/admin/feedback/{{ feedback.id }}/delete" style="display: inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <button type="submit" class="btn-danger">🗑️ Да, удалить</button>
             </form>
             <a href="/admin/feedback" class="btn-secondary">Отмена</a>

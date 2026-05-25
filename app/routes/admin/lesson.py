@@ -35,7 +35,11 @@ async def create_lesson_get(
     db: AsyncSession = Depends(get_db),
 ):
     return templates.TemplateResponse(
-        "admin/lessons/lesson_create.html", {"request": request, "user": current_admin}
+        "admin/lessons/lesson_create.html", {
+            "request": request, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -67,7 +71,12 @@ async def update_lesson_get(
         )
     return templates.TemplateResponse(
         "admin/lessons/lesson_edit.html",
-        {"request": request, "lesson": lesson, "user": current_admin}
+        {
+            "request": request, 
+            "lesson": lesson, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -95,7 +104,12 @@ async def delete_lesson_get(
     lesson = await lesson_service.get_lesson_by_id(lesson_id)
     return templates.TemplateResponse(
         "admin/lessons/delete_confirm.html",
-        {"request": request, "lesson": lesson, "user": current_admin}
+        {
+            "request": request, 
+            "lesson": lesson, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 

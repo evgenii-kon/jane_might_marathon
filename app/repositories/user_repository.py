@@ -42,14 +42,12 @@ class UserRepository:
         else:
             return False
 
-    async def update(self, id: int, update_data: UserUpdate) -> Optional[User]:
+    async def update(self, id: int, update_data: dict) -> Optional[User]:
         user = await self.get_by_id(id)
         if not user:
             return None
 
-        update_dict = update_data.model_dump(exclude_unset=True)
-
-        for key, value in update_dict.items():
+        for key, value in update_data.items():
             setattr(user, key, value)
 
         await self.db.commit()

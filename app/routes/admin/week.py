@@ -36,7 +36,11 @@ async def create_week_get(
 ):
     return templates.TemplateResponse(
         "admin/weeks/weeks_create.html",
-        {"request": request, "user": current_admin}
+        {
+            "request": request, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -68,7 +72,12 @@ async def update_week_get(
         )
     return templates.TemplateResponse(
         "admin/weeks/weeks_edit.html",
-        {"request": request, "week": week, "user": current_admin}
+        {
+            "request": request, 
+            "week": week, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -96,7 +105,12 @@ async def delete_week_get(
     week = await week_service.get_week_by_id(week_id)
     return templates.TemplateResponse(
         "admin/weeks/delete_confirm.html",
-        {"request": request, "week": week, "user": current_admin}
+        {
+            "request": request, 
+            "week": week, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 

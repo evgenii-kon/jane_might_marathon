@@ -11,6 +11,7 @@
     <p style="color: red;">⚠️ Это действие необратимо!</p>
     
     <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <button type="submit">✅ Да, удалить</button>
         <a href="/admin/lessons">Отмена</a>
     </form>

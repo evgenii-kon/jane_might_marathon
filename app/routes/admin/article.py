@@ -34,7 +34,11 @@ async def create_article_form(
 ):
     return templates.TemplateResponse(
         "admin/articles/articles_create.html",
-        {"request": request, "user": current_user},
+        {
+            "request": request, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            },
     )
 
 
@@ -93,6 +97,7 @@ async def edit_article_form(
             "article": article,
             "images_str": images_str,
             "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
         },
     )
 
@@ -152,7 +157,12 @@ async def delete_article_confirm(
     article = await service.get_article_by_id(article_id)
     return templates.TemplateResponse(
         "admin/articles/delete_confirm.html",
-        {"request": request, "article": article, "user": current_user},
+        {
+            "request": request,
+            "article": article, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            },
     )
 
 

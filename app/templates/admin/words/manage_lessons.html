@@ -8,6 +8,7 @@
     <div style="flex: 1; min-width: 250px;">
         <h3>➕ Добавить в урок</h3>
         <form method="post" action="/admin/words/{{ word.id }}/lessons/add">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <select name="lesson_id" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
                 <option value="">-- Выберите урок --</option>
                 {% for lesson in lessons %}
@@ -32,6 +33,7 @@
                         <li style="padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
                             <span>Неделя {{ lesson.week_id }} → Урок {{ lesson.order_in_week }}: {{ lesson.name }}</span>
                             <form method="post" action="/admin/words/{{ word.id }}/lessons/remove" style="margin: 0;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                 <input type="hidden" name="lesson_id" value="{{ lesson.id }}">
                                 <button type="submit" style="background: #dc2626; color: white; border: none; border-radius: 16px; padding: 4px 12px; cursor: pointer;">✖️</button>
                             </form>

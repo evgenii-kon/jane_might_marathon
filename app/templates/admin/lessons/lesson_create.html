@@ -4,6 +4,7 @@
 <h2>{% if lesson %}✏️ Редактирование урока{% else %}➕ Новый урок{% endif %}</h2>
 
 <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <p>
         <label>Название:</label><br>
         <input type="text" name="name" value="{{ lesson.name if lesson else '' }}" size="60" required>

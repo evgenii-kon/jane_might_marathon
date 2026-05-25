@@ -28,6 +28,7 @@
                     <td class="feedback-actions">
                         <a href="/admin/feedback/{{ fb.id }}" class="btn-view">👁️ Просмотр</a>
                         <form method="post" action="/admin/feedback/{{ fb.id }}/delete" style="display: inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                             <button type="submit" class="btn-delete-feedback" onclick="return confirm('Удалить этот отзыв?')">🗑️ Удалить</button>
                         </form>
                     </td>

@@ -17,6 +17,7 @@
         {% endif %}
 
         <form method="post" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div class="logout-actions">
                 <button type="submit" class="btn-logout">Да, выйти</button>
                 <a href="/dashboard" class="btn-cancel-logout">Отмена</a>

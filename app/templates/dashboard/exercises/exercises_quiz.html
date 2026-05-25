@@ -126,6 +126,12 @@
         formData.append('exercise_id', exerciseId);
         formData.append('selected_option', selectedOption);
 
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(r => r.startsWith('csrftoken='))
+            ?.split('=')[1];
+        if (csrfToken) formData.append('csrf_token', decodeURIComponent(csrfToken));
+
         try {
             const response = await fetch(`/dashboard/exercises/lesson/${lessonId}/check`, {
                 method: 'POST',

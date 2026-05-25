@@ -23,6 +23,8 @@ from .routes.public.articles import router as article_router
 from app.routes.dashboard.feedback import router as feedback_router
 from .routes.admin.feedback import router as admin_feedback_router
 
+from .csrf import CSRFMiddleware, get_csrf_token
+
 from .database import init_db, engine
 
 @asynccontextmanager
@@ -34,6 +36,7 @@ async def lifespan(app: FastAPI):
     await engine.dispose()
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(CSRFMiddleware) 
 
 app.include_router(admin_router)
 app.include_router(dashboard_router)
@@ -57,6 +60,7 @@ app.include_router(admin_feedback_router)
 
 templates = Jinja2Templates("app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+templates.env.globals["csrf"] = get_csrf_token
 
 
 @app.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)

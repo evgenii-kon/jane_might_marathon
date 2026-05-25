@@ -47,6 +47,7 @@ async def lesson_detail(
             "is_completed": is_completed,
             "words": words,
             "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
         },
     )
 

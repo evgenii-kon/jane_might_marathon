@@ -16,6 +16,7 @@
     {% endif %}
 
     <form method="post" class="admin-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <div class="form-grid">
             <div class="form-group">
                 <label for="lesson_id">Урок *</label>

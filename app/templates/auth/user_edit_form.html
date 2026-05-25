@@ -17,6 +17,7 @@
         {% endif %}
 
         <form method="post" class="profile-edit-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div class="form-group">
                 <label for="name">Имя</label>
                 <input type="text" id="name" name="name" value="{{ user.name }}" required>

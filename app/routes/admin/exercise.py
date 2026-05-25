@@ -66,6 +66,7 @@ async def create_exercise_form(
             "selected_lesson_id": lesson_id,
             "user": current_user,
             "form_data": {},
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
         },
     )
 
@@ -156,6 +157,7 @@ async def edit_exercise_form(
             "exercise": exercise,
             "lessons": lessons,
             "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
         },
     )
 
@@ -240,7 +242,12 @@ async def delete_exercise_confirm(
 
     return templates.TemplateResponse(
         "admin/exercises/delete_confirm.html",
-        {"request": request, "exercise": exercise, "user": current_user},
+        {
+            "request": request, 
+            "exercise": exercise, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            },
     )
 
 

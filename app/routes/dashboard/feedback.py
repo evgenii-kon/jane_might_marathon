@@ -20,7 +20,11 @@ async def feedback_form(
     """Отображает форму обратной связи"""
     return templates.TemplateResponse(
         "dashboard/feedback_form.html",
-        {"request": request, "user": current_user}
+        {
+            "request": request, 
+            "user": current_user,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 

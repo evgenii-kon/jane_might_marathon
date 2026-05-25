@@ -4,6 +4,7 @@
 <h2>{% if week %}✏️ Редактирование недели{% else %}➕ Новая неделя{% endif %}</h2>
 
 <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <p>
         <label>Номер:</label><br>
         <input type="number" name="number" value="{{ week.number if week else '' }}" required>

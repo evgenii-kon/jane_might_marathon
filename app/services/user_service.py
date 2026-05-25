@@ -85,9 +85,11 @@ class UserService:
 
     async def update_user(self, user_id: int, user_data: UserUpdate) -> UserResponse:
         update_dict = user_data.model_dump(exclude_unset=True)
-        if "password" in update_dict:
+        if "password" in update_dict and update_dict["password"] is not None:
             password_hash = self._hash_password(update_dict.pop("password"))
             update_dict["password_hash"] = password_hash
+        else:
+            update_dict.pop("password", None)
         user = await self.repository.update(user_id, update_dict)
         if not user:
             raise HTTPException(

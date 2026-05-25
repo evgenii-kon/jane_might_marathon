@@ -37,7 +37,11 @@ async def create_word_get(
 ):
     return templates.TemplateResponse(
         "admin/words/words_create.html",
-        {"request": request, "user": current_admin}
+        {
+            "request": request, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -69,7 +73,12 @@ async def update_word_get(
         )
     return templates.TemplateResponse(
         "admin/words/words_edit.html",
-        {"request": request, "word": word, "user": current_admin}
+        {
+            "request": request, 
+            "word": word, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -97,7 +106,12 @@ async def delete_word_get(
     word = await word_service.get_word_by_id(word_id)
     return templates.TemplateResponse(
         "admin/words/delete_word_confirm.html",
-        {"request": request, "word": word, "user": current_admin}
+        {
+            "request": request, 
+            "word": word, 
+            "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
+            }
     )
 
 
@@ -135,6 +149,7 @@ async def manage_word_lessons(
             "lessons": all_lessons,
             "existing_lesson_ids": existing_lesson_ids,
             "user": current_admin,
+            "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
         },
     )
 

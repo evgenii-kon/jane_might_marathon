@@ -93,6 +93,7 @@
             <button class="btn-completed" disabled>✅ Урок пройден</button>
         {% else %}
             <form method="post" action="/dashboard/lessons/{{ lesson.id }}/complete">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <button type="submit" class="btn-complete">📝 Отметить урок пройденным</button>
             </form>
         {% endif %}

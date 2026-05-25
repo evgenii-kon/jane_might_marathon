@@ -22,7 +22,8 @@ async def list_feedback(
     return templates.TemplateResponse("admin/feedback/feedback_list.html", {
         "request": request,
         "feedbacks": feedbacks,
-        "user": admin
+        "user": admin,
+        "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
     })
 
 
@@ -77,5 +78,6 @@ async def delete_feedback_confirm(
     return templates.TemplateResponse("admin/feedback/delete_confirm.html", {
         "request": request,
         "feedback": feedback,
-        "user": admin
+        "user": admin,
+        "csrf_token": getattr(request.state, "csrf_token", request.cookies.get("csrftoken", "")),
     })

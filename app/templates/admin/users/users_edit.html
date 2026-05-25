@@ -4,6 +4,7 @@
 <h2>{% if user %}✏️ Редактирование пользователя{% else %}➕ Новый пользователь{% endif %}</h2>
 
 <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <p>
         <label>Имя:</label><br>
         <input type="text" name="name" value="{{ user.name if user else '' }}" required>
