@@ -8,6 +8,7 @@ from app.models.user import User
 from app.services.word_trainer_service import WordTrainerService
 from app.repositories.word_repository import WordRepository
 from ....schemas.word import WordResponse
+from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/word-trainer", tags=["word_trainer"])
 templates = Jinja2Templates(directory="app/templates")
@@ -48,6 +49,7 @@ async def daily_trainer(
             "mode": "daily",
             "mode_name": "Ежедневное повторение",
             "user": current_user,
+            "csrf_token": get_csrf_token(request),
         },
     )
 
@@ -72,6 +74,7 @@ async def all_words_trainer(
             "mode": "all",
             "mode_name": "Все слова",
             "user": current_user,
+            "csrf_token": get_csrf_token(request),
         },
     )
 

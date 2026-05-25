@@ -246,16 +246,11 @@
             formData.append('user_answer', userInput);
             formData.append('mode', mode);
 
-            const csrfToken = document.cookie
-                .split('; ')
-                .find(r => r.startsWith('csrftoken='))
-                ?.split('=')[1];
-            if (csrfToken) formData.append('csrf_token', decodeURIComponent(csrfToken));
-
             const response = await fetch('/word-trainer/check', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}',
                 },
                 body: formData
             });

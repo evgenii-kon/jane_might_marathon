@@ -9,6 +9,7 @@ from app.models.user import User
 from app.services.exercise_service import ExerciseService
 from app.services.lesson_service import LessonService
 from app.services.user_exercise_progress_service import UserExerciseProgressService
+from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/dashboard/exercises", tags=["dashboard_exercises"])
 templates = Jinja2Templates(directory="app/templates")
@@ -117,6 +118,7 @@ async def exercises_quiz(
             "progress_percent": stats["percent"],
             "completed_count": stats["completed_count"],
             "user": current_user,
+            "csrf_token": get_csrf_token(request),
         },
     )
 
