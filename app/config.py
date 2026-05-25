@@ -2,16 +2,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 from pydantic import Field, field_validator
 
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 class Settings(BaseSettings):
     app_name: str = "jane_might_maraphon"
 
-    # Database settings с валидацией
+    # Database settings
     DB_HOST: str = Field(..., description="Database host")
     DB_PORT: int = Field(5432, description="Database port")
     DB_USER: str = Field(..., description="Database user")
@@ -22,12 +17,11 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         """Формирование URL для подключения к БД (синхронная версия)"""
         return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-    
+
     @property
     def database_url_async(self) -> str:
         """Формирование URL для подключения к БД (асинхронная версия)"""
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-
 
     # CORS settings
     cors_origins: List[str] = [
@@ -38,9 +32,12 @@ class Settings(BaseSettings):
     ]
 
     # JWT авторизация
-    SECRET_KEY: str = os.getenv("SECRET_KEY")
-    ALGORITHM: str = os.getenv("ALGORITHM")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+    SECRET_KEY: str = Field(..., description="Secret key for JWT signing")
+    ALGORITHM: str = Field("HS256", description="JWT signing algorithm")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(10080, description="Token TTL in minutes (default 7 days)")
+
+    # Окружение
+    DEBUG: bool = Field(False, description="Debug mode; set True only in development")
 
     # Static files
     static_dir: str = "static"

@@ -20,9 +20,6 @@ class CSRFMiddleware(BaseHTTPMiddleware):
             form_data = await request.form()
             form_token = form_data.get("csrf_token")
 
-            print(f"SESSION TOKEN: {session_token}")
-            print(f"FORM TOKEN: {form_token}")
-
             if not form_token:
                 form_token = request.headers.get("X-CSRFToken")
 

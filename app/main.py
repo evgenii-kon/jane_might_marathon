@@ -28,6 +28,7 @@ from .csrf import CSRFMiddleware, get_csrf_token
 from app.utils.rate_limiter import limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
+from .config import settings
 
 from .database import init_db, engine
 
@@ -44,7 +45,7 @@ app = FastAPI(lifespan=lifespan)
 app.state.limiter = limiter
 app.add_middleware(CSRFMiddleware)
 app.add_middleware(SlowAPIMiddleware)
-app.add_middleware(SessionMiddleware, secret_key="73490b3dbacad4b8e2dccbe815199f13")
+app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 

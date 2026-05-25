@@ -6,6 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.database import Base
+import app.models  # noqa: F401 — импортируем все модели, чтобы Base.metadata была полной
 import os
 from dotenv import load_dotenv
 

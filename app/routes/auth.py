@@ -12,7 +12,8 @@ from app.dependencies.auth import get_current_user_optional, get_current_user
 from app.models.user import User
 from app.utils.jwt import create_access_token
 from app.utils.rate_limiter import limiter
-from app.csrf import get_csrf_token 
+from app.csrf import get_csrf_token
+from app.config import settings
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -102,7 +103,7 @@ async def login_post(
             key="access_token",
             value=f"Bearer {access_token}",
             httponly=True,
-            secure=False,
+            secure=not settings.DEBUG,
             samesite="lax",
             max_age=60 * 60 * 24 * 7,
         )

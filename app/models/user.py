@@ -16,17 +16,17 @@ class User(Base):
     is_admin = Column(Boolean, default=False, nullable=False)
 
     lesson_progress = relationship(
-        "UserLessonProgress", back_populates="user", cascade="all, delete-orphan", lazy="selectin"
+        "UserLessonProgress", back_populates="user", cascade="all, delete-orphan"
     )
     word_progress = relationship(
-        "UserWordProgress", back_populates="user", cascade="all, delete-orphan", lazy="selectin"
+        "UserWordProgress", back_populates="user", cascade="all, delete-orphan"
     )
     exercise_progress = relationship(
-        "UserExerciseProgress", back_populates="user", cascade="all, delete-orphan", lazy="selectin"
+        "UserExerciseProgress", back_populates="user", cascade="all, delete-orphan"
     )
     week_progress = relationship(
-        "UserWeekProgress", back_populates="user", cascade="all, delete-orphan", lazy="selectin"
+        "UserWeekProgress", back_populates="user", cascade="all, delete-orphan"
     )
     feedback = relationship(
-        'FeedBack', back_populates='user', cascade='all, delete-orphan', lazy="selectin"
+        'FeedBack', back_populates='user', cascade='all, delete-orphan'
     )

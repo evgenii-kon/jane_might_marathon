@@ -72,18 +72,14 @@ async def complete_lesson(
     # Отмечаем урок пройденным
     await progress_service.mark_lesson_as_completed(current_user.id, lesson_id)
 
-    # Получаем все уроки недели
+    # Получаем все уроки недели и количество пройденных — двумя запросами вместо N
     lessons_in_week = await lesson_service.get_lessons_by_week(lesson.week_id)
-
-    # Проверяем, все ли уроки недели пройдены (последовательно, но можно и gather)
-    all_completed = True
-    for l in lessons_in_week:
-        if not await progress_service.is_lesson_completed(current_user.id, l.id):
-            all_completed = False
-            break
+    completed_count = await progress_service.get_completed_count_by_week(
+        current_user.id, lesson.week_id
+    )
 
     # Если все уроки недели пройдены, отмечаем неделю как пройденную
-    if all_completed:
+    if completed_count == len(lessons_in_week):
         await week_progress_service.mark_week_completed(current_user.id, lesson.week_id)
 
     # Редирект обратно на страницу недели

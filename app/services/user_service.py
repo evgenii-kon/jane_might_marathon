@@ -52,7 +52,7 @@ class UserService:
         user = await self.repository.get_by_email(user_email)
         if not user:
             raise HTTPException(
-                status=status.HTTP_404_NOT_FOUND,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"user with email {user_email} not found",
             )
         return UserResponse.model_validate(user)
@@ -61,7 +61,7 @@ class UserService:
         user = await self.repository.get_by_name(user_name)
         if not user:
             raise HTTPException(
-                status=status.HTTP_404_NOT_FOUND,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"user with name {user_name} not found",
             )
         return UserResponse.model_validate(user)
