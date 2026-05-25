@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     
-                    {% if user.email == 'admin@mail.com' %}
+                    {% if user.is_admin %}
                         <a href="/admin" class="admin-link">Админка</a>
                     {% endif %}
                     <a href="/auth/logout" class="btn-outline">Выйти</a>

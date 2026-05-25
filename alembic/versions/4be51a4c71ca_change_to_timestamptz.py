@@ -8,7 +8,7 @@ Create Date: 2026-05-24 17:08:44.813384
 from alembic import op
 import sqlalchemy as sa
 
-revision = 'your_new_id'
+revision = '4be51a4c71ca'
 down_revision = '815285deb500'
 branch_labels = None
 depends_on = None
