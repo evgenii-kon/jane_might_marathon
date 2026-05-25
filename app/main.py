@@ -3,7 +3,6 @@ from fastapi import FastAPI, Request, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from slowapi.middleware import SlowAPIMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
 from .routes.admin.dashboard import router as admin_router
@@ -26,7 +25,10 @@ from app.routes.dashboard.feedback import router as feedback_router
 from .routes.admin.feedback import router as admin_feedback_router
 
 from .csrf import CSRFMiddleware, get_csrf_token
-from app.utils.rate_limiter import limiter
+from app.utils.rate_limiter import limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+
 from .database import init_db, engine
 
 
@@ -39,14 +41,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Порядок важен: Session должен быть зарегистрирован раньше CSRF,
-# но add_middleware добавляет в стек в обратном порядке —
-# поэтому Session пишем последним, он выполнится первым
+app.state.limiter = limiter
 app.add_middleware(CSRFMiddleware)
 app.add_middleware(SlowAPIMiddleware)
 app.add_middleware(SessionMiddleware, secret_key="73490b3dbacad4b8e2dccbe815199f13")
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-app.state.limiter = limiter
 
 app.include_router(admin_router)
 app.include_router(dashboard_router)

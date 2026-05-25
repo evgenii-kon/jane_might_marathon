@@ -37,11 +37,11 @@ async def register_get(
     )
 
 
-@limiter.limit("5/minute") 
 @router.post("/register", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+@limiter.limit("5/minute")
 async def register_post(
-    user_data: Annotated[UserCreate, Form()],
     request: Request,
+    user_data: Annotated[UserCreate, Form()],
     db: AsyncSession = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
@@ -82,8 +82,8 @@ async def login_get(
     )
 
 
-@limiter.limit("5/minute") 
 @router.post("/login", response_class=HTMLResponse)
+@limiter.limit("5/minute")
 async def login_post(
     request: Request,
     email: str = Form(...),
