@@ -11,6 +11,8 @@ from app.services.user_week_progress_service import UserWeekProgressService
 from app.dependencies.auth import get_current_user_optional, get_current_user
 from app.models.user import User
 from app.utils.jwt import create_access_token
+from app.utils.rate_limiter import limiter
+
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
@@ -34,6 +36,7 @@ async def register_get(
     )
 
 
+@limiter.limit("5/minute") 
 @router.post("/register", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 async def register_post(
     user_data: Annotated[UserCreate, Form()],
@@ -74,6 +77,7 @@ async def login_get(
     )
 
 
+@limiter.limit("5/minute") 
 @router.post("/login", response_class=HTMLResponse)
 async def login_post(
     request: Request,

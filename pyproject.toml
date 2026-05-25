@@ -26,6 +26,7 @@ dependencies = [
     "sqlalchemy-utils>=0.42.1",
     "starlette==0.38.0",
     "uvicorn==0.30.0",
+    "slowapi>=0.1.9",
 ]
 
 [dependency-groups]

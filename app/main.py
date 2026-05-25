@@ -3,6 +3,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from slowapi.middleware import SlowAPIMiddleware
+
 
 from .routes.admin.dashboard import router as admin_router
 from .routes.dashboard.dashboard import router as dashboard_router
@@ -24,6 +26,8 @@ from app.routes.dashboard.feedback import router as feedback_router
 from .routes.admin.feedback import router as admin_feedback_router
 
 from .csrf import CSRFMiddleware, get_csrf_token
+from app.utils.rate_limiter import limiter
+
 
 from .database import init_db, engine
 
@@ -37,6 +41,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(CSRFMiddleware) 
+
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
 
 app.include_router(admin_router)
 app.include_router(dashboard_router)
