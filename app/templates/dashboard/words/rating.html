@@ -1,78 +1,175 @@
 {% extends "base.html" %}
 
-{% block title %}Рейтинг слов - HSK-1 Марафон{% endblock %}
+{% block title %}Рейтинг слов — HSK-1 Марафон{% endblock %}
 
 {% block content %}
-<div class="rating-container">
-    <h1>📊 Рейтинг слов</h1>
-    <p>Ваш прогресс по каждому слову HSK-1</p>
+<div class="rp-page">
 
-    <div class="rating-filters">
-        <button class="filter-btn active" data-filter="all">Все слова</button>
-        <button class="filter-btn" data-filter="low">Низкий уровень (0-2)</button>
-        <button class="filter-btn" data-filter="mid">Средний уровень (3-4)</button>
-        <button class="filter-btn" data-filter="mastered">Выучено (5)</button>
+    <!-- ═══ ШАПКА ═══════════════════════════════════════════ -->
+    <div class="rp-header">
+        <div class="rp-header-deco rp-header-deco--1"></div>
+        <div class="rp-header-deco rp-header-deco--2"></div>
+
+        <div class="rp-header-inner">
+            <div class="rp-header-top">
+                <a href="/dashboard" class="rp-back">← Кабинет</a>
+                <div class="rp-title-group">
+                    <h1 class="rp-title">Рейтинг слов</h1>
+                    <p class="rp-subtitle">Прогресс по каждому слову HSK-1</p>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="rp-stats">
+                <div class="rp-stat">
+                    <span class="rp-stat__val">{{ stats.total }}</span>
+                    <span class="rp-stat__lbl">Всего слов</span>
+                </div>
+                <div class="rp-stat-divider"></div>
+                <div class="rp-stat rp-stat--green">
+                    <span class="rp-stat__val">{{ stats.mastered }}</span>
+                    <span class="rp-stat__lbl">Выучено</span>
+                </div>
+                <div class="rp-stat-divider"></div>
+                <div class="rp-stat rp-stat--orange">
+                    <span class="rp-stat__val">{{ stats.learning }}</span>
+                    <span class="rp-stat__lbl">Изучается</span>
+                </div>
+                <div class="rp-stat-divider"></div>
+                <div class="rp-stat rp-stat--muted">
+                    <span class="rp-stat__val">{{ stats.new }}</span>
+                    <span class="rp-stat__lbl">Не начато</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="rating-table-wrapper">
-        <table class="rating-table">
-            <thead>
-                <tr>
-                    <th>Иероглиф</th>
-                    <th>Транскрипция</th>
-                    <th>Перевод</th>
-                    <th>Уровень</th>
-                    <th>✅/❌</th>
-                    <th>Действие</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for word in words %}
-                <tr class="word-row" data-mastery="{{ word.mastery_level }}">
-                    <td class="word-hanzi">{{ word.hanzi }}</td>
-                    <td class="word-transcription">{{ word.transcription }}</td>
-                    <td class="word-translation">{{ word.translation }}</td>
-                    <td class="word-mastery">
-                        <div class="mastery-stars">
-                            {% for i in range(1,6) %}
-                                {% if i <= word.mastery_level %}
-                                    <span class="star filled">★</span>
-                                {% else %}
-                                    <span class="star empty">☆</span>
-                                {% endif %}
-                            {% endfor %}
+    <!-- ═══ ОСНОВНОЙ БЛОК ════════════════════════════════════ -->
+    <div class="rp-main">
+
+        <!-- Фильтры -->
+        <div class="rp-filters">
+            <button class="filter-btn active" data-filter="all">
+                Все <span class="filter-count">{{ stats.cnt_all }}</span>
+            </button>
+            <button class="filter-btn" data-filter="low">
+                Нужна работа <span class="filter-count">{{ stats.cnt_low }}</span>
+            </button>
+            <button class="filter-btn" data-filter="mid">
+                Изучается <span class="filter-count">{{ stats.cnt_mid }}</span>
+            </button>
+            <button class="filter-btn" data-filter="mastered">
+                Выучено <span class="filter-count">{{ stats.cnt_mastered }}</span>
+            </button>
+        </div>
+
+        <!-- Заголовки колонок -->
+        <div class="rp-list-head">
+            <div class="rp-col rp-col--hanzi">Иероглиф</div>
+            <div class="rp-col rp-col--text">Перевод</div>
+            <div class="rp-col rp-col--mastery">Уровень</div>
+            <div class="rp-col rp-col--stats">Статистика</div>
+            <div class="rp-col rp-col--action"></div>
+        </div>
+
+        <!-- Список слов -->
+        <div class="rp-list" id="wordList">
+            {% for word in words %}
+            <div class="word-row" data-mastery="{{ word.mastery_level }}">
+
+                <!-- Иероглиф -->
+                <div class="wr-hanzi">
+                    <span class="hanzi-char">{{ word.hanzi }}</span>
+                    <span class="hanzi-pinyin">{{ word.transcription }}</span>
+                </div>
+
+                <!-- Перевод -->
+                <div class="wr-text">
+                    <span class="wr-translation">{{ word.translation }}</span>
+                </div>
+
+                <!-- Mastery — 5 сегментов -->
+                <div class="wr-mastery">
+                    <div class="mastery-segs mastery-segs--{{ word.mastery_level }}">
+                        <div class="ms"></div>
+                        <div class="ms"></div>
+                        <div class="ms"></div>
+                        <div class="ms"></div>
+                        <div class="ms"></div>
+                    </div>
+                    <span class="mastery-label mastery-label--{{ word.mastery_level }}">
+                        {% if word.mastery_level == 0 %}Новое
+                        {% elif word.mastery_level <= 2 %}Начальный
+                        {% elif word.mastery_level <= 4 %}Изучается
+                        {% else %}Выучено
+                        {% endif %}
+                    </span>
+                </div>
+
+                <!-- Статистика -->
+                <div class="wr-stats">
+                    {% set total_ans = word.correct_count + word.wrong_count %}
+                    {% if total_ans > 0 %}
+                        <div class="stats-fraction">
+                            <span class="stats-correct">{{ word.correct_count }}</span>
+                            <span class="stats-sep">/</span>
+                            <span class="stats-total">{{ total_ans }}</span>
                         </div>
-                    </td>
-                    <td class="word-stats">{{ word.correct_count }}/{{ word.correct_count + word.wrong_count }}</td>
-                    <td class="word-action">
-                        <a href="/word-trainer/all?word_id={{ word.id }}" class="btn-small">Повторить</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    {% else %}
+                        <span class="stats-none">—</span>
+                    {% endif %}
+                </div>
+
+                <!-- Действие -->
+                <div class="wr-action">
+                    <a href="/word-trainer/all?word_id={{ word.id }}" class="btn-repeat">
+                        Повторить
+                    </a>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пустое состояние при фильтрации -->
+        <div class="rp-empty" id="rpEmpty" style="display:none">
+            <span class="rp-empty-icon">🔍</span>
+            <p>Нет слов в этой категории</p>
+        </div>
+
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+(function () {
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const rows = document.querySelectorAll('.word-row');
+    const rows        = document.querySelectorAll('.word-row');
+    const emptyState  = document.getElementById('rpEmpty');
+
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const filter = btn.dataset.filter;
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+
+            let visible = 0;
             rows.forEach(row => {
-                const mastery = parseInt(row.dataset.mastery);
-                if (filter === 'all') row.style.display = '';
-                else if (filter === 'low' && mastery <= 2) row.style.display = '';
-                else if (filter === 'mid' && (mastery === 3 || mastery === 4)) row.style.display = '';
-                else if (filter === 'mastered' && mastery === 5) row.style.display = '';
-                else row.style.display = 'none';
+                const m = parseInt(row.dataset.mastery, 10);
+                const show =
+                    filter === 'all'      ? true :
+                    filter === 'low'      ? m <= 2 :
+                    filter === 'mid'      ? (m === 3 || m === 4) :
+                    filter === 'mastered' ? m === 5 : false;
+
+                row.style.display = show ? '' : 'none';
+                if (show) visible++;
             });
+
+            emptyState.style.display = visible === 0 ? 'flex' : 'none';
         });
     });
+})();
 </script>
 {% endblock %}

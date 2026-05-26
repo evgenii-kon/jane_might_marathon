@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
+from sqlalchemy.orm import selectinload
 from datetime import datetime, timezone, timedelta
 from typing import List
 from app.models.user_word_progress import UserWordProgress
@@ -67,6 +68,7 @@ class UserWordProgressRepository:
         now = datetime.now(timezone.utc)
         result = await self.db.execute(
             select(UserWordProgress)
+            .options(selectinload(UserWordProgress.word))
             .where(
                 UserWordProgress.user_id == user_id,
                 UserWordProgress.next_review_at <= now,
@@ -119,6 +121,15 @@ class UserWordProgressRepository:
             .where(
                 UserWordProgress.user_id == user_id,
                 UserWordProgress.next_review_at <= now,
+            )
+        )
+        return result.scalar_one() or 0
+
+    async def get_count(self, user_id: int) -> int:
+        """Получить количество слов в прогрессе пользователя через COUNT"""
+        result = await self.db.execute(
+            select(func.count(UserWordProgress.id)).where(
+                UserWordProgress.user_id == user_id
             )
         )
         return result.scalar_one() or 0

@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import List, Dict
 from fastapi import HTTPException
 from ..repositories.user_exercise_progress_repository import (
     UserExerciseProgressRepository,
@@ -59,3 +59,17 @@ class UserExerciseProgressService:
     async def get_total_completed_count(self, user_id: int) -> int:
         """Получить общее количество пройденных упражнений"""
         return await self.repository.get_completed_count(user_id)
+
+    async def get_lessons_progress(
+        self, user_id: int, lesson_ids: List[int]
+    ) -> Dict[int, LessonExerciseProgressResponse]:
+        """Batch-получение прогресса упражнений для нескольких уроков за 2 запроса"""
+        raw = await self.repository.get_progress_by_lessons(user_id, lesson_ids)
+        return {
+            lesson_id: LessonExerciseProgressResponse(
+                total=data["total"],
+                completed=data["completed"],
+                percent=data["percent"],
+            )
+            for lesson_id, data in raw.items()
+        }

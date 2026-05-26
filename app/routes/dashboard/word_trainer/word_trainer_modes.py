@@ -1,3 +1,4 @@
+import random
 from fastapi import Form, APIRouter, Depends, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -7,7 +8,7 @@ from app.dependencies.auth import get_current_user
 from app.models.user import User
 from app.services.word_trainer_service import WordTrainerService
 from app.repositories.word_repository import WordRepository
-from ....schemas.word import WordResponse
+from app.repositories.user_word_progress_repository import UserWordProgressRepository
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/word-trainer", tags=["word_trainer"])
@@ -24,13 +25,13 @@ async def daily_trainer(
     service = WordTrainerService(db)
     words_progress = await service.get_daily_session(current_user.id)
 
+    random.shuffle(words_progress)
     words = []
     for wp in words_progress:
-        # Если у слова есть атрибут `word` (связь), то используем его, иначе wp.word — это объект Word
         word = wp.word
         words.append({
             "id": word.id,
-            "word": word.hanzi or word.word,
+            "word": word.hanzi,
             "translation": word.translation,
             "transcription": word.transcription,
             "example_sentence": word.example_sentence,
@@ -62,15 +63,25 @@ async def all_words_trainer(
 ):
     """Режим всех слов (без учёта повторений)"""
     service = WordTrainerService(db)
-    words = await service.get_all_words_session(current_user.id)
-    words_schemas = [WordResponse.model_validate(word) for word in words]
-    words_dicts = [word.model_dump() for word in words_schemas]
+    raw_words = await service.get_all_words_session(current_user.id)
+    words = [
+        {
+            "id": w.id,
+            "word": w.hanzi,
+            "translation": w.translation,
+            "transcription": w.transcription,
+            "example_sentence": w.example_sentence,
+            "audio_url": w.audio_url,
+            "mastery_level": None,
+        }
+        for w in raw_words
+    ]
 
     return templates.TemplateResponse(
         "word_trainer/session.html",
         {
             "request": request,
-            "words": words_dicts,
+            "words": words,
             "mode": "all",
             "mode_name": "Все слова",
             "user": current_user,
@@ -102,15 +113,15 @@ async def check_answer(
         progress = await service.progress_repo.update_mastery(
             current_user.id, word_id, is_correct
         )
-        intervals = {0: 1, 1: 3, 2: 7, 3: 14, 4: 30, 5: 60}
-
         return {
             "is_correct": is_correct,
             "translation": word.translation,
             "transcription": word.transcription,
             "example": word.example_sentence,
             "new_mastery_level": progress.mastery_level,
-            "next_review_days": intervals.get(progress.mastery_level, 1),
+            "next_review_days": UserWordProgressRepository.MASTERY_INTERVALS.get(
+                progress.mastery_level, 1
+            ),
         }
     else:
         # Для режима 'all' просто возвращаем результат

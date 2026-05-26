@@ -52,9 +52,19 @@ class UserWeekProgressService:
         """Инициализировать прогресс для всех недель при регистрации"""
         weeks = await self.week_repo.get_all()
 
+        # Загружаем пользователя один раз — не N раз в цикле
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise HTTPException(404, f"User {user_id} not found")
+
+        now = datetime.now(timezone.utc)
+        created_at = user.created_at
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+
         weeks_opens_at = []
         for week in weeks:
-            opens_at = await self._calculate_opens_at(user_id, week.number)
+            opens_at = now if week.number == 1 else created_at + timedelta(days=(week.number - 1) * 7)
             weeks_opens_at.append((week.id, opens_at))
 
         await self.repository.create_many(user_id, weeks_opens_at)

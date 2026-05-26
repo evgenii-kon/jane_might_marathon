@@ -35,7 +35,8 @@ async def lesson_detail(
 
     await progress_service.mark_lesson_as_started(current_user.id, lesson_id)
 
-    is_started = await progress_service.is_lesson_started(current_user.id, lesson_id)
+    # mark_lesson_as_started гарантирует is_started=True, повторный запрос не нужен
+    is_started = True
     is_completed = await progress_service.is_lesson_completed(current_user.id, lesson_id)
 
     words = await word_service.get_words_by_lesson(lesson_id)

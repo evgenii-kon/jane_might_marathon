@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from app.database import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
@@ -31,8 +31,10 @@ async def get_dashboard(
 
     # Данные пользователя
     user = current_user
-    today = date.today()
-    days_after_start = (today - user.created_at.date()).days
+    # Используем UTC-дату для корректного вычисления независимо от серверной timezone
+    today_utc = datetime.now(timezone.utc).date()
+    created_date = user.created_at.date() if user.created_at.tzinfo else user.created_at.replace(tzinfo=timezone.utc).date()
+    days_after_start = (today_utc - created_date).days
 
     # Все недели
     weeks = await week_service.get_all_weeks()
@@ -119,7 +121,25 @@ async def word_rating(
 ):
     service = WordTrainerService(db)
     words = await service.get_word_ranking(current_user.id)
+
+    cnt_mastered = sum(1 for w in words if w['mastery_level'] == 5)
+    cnt_mid      = sum(1 for w in words if 3 <= w['mastery_level'] < 5)
+    cnt_low      = sum(1 for w in words if w['mastery_level'] <= 2)
+    stats = {
+        # Заголовочная статистика
+        'total':    len(words),
+        'mastered': cnt_mastered,
+        'learning': cnt_mid,
+        'low':      sum(1 for w in words if 0 < w['mastery_level'] < 3),
+        'new':      sum(1 for w in words if w['mastery_level'] == 0),
+        # Счётчики для кнопок-фильтров
+        'cnt_all':      len(words),
+        'cnt_low':      cnt_low,
+        'cnt_mid':      cnt_mid,
+        'cnt_mastered': cnt_mastered,
+    }
+
     return templates.TemplateResponse(
         'dashboard/words/rating.html',
-        {'request': request, 'words': words, 'user': current_user}
+        {'request': request, 'words': words, 'user': current_user, 'stats': stats}
     )

@@ -1,40 +1,64 @@
 {% extends "base.html" %}
 
-{% block title %}Тренажёр слов - HSK-1 Марафон{% endblock %}
+{% block title %}Тренажёр слов — HSK-1 Марафон{% endblock %}
 
 {% block content %}
-<div class="trainer-hub-container">
-    <h1>Тренажёр слов</h1>
-    <p class="trainer-hub-desc">Выберите режим тренировки</p>
+<div class="hub-page">
 
-    <div class="trainer-modes-grid">
-        <a href="/word-trainer/daily" class="trainer-mode-card">
-            <div class="trainer-mode-icon">📅</div>
-            <div class="trainer-mode-title">Ежедневное повторение</div>
-            <div class="trainer-mode-desc">Слова, которые нужно повторить по расписанию</div>
-            <div class="trainer-mode-badge">Рекомендуется</div>
+    <!-- ═══ ШАПКА ════════════════════════════════════════════ -->
+    <div class="hub-header">
+        <div class="hub-header-deco hub-header-deco--1"></div>
+        <div class="hub-header-deco hub-header-deco--2"></div>
+        <div class="hub-header-inner">
+            <a href="/dashboard" class="hub-back">← Кабинет</a>
+            <h1 class="hub-title">Тренажёр слов</h1>
+            <p class="hub-subtitle">Выберите режим тренировки</p>
+        </div>
+    </div>
+
+    <!-- ═══ РЕЖИМЫ ═══════════════════════════════════════════ -->
+    <div class="hub-modes-grid">
+
+        <a href="/word-trainer/daily" class="hub-mode-card hub-mode-card--orange">
+            <div class="hub-mode-accent"></div>
+            <div class="hub-mode-top">
+                <div class="hub-mode-icon hub-mode-icon--orange">📅</div>
+                <span class="hub-mode-badge hub-mode-badge--active">Рекомендуется</span>
+            </div>
+            <h3 class="hub-mode-title">Ежедневное повторение</h3>
+            <p class="hub-mode-desc">Слова, которые нужно повторить сегодня по алгоритму интервального повторения</p>
+            <div class="hub-mode-cta">Начать →</div>
         </a>
 
-        <a href="/word-trainer/all" class="trainer-mode-card">
-            <div class="trainer-mode-icon">📖</div>
-            <div class="trainer-mode-title">Все слова HSK-1</div>
-            <div class="trainer-mode-desc">Все слова, которые необходимо знать на уровне HSK-1</div>
-            <div class="trainer-mode-badge">Для закрепления</div>
+        <a href="/word-trainer/all" class="hub-mode-card hub-mode-card--blue">
+            <div class="hub-mode-accent"></div>
+            <div class="hub-mode-top">
+                <div class="hub-mode-icon hub-mode-icon--blue">📖</div>
+                <span class="hub-mode-badge hub-mode-badge--active">Для закрепления</span>
+            </div>
+            <h3 class="hub-mode-title">Все слова HSK-1</h3>
+            <p class="hub-mode-desc">Все слова, необходимые для сдачи экзамена HSK-1, без фильтрации по расписанию</p>
+            <div class="hub-mode-cta hub-mode-cta--blue">Начать →</div>
         </a>
 
-        <div class="trainer-mode-card locked">
-            <div class="trainer-mode-icon">🔒</div>
-            <div class="trainer-mode-title">Слабые слова</div>
-            <div class="trainer-mode-desc">Слова, которые требуют повторения</div>
-            <div class="trainer-mode-badge">Скоро</div>
+        <div class="hub-mode-card hub-mode-card--locked">
+            <div class="hub-mode-top">
+                <div class="hub-mode-icon hub-mode-icon--locked">🔒</div>
+                <span class="hub-mode-badge hub-mode-badge--soon">Скоро</span>
+            </div>
+            <h3 class="hub-mode-title">Слабые слова</h3>
+            <p class="hub-mode-desc">Тренировка только по словам с низким уровнем mastery</p>
         </div>
 
-        <div class="trainer-mode-card locked">
-            <div class="trainer-mode-icon">🏃</div>
-            <div class="trainer-mode-title">Марафон</div>
-            <div class="trainer-mode-desc">Все слова + повтор ошибок</div>
-            <div class="trainer-mode-badge">Скоро</div>
+        <div class="hub-mode-card hub-mode-card--locked">
+            <div class="hub-mode-top">
+                <div class="hub-mode-icon hub-mode-icon--locked">🏃</div>
+                <span class="hub-mode-badge hub-mode-badge--soon">Скоро</span>
+            </div>
+            <h3 class="hub-mode-title">Марафон</h3>
+            <p class="hub-mode-desc">Все слова подряд с повтором ошибок в конце сессии</p>
         </div>
+
     </div>
 </div>
 {% endblock %}

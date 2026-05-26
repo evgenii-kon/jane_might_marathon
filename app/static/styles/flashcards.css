@@ -53,6 +53,34 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
+/* ── Trainer session overrides ────────────────────────────── */
+.trainer-card-container .flashcard-front {
+    background: linear-gradient(140deg, #0c2461 0%, #1e40af 55%, #2563eb 100%);
+    box-shadow: 0 14px 40px rgba(12,36,97,.3), 0 2px 8px rgba(12,36,97,.15);
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+/* Decorative orange glow on the front face */
+.trainer-card-container .flashcard-front::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -40px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(249,115,22,.22) 0%, transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* White back face */
+.trainer-card-container .flashcard-back {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 14px 40px rgba(15,23,42,.1), 0 2px 8px rgba(15,23,42,.06);
+    border-radius: 24px;
+}
+
 .flashcard-hanzi {
     font-size: 48px;
     font-weight: 700;

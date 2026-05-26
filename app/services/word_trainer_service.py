@@ -1,3 +1,4 @@
+import random
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
@@ -26,7 +27,7 @@ class WordTrainerService:
             print(f"В уроке {lesson_id} нет слов")
             return 0
 
-        existing_word_ids = await self.progress_repo.get_existing_word_ids(user_id)
+        existing_word_ids = set(await self.progress_repo.get_existing_word_ids(user_id))
 
         new_word_ids = [wid for wid in word_ids if wid not in existing_word_ids]
 
@@ -58,9 +59,10 @@ class WordTrainerService:
 
     async def get_all_words_session(self, user_id: int) -> List[Word]:
         """
-        Получить все слова
+        Получить все слова в случайном порядке
         """
-        words = await self.word_repo.get_all()
+        words = list(await self.word_repo.get_all())
+        random.shuffle(words)
         return words
 
     async def update_mastery(
@@ -88,8 +90,7 @@ class WordTrainerService:
         Получить общее количество слов в прогрессе пользователя
         (все слова из уроков, которые он открыл)
         """
-        word_ids = await self.progress_repo.get_existing_word_ids(user_id)
-        return len(word_ids)
+        return await self.progress_repo.get_count(user_id)
 
     async def get_word_ranking(self, user_id: int) -> List[dict]:
         """Возвращает список всех слов с прогрессом пользователя (mastery, correct/wrong)"""
