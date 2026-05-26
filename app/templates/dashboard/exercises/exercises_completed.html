@@ -3,23 +3,51 @@
 {% block title %}Упражнения завершены! - {{ lesson.name }}{% endblock %}
 
 {% block content %}
-<div class="completed-container">
-    <div class="completed-card">
+<div class="quiz-container">
+    <div class="quiz-nav">
+        <a href="/dashboard/weeks/{{ lesson.week_id }}" class="back-link">← Назад к неделе</a>
+        <a href="/dashboard/lessons/{{ lesson.id }}" class="back-link">← Назад к уроку</a>
+    </div>
+
+    <div class="quiz-card completed-card">
         <div class="completed-icon">🎉</div>
-        
-        <h1>Поздравляем!</h1>
-        
+
+        <span class="quiz-badge">Все упражнения пройдены</span>
+        <h1 class="completed-title">Поздравляем!</h1>
+
         <p class="completed-message">
             Вы успешно прошли все упражнения урока <strong>{{ lesson.name }}</strong>.
         </p>
-        
+
+        {% if progress %}
+        <div class="completed-stats">
+            <div class="completed-stat">
+                <span class="completed-stat-value">{{ progress.completed }}</span>
+                <span class="completed-stat-label">выполнено</span>
+            </div>
+            <div class="completed-stat">
+                <span class="completed-stat-value">{{ progress.total }}</span>
+                <span class="completed-stat-label">всего</span>
+            </div>
+            <div class="completed-stat">
+                <span class="completed-stat-value">{{ progress.percent|int }}%</span>
+                <span class="completed-stat-label">результат</span>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="completed-actions">
-            <a href="/dashboard" class="btn-primary">
-                🏠 На главную
-            </a>
-            <a href="/dashboard/weeks/{{ lesson.week_id }}" class="btn-secondary">
+            <a href="/dashboard/weeks/{{ lesson.week_id }}" class="btn-primary">
                 📚 К списку уроков
             </a>
+            <form method="post" action="/dashboard/exercises/lesson/{{ lesson.id }}/reset" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn-secondary">
+                    🔄 Пройти заново
+                </button>
+            </form>
+            <a href="/dashboard" class="btn-cancel">
+                🏠 На главную
             </a>
         </div>
     </div>

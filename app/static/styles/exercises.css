@@ -226,6 +226,13 @@
     flex: 1;
 }
 
+.feedback-explanation {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    opacity: 0.85;
+}
+
 /* Кнопка "Следующий вопрос" */
 .quiz-next {
     text-align: center;
@@ -305,8 +312,9 @@
     margin-bottom: 24px;
 }
 
-.completed-card h1 {
-    font-size: 32px;
+.completed-card h1,
+.completed-card .completed-title {
+    font-size: 28px;
     font-weight: 800;
     margin-bottom: 16px;
     background: linear-gradient(135deg, #0f2b6d, #f97316);
@@ -329,24 +337,39 @@
     margin-bottom: 40px;
 }
 
-.stat-card {
+.stat-card,
+.completed-stat {
     text-align: center;
     padding: 16px 24px;
     background: #f8fafc;
     border-radius: 20px;
-    min-width: 120px;
+    min-width: 100px;
 }
 
-.stat-value {
-    font-size: 36px;
+.stat-value,
+.completed-stat-value {
+    font-size: 32px;
     font-weight: 800;
     color: #f97316;
-    margin-bottom: 8px;
+    display: block;
+    margin-bottom: 4px;
 }
 
-.stat-label {
-    font-size: 14px;
+.stat-label,
+.completed-stat-label {
+    font-size: 13px;
     color: #6b7280;
+    display: block;
+}
+
+.completed-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #0f2b6d, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .completed-actions {

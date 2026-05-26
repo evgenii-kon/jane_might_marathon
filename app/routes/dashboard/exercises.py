@@ -9,6 +9,7 @@ from app.models.user import User
 from app.services.exercise_service import ExerciseService
 from app.services.lesson_service import LessonService
 from app.services.user_exercise_progress_service import UserExerciseProgressService
+from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/dashboard/exercises", tags=["dashboard_exercises"])
@@ -159,6 +160,13 @@ async def check_exercise_answer(
     )
     has_next = len(completed_ids) < len(exercises)
 
+    # 6. Если все упражнения впервые пройдены — ставим постоянный флаг
+    if not has_next:
+        lesson_progress_service = UserLessonProgressService(db)
+        await lesson_progress_service.mark_exercises_ever_completed(
+            current_user.id, lesson_id
+        )
+
     return {
         "is_correct": is_correct,
         "correct_answer": exercise.correct_answer,
@@ -168,6 +176,24 @@ async def check_exercise_answer(
         "completed_count": len(completed_ids),
         "total_count": len(exercises),
     }
+
+
+@router.post("/lesson/{lesson_id}/reset")
+async def exercises_reset(
+    lesson_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Сбросить прогресс упражнений урока и перейти к прохождению заново"""
+    lesson_service = LessonService(db)
+    progress_service = UserExerciseProgressService(db)
+
+    await _get_lesson_or_404(lesson_service, lesson_id)
+    await progress_service.reset_lesson_exercises(current_user.id, lesson_id)
+
+    return RedirectResponse(
+        url=f"/dashboard/exercises/lesson/{lesson_id}", status_code=302
+    )
 
 
 @router.get("/lesson/{lesson_id}/completed", response_class=HTMLResponse)
@@ -191,5 +217,6 @@ async def exercises_completed(
             "lesson": lesson,
             "progress": progress,
             "user": current_user,
+            "csrf_token": get_csrf_token(request),
         },
     )

@@ -152,3 +152,11 @@ class UserLessonProgressService:
                 )
             )
         return result
+
+    async def mark_exercises_ever_completed(self, user_id: int, lesson_id: int) -> None:
+        """Постоянно пометить упражнения урока как пройденные (флаг не сбрасывается при сбросе прогресса)."""
+        await self.repository.mark_exercises_ever_completed(user_id, lesson_id)
+
+    async def get_exercises_ever_completed_lesson_ids(self, user_id: int) -> List[int]:
+        """Вернуть lesson_id уроков, где упражнения хотя бы раз были полностью пройдены."""
+        return await self.repository.get_exercises_ever_completed_lesson_ids(user_id)

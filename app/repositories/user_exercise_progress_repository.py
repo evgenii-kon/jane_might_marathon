@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select, func, delete
 from typing import Optional, List, Dict
 from ..models.user_exercise_progress import UserExerciseProgress
 from ..models.exercise import Exercise
@@ -126,3 +126,17 @@ class UserExerciseProgressRepository:
             )
         )
         return result.scalar_one()
+
+    async def reset_by_lesson(self, user_id: int, lesson_id: int) -> int:
+        """Удалить весь прогресс упражнений пользователя для урока. Возвращает кол-во удалённых строк."""
+        subq = (
+            select(Exercise.id).where(Exercise.lesson_id == lesson_id).scalar_subquery()
+        )
+        result = await self.db.execute(
+            delete(UserExerciseProgress).where(
+                UserExerciseProgress.user_id == user_id,
+                UserExerciseProgress.exercise_id.in_(subq),
+            )
+        )
+        await self.db.commit()
+        return result.rowcount

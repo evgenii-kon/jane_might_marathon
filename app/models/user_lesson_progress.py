@@ -15,6 +15,9 @@ class UserLessonProgress(Base):
     completed_at = Column(
         DateTime(timezone=True), server_default=func.now(), nullable=True
     )
+    # Постоянный флаг: True после первого успешного прохождения всех упражнений.
+    # Сбросы упражнений не меняют это поле.
+    exercises_ever_completed = Column(Boolean, default=False, nullable=False, server_default="false")
 
     user = relationship("User", back_populates="lesson_progress")
     lesson = relationship("Lesson", back_populates="user_progress")

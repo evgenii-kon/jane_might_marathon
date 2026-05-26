@@ -52,6 +52,10 @@ async def week_detail(
     # Batch-загрузка прогресса уроков (2 запроса вместо 2*N)
     completed_ids = set(await lesson_progress_service.get_completed_lesson_ids(current_user.id))
     started_ids = set(await lesson_progress_service.get_started_lesson_ids(current_user.id))
+    # Постоянный флаг: уроки, где упражнения были полностью пройдены хотя бы раз
+    ever_completed_ids = set(
+        await lesson_progress_service.get_exercises_ever_completed_lesson_ids(current_user.id)
+    )
 
     # Batch-загрузка прогресса упражнений (2 запроса вместо 2*N)
     lesson_ids = [lesson.id for lesson in lessons]
@@ -74,7 +78,8 @@ async def week_detail(
             "is_completed": lesson.id in completed_ids,
             "exercises_total": ex_total,
             "exercises_completed": ex_completed,
-            "all_exercises_completed": ex_completed == ex_total and ex_total > 0,
+            # Используем постоянный флаг вместо динамического счёта
+            "all_exercises_completed": lesson.id in ever_completed_ids,
         })
 
     total_lessons = len(lessons)

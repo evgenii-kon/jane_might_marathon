@@ -73,3 +73,7 @@ class UserExerciseProgressService:
             )
             for lesson_id, data in raw.items()
         }
+
+    async def reset_lesson_exercises(self, user_id: int, lesson_id: int) -> int:
+        """Сбросить прогресс всех упражнений урока. Возвращает кол-во удалённых записей."""
+        return await self.repository.reset_by_lesson(user_id, lesson_id)

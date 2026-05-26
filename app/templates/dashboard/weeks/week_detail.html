@@ -3,73 +3,82 @@
 {% block title %}Неделя {{ week.number }} - {{ week.short_description }}{% endblock %}
 
 {% block content %}
-<div class="week-detail-container">
-    <div class="week-detail-nav">
+<div class="quiz-container">
+    <!-- Навигация -->
+    <div class="quiz-nav">
         <a href="/dashboard" class="back-link">← Назад к неделям</a>
     </div>
 
-    <div class="week-detail-card">
-        <h1>Неделя {{ week.number }}: {{ week.short_description }}</h1>
-        <p class="week-description">{{ week.long_description }}</p>
-        
-        <div class="week-progress-section">
+    <!-- Заголовок недели -->
+    <div class="quiz-card week-header-card">
+        <div class="week-badge-row">
+            <span class="quiz-badge">Неделя {{ week.number }}</span>
+        </div>
+        <h1 class="week-title">{{ week.short_description }}</h1>
+        <p class="week-long-desc">{{ week.long_description }}</p>
+
+        <!-- Прогресс -->
+        <div class="week-progress-block">
             <div class="progress-header">
-                <span>📊 Прогресс недели</span>
-                <span>{{ completed_count }}/{{ total_count }} уроков</span>
+                <span class="progress-label">📊 Прогресс недели</span>
+                <span class="progress-count">{{ completed_count }} из {{ total_count }} уроков</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
             </div>
         </div>
+    </div>
 
-        <div class="lessons-list">
-            <h2>📖 Уроки недели</h2>
-            
-            {% for lesson in lessons %}
-            <div class="lesson-item {% if lesson.is_completed %}lesson-completed{% elif lesson.is_started %}lesson-started{% endif %}">
-                <div class="lesson-info">
-                    <div class="lesson-title">{{ lesson.order_in_week }}. {{ lesson.name }}</div>
-                    <div class="lesson-description">{{ lesson.description or 'Изучите новую тему' }}</div>
-                    
-                    <!-- Блок прогресса упражнений (только если есть упражнения) -->
+    <!-- Список уроков -->
+    <div class="week-lessons-card">
+        <div class="week-lessons-heading">
+            <span class="week-lessons-title">📖 Уроки недели</span>
+            <span class="week-lessons-count">{{ total_count }} уроков</span>
+        </div>
+
+        {% for lesson in lessons %}
+        <div class="week-lesson-row {% if lesson.is_completed %}wl-completed{% elif lesson.is_started %}wl-started{% endif %}">
+            <div class="wl-info">
+                <div class="wl-number">{{ lesson.order_in_week }}</div>
+                <div class="wl-details">
+                    <div class="wl-name">{{ lesson.name }}</div>
+                    <div class="wl-desc">{{ lesson.description or 'Изучите новую тему' }}</div>
                     {% if lesson.exercises_total > 0 %}
-                    <div class="lesson-exercises-progress">
+                    <div class="wl-exercises-badge">
                         <span>📝 Упражнения: {{ lesson.exercises_completed }}/{{ lesson.exercises_total }}</span>
                         {% if lesson.all_exercises_completed %}
-                            <span class="exercises-done">✅ Все выполнены</span>
+                            <span class="wl-exercises-done">✅ Все выполнены</span>
                         {% endif %}
                     </div>
                     {% endif %}
                 </div>
-                
-                <div class="lesson-actions">
-                    <!-- Кнопка упражнений (только если есть упражнения и урок пройден) -->
-                    {% if lesson.exercises_total > 0 and lesson.is_completed %}
-                        {% if lesson.all_exercises_completed %}
-                            <a href="/dashboard/exercises/lesson/{{ lesson.id }}" class="lesson-link exercises-link completed-all">
-                                ✅ Упражнения
-                            </a>
-                        {% else %}
-                            <a href="/dashboard/exercises/lesson/{{ lesson.id }}" class="lesson-link exercises-link active">
-                                ✍️ Упражнения ({{ lesson.exercises_completed }}/{{ lesson.exercises_total }})
-                            </a>
-                        {% endif %}
-                    {% endif %}
-
-                    <!-- Основная кнопка урока -->
-                    <a href="/dashboard/lessons/{{ lesson.id }}" class="lesson-link {% if lesson.is_completed %}completed{% endif %}">
-                        {% if lesson.is_completed %}
-                            ✅ Завершено
-                        {% elif lesson.is_started %}
-                            📖 Продолжить
-                        {% else %}
-                            🚀 Начать
-                        {% endif %}
-                    </a>
-                </div>
             </div>
-            {% endfor %}
+
+            <div class="wl-actions">
+                {% if lesson.exercises_total > 0 and lesson.is_completed %}
+                    {% if lesson.all_exercises_completed %}
+                        <a href="/dashboard/exercises/lesson/{{ lesson.id }}" class="wl-btn wl-btn-exercises wl-btn-exercises-done">
+                            ✅ Упражнения
+                        </a>
+                    {% else %}
+                        <a href="/dashboard/exercises/lesson/{{ lesson.id }}" class="wl-btn wl-btn-exercises">
+                            ✍️ Упражнения
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+                <a href="/dashboard/lessons/{{ lesson.id }}" class="wl-btn {% if lesson.is_completed %}wl-btn-done{% elif lesson.is_started %}wl-btn-continue{% else %}wl-btn-start{% endif %}">
+                    {% if lesson.is_completed %}
+                        ✅ Теория
+                    {% elif lesson.is_started %}
+                        📖 Продолжить
+                    {% else %}
+                        🚀 Начать
+                    {% endif %}
+                </a>
+            </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

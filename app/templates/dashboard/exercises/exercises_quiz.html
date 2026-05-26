@@ -65,6 +65,7 @@
     const lessonId = {{ lesson.id }};
     const exerciseId = {{ exercise.id }};
     let isAnswered = false;
+    let isLastQuestion = false;
 
     const optionsContainer = document.getElementById('quizOptions');
     const feedbackDiv = document.getElementById('quizFeedback');
@@ -73,21 +74,25 @@
 
     function showFeedback(result) {
         if (result.is_correct) {
+            let bodyHtml = `Правильно! Отличная работа!`;
+            if (result.explanation) {
+                bodyHtml += `<br><span class="feedback-explanation">💡 ${result.explanation}</span>`;
+            }
             feedbackDiv.innerHTML = `
                 <div class="feedback-correct">
                     <span class="feedback-icon">✅</span>
-                    <span class="feedback-text">Правильно! Отличная работа!</span>
+                    <span class="feedback-text">${bodyHtml}</span>
                 </div>
             `;
         } else {
-            let message = `❌ Неправильно! Правильный ответ: ${result.correct_answer_text}`;
+            let bodyHtml = `Неправильно! Правильный ответ: ${result.correct_answer_text}`;
             if (result.explanation) {
-                message += `<br>💡 ${result.explanation}`;
+                bodyHtml += `<br><span class="feedback-explanation">💡 ${result.explanation}</span>`;
             }
             feedbackDiv.innerHTML = `
                 <div class="feedback-wrong">
                     <span class="feedback-icon">❌</span>
-                    <span class="feedback-text">${message}</span>
+                    <span class="feedback-text">${bodyHtml}</span>
                 </div>
             `;
         }
@@ -115,7 +120,11 @@
     }
 
     function loadNextQuestion() {
-        window.location.reload();
+        if (isLastQuestion) {
+            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
+        } else {
+            window.location.reload();
+        }
     }
 
     async function handleAnswer(selectedBtn, selectedOption) {
@@ -151,7 +160,9 @@
             if (result.has_next) {
                 showNextButton();
             } else {
+                isLastQuestion = true;
                 nextBtn.textContent = 'Завершить →';
+                showNextButton();
             }
 
         } catch (error) {

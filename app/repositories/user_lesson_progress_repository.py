@@ -113,6 +113,35 @@ class UserLessonProgressRepository:
         )
         return result.scalar_one() or 0
 
+    async def mark_exercises_ever_completed(self, user_id: int, lesson_id: int) -> None:
+        """Навсегда выставить флаг 'упражнения были пройдены хотя бы раз'. Не сбрасывается."""
+        progress = await self.get_by_user_and_lesson(user_id, lesson_id)
+        if progress is None:
+            # На случай рассинхронизации — создаём запись
+            progress = UserLessonProgress(
+                user_id=user_id,
+                lesson_id=lesson_id,
+                is_started=True,
+                is_completed=True,
+                exercises_ever_completed=True,
+            )
+            self.db.add(progress)
+        elif not progress.exercises_ever_completed:
+            progress.exercises_ever_completed = True
+        else:
+            return  # Уже выставлен, ничего не делаем
+        await self.db.commit()
+
+    async def get_exercises_ever_completed_lesson_ids(self, user_id: int) -> List[int]:
+        """Вернуть lesson_id уроков, где упражнения были полностью пройдены хотя бы раз."""
+        result = await self.db.execute(
+            select(UserLessonProgress.lesson_id).where(
+                UserLessonProgress.user_id == user_id,
+                UserLessonProgress.exercises_ever_completed == True,
+            )
+        )
+        return result.scalars().all()
+
     async def get_completed_count_by_week(self, user_id: int, week_id: int) -> int:
         """Получить количество пройденных уроков в конкретной неделе"""
         result = await self.db.execute(
