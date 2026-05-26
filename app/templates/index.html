@@ -3,86 +3,423 @@
 {% block title %}HSK-1 за 60 дней — курс китайского с Jane Might{% endblock %}
 
 {% block content %}
-<!-- Hero секция -->
-<section class="hero">
-    <div class="hero-content">
-        <span class="hero-badge">🎯 АКЦИЯ: ПЕРВЫЙ УРОК БЕСПЛАТНО</span>
-        <h1>HSK-1 <span style="color: #f97316;">за 60 дней</span></h1>
-        <p class="hero-text">
-            Интенсивный онлайн-курс от сертифицированного преподавателя. 
-            Разговорная практика, лексика, грамматика — всё, чтобы сдать HSK-4 на отлично.
-        </p>
-        <div>
-            <a href="/auth/register" class="btn-primary">🚀 Начать бесплатно</a>
-        </div>
-        <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">выпускников</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">98%</div>
-                <div class="stat-label">успешно сдали</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">60</div>
-                <div class="stat-label">дней до результата</div>
-            </div>
-        </div>
+
+<!-- ===== HERO BANNER ===== -->
+<section class="landing-hero">
+    <div class="landing-hero__content">
+        <span class="landing-hero__badge">🎯 АКЦИЯ: ПЕРВЫЙ УРОК БЕСПЛАТНО</span>
+        <h1 class="landing-hero__title">
+            Марафон<br>
+            китайского
+            <span class="landing-hero__tag">
+                HSK-1 за 60 дней
+                <span class="landing-hero__tag-sub">авторский курс Jane Might</span>
+            </span>
+        </h1>
+        <a href="/auth/register" class="landing-hero__cta">
+            Начать бесплатно <span aria-hidden="true">→</span>
+        </a>
     </div>
-    <div class="hero-image">
-        <img src="/static/images/jane_photo.png" alt="Jane Might">
+    <div class="landing-hero__photo-wrap">
+        <img src="/static/images/jane_photo.png" alt="Jane Might" class="landing-hero__photo">
+    </div>
+    <div class="landing-hero__deco-l" aria-hidden="true">汉</div>
+    <div class="landing-hero__deco-r" aria-hidden="true">语</div>
+</section>
+
+<!-- ===== STATS STRIP ===== -->
+<div class="landing-stats">
+    <div class="landing-stats__item">
+        <span class="landing-stats__num">500+</span>
+        <span class="landing-stats__label">выпускников</span>
+    </div>
+    <div class="landing-stats__divider"></div>
+    <div class="landing-stats__item">
+        <span class="landing-stats__num">98%</span>
+        <span class="landing-stats__label">успешно сдали HSK</span>
+    </div>
+    <div class="landing-stats__divider"></div>
+    <div class="landing-stats__item">
+        <span class="landing-stats__num">60</span>
+        <span class="landing-stats__label">дней до результата</span>
+    </div>
+    <div class="landing-stats__divider"></div>
+    <div class="landing-stats__item">
+        <span class="landing-stats__num">8+</span>
+        <span class="landing-stats__label">лет опыта</span>
+    </div>
+</div>
+
+<!-- ===== FEATURES SECTION ===== -->
+<section class="landing-section">
+    <header class="landing-section__header">
+        <h2 class="landing-section__title">Возможности</h2>
+        <p class="landing-section__subtitle">Всё необходимое для уверенного изучения китайского языка</p>
+    </header>
+
+    <div class="lf-grid">
+
+        <!-- CARD 1: Уроки (широкая) -->
+        <div class="lf-card lf-card--wide">
+            <div class="lf-card__text">
+                <h3 class="lf-card__title">Структурированные уроки</h3>
+                <p class="lf-card__desc">60 уроков с нарастающей сложностью — от первых иероглифов до разговорной практики</p>
+            </div>
+            <div class="lf-card__preview lf-card__preview--lessons">
+                <!-- Плавающие карточки уроков -->
+                <div class="mock-lesson mock-lesson--1">
+                    <div class="mock-lesson__icon">✏️</div>
+                    <div class="mock-lesson__body">
+                        <div class="mock-lesson__title">Урок 5: Числа 1–10</div>
+                        <div class="mock-lesson__chars">一 二 三 四 五...</div>
+                        <div class="mock-pbar"><div class="mock-pbar__fill" style="width:60%"></div></div>
+                    </div>
+                    <div class="mock-badge">60%</div>
+                </div>
+                <div class="mock-lesson mock-lesson--2">
+                    <div class="mock-lesson__icon">📖</div>
+                    <div class="mock-lesson__body">
+                        <div class="mock-lesson__title">Урок 12: Приветствия</div>
+                        <div class="mock-lesson__chars">你好 · 谢谢 · 再见</div>
+                        <div class="mock-pbar"><div class="mock-pbar__fill" style="width:100%"></div></div>
+                    </div>
+                    <div class="mock-badge mock-badge--done">✓</div>
+                </div>
+                <!-- Окно контента урока -->
+                <div class="mock-window">
+                    <div class="mock-window__header">
+                        <span class="mock-dot"></span>
+                        <span class="mock-dot"></span>
+                        <span class="mock-dot"></span>
+                    </div>
+                    <div class="mock-window__body">
+                        <div class="mock-line"><span class="mock-kw">Иероглиф:</span> <span class="mock-str">你好</span></div>
+                        <div class="mock-line"><span class="mock-kw">Пиньинь:</span> <span class="mock-num">nǐ hǎo</span></div>
+                        <div class="mock-line"><span class="mock-kw">Значение:</span> Привет / Здравствуйте</div>
+                        <div class="mock-line mock-line--empty"></div>
+                        <div class="mock-line"><span class="mock-kw">Пример:</span></div>
+                        <div class="mock-line"><span class="mock-str">你好，我叫娜塔莎。</span></div>
+                        <div class="mock-line"><span class="mock-comment">Привет, меня зовут Наташа.</span></div>
+                    </div>
+                </div>
+            </div>
+            <a href="/auth/register" class="lf-card__btn">Перейти</a>
+        </div>
+
+        <!-- CARD 2: Карточки-флешки (узкая) -->
+        <div class="lf-card">
+            <div class="lf-card__text">
+                <h3 class="lf-card__title">Карточки-флешки</h3>
+                <p class="lf-card__desc">Система построена на алгоритме <strong>SM-2</strong> — научном методе, который автоматически вычисляет оптимальный момент для каждого повторения</p>
+            </div>
+
+            <!-- SR-инфоблок -->
+            <div class="lf-sr-info">
+                <div class="lf-sr-chips">
+                    <span class="lf-sr-chip lf-sr-chip--blue">⚡ Алгоритм SM-2</span>
+                    <span class="lf-sr-chip lf-sr-chip--blue">📈 Кривая Эббингауза</span>
+                    <span class="lf-sr-chip lf-sr-chip--orange">🧠 Адаптация под вас</span>
+                </div>
+                <p class="lf-sr-caption">Интервал растёт с каждым верным ответом — слово уходит в долгосрочную память:</p>
+                <!-- Таймлайн повторений -->
+                <div class="lf-sr-timeline">
+                    <div class="lf-sr-node">
+                        <div class="lf-sr-node__dot lf-sr-node__dot--first"></div>
+                        <div class="lf-sr-node__day">Сейчас</div>
+                        <div class="lf-sr-node__lbl">Учим</div>
+                    </div>
+                    <div class="lf-sr-line"></div>
+                    <div class="lf-sr-node">
+                        <div class="lf-sr-node__dot"></div>
+                        <div class="lf-sr-node__day">+1 д</div>
+                        <div class="lf-sr-node__lbl">Повтор</div>
+                    </div>
+                    <div class="lf-sr-line"></div>
+                    <div class="lf-sr-node">
+                        <div class="lf-sr-node__dot"></div>
+                        <div class="lf-sr-node__day">+4 д</div>
+                        <div class="lf-sr-node__lbl">Закрепление</div>
+                    </div>
+                    <div class="lf-sr-line"></div>
+                    <div class="lf-sr-node">
+                        <div class="lf-sr-node__dot"></div>
+                        <div class="lf-sr-node__day">+14 д</div>
+                        <div class="lf-sr-node__lbl">Долгосрочно</div>
+                    </div>
+                    <div class="lf-sr-line"></div>
+                    <div class="lf-sr-node">
+                        <div class="lf-sr-node__dot lf-sr-node__dot--last"></div>
+                        <div class="lf-sr-node__day">∞</div>
+                        <div class="lf-sr-node__lbl">Навсегда</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lf-card__preview lf-card__preview--fc">
+                <div class="mock-fc-stack">
+                    <div class="mock-fc mock-fc--back">
+                        <div class="mock-fc__pinyin">nǐ hǎo</div>
+                        <div class="mock-fc__rus">Здравствуйте / Привет</div>
+                    </div>
+                    <div class="mock-fc mock-fc--front">
+                        <div class="mock-fc__char">你好</div>
+                        <div class="mock-fc__next">⏱ Следующий повтор: через 4 дня</div>
+                        <div class="mock-fc__actions">
+                            <button class="mock-fc__btn mock-fc__btn--fail" tabindex="-1">✗ Ещё раз</button>
+                            <button class="mock-fc__btn mock-fc__btn--ok" tabindex="-1">✓ Знаю</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="/auth/register" class="lf-card__btn">Перейти</a>
+        </div>
+
+        <!-- CARD 3: Тренажёр слов (узкая) -->
+        <div class="lf-card">
+            <div class="lf-card__text">
+                <h3 class="lf-card__title">Тренажёр слов</h3>
+                <p class="lf-card__desc">Система отслеживает каждое слово индивидуально и автоматически повышает частоту повторений для слов, с которыми возникают трудности</p>
+            </div>
+
+            <!-- Адаптив-инфоблок -->
+            <div class="lf-adapt-info">
+                <div class="lf-sr-chips">
+                    <span class="lf-sr-chip lf-sr-chip--blue">🎯 Умная очередь</span>
+                    <span class="lf-sr-chip lf-sr-chip--orange">🔄 Приоритет слабых слов</span>
+                </div>
+                <div class="lf-adapt-levels">
+                    <div class="lf-adapt-level">
+                        <div class="lf-adapt-level__dot" style="background:#16a34a"></div>
+                        <span class="lf-adapt-level__lbl">Уверенно знаю</span>
+                        <span class="lf-adapt-level__hint">редкий повтор</span>
+                    </div>
+                    <div class="lf-adapt-level">
+                        <div class="lf-adapt-level__dot" style="background:#f97316"></div>
+                        <span class="lf-adapt-level__lbl">Изучаю</span>
+                        <span class="lf-adapt-level__hint">частый повтор</span>
+                    </div>
+                    <div class="lf-adapt-level">
+                        <div class="lf-adapt-level__dot" style="background:#dc2626"></div>
+                        <span class="lf-adapt-level__lbl">Трудное слово</span>
+                        <span class="lf-adapt-level__hint">усиленный режим</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lf-card__preview lf-card__preview--words">
+                <div class="mock-words">
+                    <div class="mock-word">
+                        <div class="mock-word__diff mock-word__diff--easy" title="Легко"></div>
+                        <span class="mock-word__char">猫</span>
+                        <span class="mock-word__ru">кот</span>
+                        <div class="mock-word__bar"><div style="width:92%;background:#16a34a;"></div></div>
+                        <span class="mock-word__pct">92%</span>
+                    </div>
+                    <div class="mock-word">
+                        <div class="mock-word__diff mock-word__diff--mid" title="Средне"></div>
+                        <span class="mock-word__char">水</span>
+                        <span class="mock-word__ru">вода</span>
+                        <div class="mock-word__bar"><div style="width:68%;background:#f97316;"></div></div>
+                        <span class="mock-word__pct">68%</span>
+                    </div>
+                    <div class="mock-word">
+                        <div class="mock-word__diff mock-word__diff--mid" title="Средне"></div>
+                        <span class="mock-word__char">书</span>
+                        <span class="mock-word__ru">книга</span>
+                        <div class="mock-word__bar"><div style="width:45%;background:#f97316;"></div></div>
+                        <span class="mock-word__pct">45%</span>
+                    </div>
+                    <div class="mock-word">
+                        <div class="mock-word__diff mock-word__diff--hard" title="Сложно"></div>
+                        <span class="mock-word__char">人</span>
+                        <span class="mock-word__ru">человек</span>
+                        <div class="mock-word__bar"><div style="width:30%;background:#dc2626;"></div></div>
+                        <span class="mock-word__pct">30%</span>
+                    </div>
+                </div>
+            </div>
+            <a href="/auth/register" class="lf-card__btn">Перейти</a>
+        </div>
+
+        <!-- CARD 4: Прогресс (широкая, тёмный фон) -->
+        <div class="lf-card lf-card--wide lf-card--dark">
+
+            <!-- Декоративные иероглифы на фоне всей карточки -->
+            <span class="lf-dchar" style="font-size:220px;bottom:-50px;right:-20px;">进</span>
+            <span class="lf-dchar" style="font-size:180px;top:-45px;left:-25px;">学</span>
+            <span class="lf-dchar" style="font-size:120px;top:20px;right:280px;color:#fdba74;opacity:0.12;">步</span>
+            <span class="lf-dchar" style="font-size:140px;bottom:-30px;left:38%;opacity:0.07;">习</span>
+
+            <div class="lf-card__text">
+                <h3 class="lf-card__title">Прогресс и статистика</h3>
+                <p class="lf-card__desc">Отслеживайте прогресс по неделям и темам, смотрите словарный запас в реальном времени</p>
+            </div>
+            <div class="lf-card__preview lf-card__preview--dash">
+                <div class="mock-dash">
+
+                    <!-- Строка KPI-карточек -->
+                    <div class="mock-dash__kpis">
+                        <div class="mock-dash__kpi-card">
+                            <span class="mock-dash__kpi-num" style="color:#fb923c">248</span>
+                            <span class="mock-dash__kpi-lbl">слов выучено</span>
+                            <span class="mock-dash__kpi-delta mock-dash__kpi-delta--up">↑ +12 за неделю</span>
+                        </div>
+                        <div class="mock-dash__kpi-card">
+                            <div class="mock-dash__kpi-fraction">
+                                <span class="mock-dash__kpi-num" style="color:white">15</span>
+                                <span class="mock-dash__kpi-of">/60</span>
+                            </div>
+                            <span class="mock-dash__kpi-lbl">уроков пройдено</span>
+                            <div class="mock-pbar" style="margin-top:5px"><div class="mock-pbar__fill" style="width:25%"></div></div>
+                        </div>
+                        <div class="mock-dash__kpi-card">
+                            <span class="mock-dash__kpi-num">🔥 7</span>
+                            <span class="mock-dash__kpi-lbl">дней подряд</span>
+                            <span class="mock-dash__kpi-delta" style="color:#fb923c">🏆 личный рекорд</span>
+                        </div>
+                        <div class="mock-dash__kpi-card">
+                            <span class="mock-dash__kpi-num" style="color:#4ade80">84%</span>
+                            <span class="mock-dash__kpi-lbl">точность ответов</span>
+                            <span class="mock-dash__kpi-delta mock-dash__kpi-delta--up">↑ было 79%</span>
+                        </div>
+                    </div>
+
+                    <!-- Прогресс по неделям -->
+                    <div class="mock-dash__weeks">
+                        <div class="mock-dash__section-title">Прогресс по неделям</div>
+                        <div class="mock-dash__week">
+                            <span class="mock-dash__label">Нед. 1</span>
+                            <div class="mock-pbar"><div class="mock-pbar__fill" style="width:100%"></div></div>
+                            <span class="mock-dash__pct">100%</span>
+                        </div>
+                        <div class="mock-dash__week">
+                            <span class="mock-dash__label">Нед. 2</span>
+                            <div class="mock-pbar"><div class="mock-pbar__fill" style="width:80%"></div></div>
+                            <span class="mock-dash__pct">80%</span>
+                        </div>
+                        <div class="mock-dash__week">
+                            <span class="mock-dash__label">Нед. 3</span>
+                            <div class="mock-pbar"><div class="mock-pbar__fill" style="width:55%"></div></div>
+                            <span class="mock-dash__pct">55%</span>
+                        </div>
+                        <div class="mock-dash__week">
+                            <span class="mock-dash__label">Нед. 4</span>
+                            <div class="mock-pbar"><div class="mock-pbar__fill" style="width:25%"></div></div>
+                            <span class="mock-dash__pct">25%</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <a href="/auth/register" class="lf-card__btn lf-card__btn--light">Перейти</a>
+        </div>
+
     </div>
 </section>
 
-<!-- Преимущества -->
-<div class="features">
-    <div class="section-header">
-        <h2>Почему выбирают нас?</h2>
-        <p style="color: #4b5563;">Современный подход к изучению китайского языка</p>
+<!-- ===== TOPICS SECTION ===== -->
+<section class="landing-section">
+    <header class="landing-section__header">
+        <h2 class="landing-section__title">Темы курса</h2>
+        <p class="landing-section__subtitle">Изучайте китайский по структурированным темам программы HSK-1</p>
+    </header>
+    <div class="landing-topics">
+        <div class="landing-topic">
+            <div class="landing-topic__emoji">👋</div>
+            <h3 class="landing-topic__title">Приветствия</h3>
+            <p class="landing-topic__desc">Базовые фразы для знакомства и ежедневного общения</p>
+            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
+        </div>
+        <div class="landing-topic">
+            <div class="landing-topic__emoji">🔢</div>
+            <h3 class="landing-topic__title">Числа</h3>
+            <p class="landing-topic__desc">От 1 до 1000, счётные слова и даты</p>
+            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
+        </div>
+        <div class="landing-topic">
+            <div class="landing-topic__emoji">👨‍👩‍👧</div>
+            <h3 class="landing-topic__title">Семья</h3>
+            <p class="landing-topic__desc">Родственники, отношения и семейная лексика</p>
+            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
+        </div>
+        <div class="landing-topic">
+            <div class="landing-topic__emoji">🍜</div>
+            <h3 class="landing-topic__title">Еда</h3>
+            <p class="landing-topic__desc">Продукты, блюда, рестораны и кафе</p>
+            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
+        </div>
+        <div class="landing-topic">
+            <div class="landing-topic__emoji">🚇</div>
+            <h3 class="landing-topic__title">Транспорт</h3>
+            <p class="landing-topic__desc">Метро, такси, автобус и путешествия</p>
+            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
+        </div>
+        <div class="landing-topic">
+            <div class="landing-topic__emoji">🏙️</div>
+            <h3 class="landing-topic__title">Город</h3>
+            <p class="landing-topic__desc">Места, магазины, улицы и учреждения</p>
+            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
+        </div>
     </div>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <h3>60 уроков</h3>
-            <p>Полный охват всех тем HSK-4 с практическими заданиями</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎥</div>
-            <h3>Видео-уроки</h3>
-            <p>Каждый урок сопровождается видео-разбором и примерами</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📝</div>
-            <h3>Упражнения</h3>
-            <p>Интерактивные задания для закрепления материала</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎓</div>
-            <h3>Куратор 24/7</h3>
-            <p>Личный наставник отвечает на вопросы в Telegram</p>
-        </div>
-    </div>
-</div>
+</section>
 
-<!-- Об авторе -->
+<!-- ===== АВТОР ===== -->
 <div class="author-section">
-    <img src="/static/images/jane_photo.png" alt="Jane Might" class="author-photo">
+
+    <!-- Фото -->
+    <div class="author-photo-wrap">
+        <img src="/static/images/jane_photo.png" alt="Jane Might" class="author-photo">
+        <div class="author-photo-badge">HSK-6 🏆</div>
+    </div>
+
+    <!-- Инфо -->
     <div class="author-info">
+        <span class="author-eyebrow">Преподаватель курса</span>
         <div class="author-name">Евгения Горбунова</div>
         <div class="author-title">Jane Might — эксперт по китайскому языку 🇨🇳</div>
         <div class="author-bio">
-            Сертифицированный преподаватель китайского языка с опытом более 8 лет. 
-            Жила и училась в Пекине, владеет языком на уровне носителя (HSK-6). 
-            Автор уникальной методики, которая помогла более 500 студентам успешно сдать HSK-4.
+            Сертифицированный преподаватель китайского языка с опытом более 8 лет.
+            Жила и обучалась в Пекине, владеет языком на уровне носителя (HSK-6).
+            Автор уникальной методики, которая помогла более 500 студентам
+            уверенно сдать HSK и заговорить на китайском с нуля.
+        </div>
+
+        <!-- Достижения -->
+        <div class="author-achievements">
+            <div class="author-ach">
+                <span class="author-ach__num">8+</span>
+                <span class="author-ach__lbl">лет преподавания</span>
+            </div>
+            <div class="author-ach">
+                <span class="author-ach__num">500+</span>
+                <span class="author-ach__lbl">выпускников</span>
+            </div>
+            <div class="author-ach">
+                <span class="author-ach__num">98%</span>
+                <span class="author-ach__lbl">успешно сдали HSK</span>
+            </div>
+            <div class="author-ach">
+                <span class="author-ach__num">HSK-6</span>
+                <span class="author-ach__lbl">уровень носителя</span>
+            </div>
+        </div>
+
+        <!-- Значки -->
+        <div class="author-creds">
+            <span class="author-cred">📍 3 года в Пекине</span>
+            <span class="author-cred">🎓 Авторская методика</span>
+            <span class="author-cred">💬 Поддержка в Telegram</span>
+            <span class="author-cred">🎥 Видео-уроки с разбором</span>
         </div>
     </div>
+
 </div>
 
-<!-- CTA -->
+<!-- ===== CTA ===== -->
 <div class="cta-section">
     <h2>🔥 Готовы к марафону?</h2>
     <p>Зарегистрируйтесь сегодня и получите первый урок бесплатно!</p>
     <a href="/auth/register" class="btn-primary">Присоединиться сейчас →</a>
 </div>
+
 {% endblock %}

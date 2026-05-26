@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import declarative_base
+import sqlalchemy as sa
 from .config import settings
 
 engine = create_async_engine(
@@ -17,8 +18,9 @@ AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 Base = declarative_base()
 
 async def init_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    """Проверка подключения к БД при старте. Схема управляется через Alembic."""
+    async with engine.connect() as conn:
+        await conn.execute(sa.text("SELECT 1"))
 
 async def drop_db():
     async with engine.begin() as conn:
