@@ -30,7 +30,7 @@
         {% endif %}
 
         <div class="article-content-body">
-            {{ article.text }}
+            {{ article.text | safe }}
         </div>
 
         <div class="article-footer-nav">
