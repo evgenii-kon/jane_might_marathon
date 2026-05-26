@@ -4,127 +4,143 @@
 
 {% block content %}
 <div class="dashboard-container">
-    <!-- Приветственная карточка -->
-    <div class="dashboard-card welcome-card">
-        <div class="welcome-header">
-            <div class="welcome-emoji">🌟</div>
-            <h1>С возвращением, {{ user.name }}!</h1>
-            <div class="days-counter">
-                📅 {{ days_after_start }}-й день со старта курса
+
+    <!-- ===== ПРИВЕТСТВЕННАЯ КАРТОЧКА ===== -->
+    <div class="welcome-card">
+        <div class="welcome-deco welcome-deco--1"></div>
+        <div class="welcome-deco welcome-deco--2"></div>
+        <div class="welcome-deco welcome-deco--3"></div>
+
+        <div class="welcome-inner">
+            <div class="welcome-left">
+                <div class="welcome-avatar">{{ user.name[0]|upper }}</div>
+                <div class="welcome-meta">
+                    <h1 class="welcome-title">С возвращением, {{ user.name }}!</h1>
+                    <div class="welcome-chips">
+                        <span class="welcome-chip">📅 День {{ days_after_start }}</span>
+                        <span class="welcome-chip welcome-chip--muted">Китайский ждёт тебя</span>
+                    </div>
+                </div>
             </div>
-        </div>
-        <p class="welcome-text">Продолжим наше путешествие в мир китайского языка!</p>
-        
-        <div class="progress-section">
-            <div class="progress-header">
-                <span class="progress-label">📊 Общий прогресс курса</span>
-                <span class="progress-stats">{{ total_completed }} из {{ total_lessons }} уроков</span>
-            </div>
-            <div class="progress-bar-large">
-                <div class="progress-fill w-{{ progress_percent|int }}">
-                    <span class="progress-percent">{{ progress_percent }}%</span>
+
+            <div class="welcome-progress-box">
+                <div class="wpr-header">
+                    <span class="wpr-label">Прогресс курса</span>
+                    <span class="wpr-fraction">{{ total_completed }}&thinsp;/&thinsp;{{ total_lessons }} уроков</span>
+                </div>
+                <div class="progress-bar-large">
+                    <div class="progress-fill w-{{ progress_percent|int }}">
+                        <span class="progress-percent">{{ progress_percent }}%</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ПЕРВЫЙ РЯД: Тренажёр слов | Рейтинг слов -->
-    <div class="dashboard-row">
-        <a href="/word-trainer" class="dashboard-card trainer-card-link half-width">
-            <div class="trainer-card-content">
-                <div class="trainer-card-icon">📚</div>
-                <div class="trainer-card-info">
-                    <h3>Тренажёр слов</h3>
-                    <p>Закрепляй свои знания в режимах ежедневного повторения и марафона</p>
-                </div>
-                <div class="trainer-card-arrow">→</div>
+    <!-- ===== БЫСТРЫЕ ДЕЙСТВИЯ ===== -->
+    <div class="actions-grid">
+
+        <a href="/word-trainer" class="action-card action-card--orange">
+            <div class="action-accent"></div>
+            <div class="action-icon action-icon--orange">📚</div>
+            <div class="action-body">
+                <h3>Тренажёр слов</h3>
+                <p>Ежедневное повторение и марафон</p>
             </div>
+            <div class="action-arrow">→</div>
         </a>
 
-        <a href="/dashboard/words/rating" class="dashboard-card rating-card half-width">
-            <div class="rating-card-content">
-                <div class="rating-card-icon">🏆</div>
-                <div class="rating-card-info">
-                    <h3>Рейтинг слов</h3>
-                    <p>Отслеживай прогресс и уровень mastery для каждого слова HSK-1</p>
-                </div>
-                <div class="rating-card-arrow">→</div>
+        <a href="/dashboard/words/rating" class="action-card action-card--blue">
+            <div class="action-accent"></div>
+            <div class="action-icon action-icon--blue">🏆</div>
+            <div class="action-body">
+                <h3>Рейтинг слов</h3>
+                <p>Уровень mastery для слов HSK-1</p>
             </div>
+            <div class="action-arrow">→</div>
         </a>
+
+        <a href="https://t.me/your_channel" target="_blank" class="action-card action-card--blue">
+            <div class="action-accent"></div>
+            <div class="action-icon action-icon--blue action-icon--img">
+                <img src="/static/images/telegram_logo.jpg" alt="Telegram">
+            </div>
+            <div class="action-body">
+                <h3>Telegram-сообщество</h3>
+                <p>Общайся и делись успехами</p>
+            </div>
+            <div class="action-arrow">→</div>
+        </a>
+
+        <a href="/dashboard/feedback/" class="action-card action-card--orange">
+            <div class="action-accent"></div>
+            <div class="action-icon action-icon--orange">💬</div>
+            <div class="action-body">
+                <h3>Обратная связь</h3>
+                <p>Отзывы и пожелания по курсу</p>
+            </div>
+            <div class="action-arrow">→</div>
+        </a>
+
     </div>
 
-    <!-- ВТОРОЙ РЯД: Telegram | Обратная связь -->
-    <div class="dashboard-row">
-        <a href="https://t.me/your_channel" target="_blank" class="dashboard-card telegram-card half-width">
-            <div class="telegram-card-content">
-                <img src="/static/images/telegram_logo.jpg" alt="Telegram" class="telegram-card-icon">
-                <div class="telegram-card-info">
-                    <h3>Telegram-сообщество</h3>
-                    <p>Общайся с другими участниками, задавай вопросы и делись успехами</p>
-                </div>
-                <div class="telegram-card-arrow">→</div>
-            </div>
-        </a>
-
-        <!-- Карточка обратной связи -->
-        <a href="/dashboard/feedback/" class="dashboard-card feedback-card half-width">
-            <div class="feedback-card-content">
-                <div class="feedback-card-icon">💬</div>
-                <div class="feedback-card-info">
-                    <h3>Обратная связь</h3>
-                    <p>Оставьте отзыв или пожелание, чтобы сделать курс лучше</p>
-                </div>
-                <div class="feedback-card-arrow">→</div>
-            </div>
-        </a>
-    </div>
-
-    <!-- Недели марафона (без изменений) -->
-    <div class="dashboard-card">
+    <!-- ===== НЕДЕЛИ МАРАФОНА ===== -->
+    <div class="weeks-section">
         <div class="section-header">
-            <h2>📚 Недели марафона</h2>
-            <span class="weeks-count">{{ weeks|length }} недель</span>
+            <div>
+                <h2 class="section-title">Недели марафона</h2>
+                <p class="section-subtitle">Ваш учебный план</p>
+            </div>
+            <span class="weeks-badge">{{ weeks|length }} недель</span>
         </div>
 
         <div class="weeks-grid">
             {% for week in weeks %}
+
                 {% if week.is_locked %}
-                    <div class="week-card locked">
-                        <div class="week-number">Неделя {{ week.number }}</div>
-                        <div class="week-title">{{ week.short_description }}</div>
-                        <div class="week-lock">
-                            <span class="lock-icon">🔒</span>
-                            <span class="lock-days">
-                                {% if week.days_until_open and week.days_until_open > 0 %}
-                                    Откроется через {{ week.days_until_open }} дней
-                                {% else %}
-                                    скоро
-                                {% endif %}
-                            </span>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="week-card {% if week.is_completed %}completed{% endif %}">
-                        <div class="week-number">Неделя {{ week.number }}</div>
-                        <div class="week-title">{{ week.short_description }}</div>
-                        <div class="week-progress">
-                            <div class="week-stats">{{ week.completed_lessons }}/{{ week.total_lessons }} уроков</div>
-                            <div class="progress-bar small">
-                                <div class="progress-fill w-{{ week.progress_percent|int }}"></div>
-                            </div>
-                        </div>
-                        <div class="week-footer">
-                            {% if week.is_completed %}
-                                <span class="completed-badge">✅ Пройдена</span>
+                <div class="week-card week-card--locked">
+                    <div class="week-num">Неделя {{ week.number }}</div>
+                    <div class="week-title">{{ week.short_description }}</div>
+                    <div class="week-lock-body">
+                        <span class="week-lock-icon">🔒</span>
+                        <span class="week-lock-label">
+                            {% if week.days_until_open and week.days_until_open > 0 %}
+                                Откроется через {{ week.days_until_open }} дней
+                            {% else %}
+                                Скоро
                             {% endif %}
-                            <a href="/dashboard/weeks/{{ week.id }}" class="week-link">
-                                Перейти <span class="arrow">→</span>
-                            </a>
+                        </span>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="week-card{% if week.is_completed %} week-card--done{% endif %}">
+                    <div class="week-card-top">
+                        <div class="week-num">Неделя {{ week.number }}</div>
+                        {% if week.is_completed %}
+                            <span class="week-done-badge">✓</span>
+                        {% endif %}
+                    </div>
+                    <div class="week-title">{{ week.short_description }}</div>
+                    <div class="week-progress-wrap">
+                        <div class="week-track">
+                            <div class="week-fill" style="width: {{ week.progress_percent|int }}%"></div>
+                        </div>
+                        <div class="week-stats-row">
+                            <span class="week-lessons-count">{{ week.completed_lessons }}/{{ week.total_lessons }} уроков</span>
+                            <span class="week-pct">{{ week.progress_percent|int }}%</span>
                         </div>
                     </div>
+                    <a href="/dashboard/weeks/{{ week.id }}" class="week-cta">
+                        {% if week.is_completed %}Повторить{% else %}Перейти{% endif %}
+                        <span class="week-cta-arrow">→</span>
+                    </a>
+                </div>
                 {% endif %}
+
             {% endfor %}
         </div>
     </div>
+
 </div>
 {% endblock %}
