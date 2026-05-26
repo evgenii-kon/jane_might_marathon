@@ -33,22 +33,13 @@
         </div>
         
         <div class="quiz-options" id="quizOptions">
-            <button class="quiz-option" data-option="1">
-                <span class="option-letter">А</span>
-                <span class="option-text">{{ exercise.option_1 }}</span>
+            {% set letters = ['А', 'Б', 'В', 'Г'] %}
+            {% for orig_num, text in shuffled_options %}
+            <button class="quiz-option" data-option="{{ orig_num }}">
+                <span class="option-letter">{{ letters[loop.index0] }}</span>
+                <span class="option-text">{{ text }}</span>
             </button>
-            <button class="quiz-option" data-option="2">
-                <span class="option-letter">Б</span>
-                <span class="option-text">{{ exercise.option_2 }}</span>
-            </button>
-            <button class="quiz-option" data-option="3">
-                <span class="option-letter">В</span>
-                <span class="option-text">{{ exercise.option_3 }}</span>
-            </button>
-            <button class="quiz-option" data-option="4">
-                <span class="option-letter">Г</span>
-                <span class="option-text">{{ exercise.option_4 }}</span>
-            </button>
+            {% endfor %}
         </div>
         
         <div class="quiz-feedback" id="quizFeedback"></div>
@@ -157,11 +148,17 @@
             showFeedback(result);
             disableOptions();
 
-            if (result.has_next) {
-                showNextButton();
+            if (result.is_correct) {
+                if (result.has_next) {
+                    showNextButton();
+                } else {
+                    isLastQuestion = true;
+                    nextBtn.textContent = 'Завершить →';
+                    showNextButton();
+                }
             } else {
-                isLastQuestion = true;
-                nextBtn.textContent = 'Завершить →';
+                // Неправильный ответ — варианты перемешаются при перезагрузке
+                nextBtn.textContent = 'Попробовать снова 🔄';
                 showNextButton();
             }
 

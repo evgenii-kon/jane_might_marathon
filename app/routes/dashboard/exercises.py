@@ -1,3 +1,5 @@
+import random
+
 from fastapi import APIRouter, Depends, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -108,12 +110,22 @@ async def exercises_quiz(
     # 6. Статистика для отображения
     stats = _get_progress_stats(completed_ids, exercises)
 
+    # 7. Перемешиваем варианты ответов (data-option хранит оригинальный номер)
+    options = [
+        (1, current_exercise.option_1),
+        (2, current_exercise.option_2),
+        (3, current_exercise.option_3),
+        (4, current_exercise.option_4),
+    ]
+    random.shuffle(options)
+
     return templates.TemplateResponse(
         "dashboard/exercises/exercises_quiz.html",
         {
             "request": request,
             "lesson": lesson,
             "exercise": current_exercise,
+            "shuffled_options": options,
             "current_index": stats["current_index"],
             "total_count": stats["total_count"],
             "progress_percent": stats["percent"],
