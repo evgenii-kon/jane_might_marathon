@@ -4,6 +4,8 @@
 
 /* Карточка заголовка недели */
 .week-header-card {
+    background: linear-gradient(135deg, #0a1441 0%, #1e40af 60%, #7c2d12 100%) !important;
+    box-shadow: 0 12px 40px rgba(10,20,65,.32), 0 2px 8px rgba(10,20,65,.18) !important;
     margin-bottom: 24px;
 }
 
@@ -24,15 +26,41 @@
 }
 
 .week-long-desc {
-    color: #6b7280;
+    color: rgba(255,255,255,0.7);
     font-size: 15px;
     line-height: 1.6;
     margin-bottom: 24px;
 }
 
 .week-progress-block {
-    border-top: 1px solid #f3f4f6;
+    border-top: 1px solid rgba(255,255,255,0.15);
     padding-top: 20px;
+}
+
+.week-header-card .week-title {
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: #ffffff;
+    background-clip: unset;
+    color: #ffffff;
+}
+
+.week-header-card .progress-label {
+    color: rgba(255,255,255,0.8);
+}
+
+.week-header-card .progress-count {
+    color: #fb923c;
+}
+
+.week-header-card .progress-bar {
+    background: rgba(255,255,255,0.18);
+}
+
+.week-header-card .quiz-badge {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
 /* Список уроков */

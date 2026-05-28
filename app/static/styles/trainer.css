@@ -10,7 +10,7 @@
 .hub-page {
     max-width: 960px;
     margin: 0 auto;
-    padding: 0 24px 56px;
+    padding: 40px 24px 56px;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -18,7 +18,7 @@
 
 /* ── Header ─────────────────────────────────────────────── */
 .hub-header {
-    background: linear-gradient(140deg, #0c2461 0%, #1e40af 52%, #2563eb 100%);
+    background: linear-gradient(135deg, #0a1441 0%, #1e40af 60%, #7c2d12 100%);
     border-radius: 26px;
     padding: 36px 40px;
     position: relative;
@@ -588,7 +588,7 @@
 
 /* ── Legacy class stubs (kept for any other templates) ───── */
 .trainer-hub-container { max-width: 960px; margin: 0 auto; padding: 0 24px 56px; }
-.trainer-container     { max-width: 700px; margin: 0 auto; padding: 0 24px 56px; }
+.trainer-container     { max-width: 700px; margin: 0 auto; padding: 40px 24px 56px; }
 .due-info              { color: #ea580c; font-size: 14px; }
 
 

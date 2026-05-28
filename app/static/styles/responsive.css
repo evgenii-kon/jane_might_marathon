@@ -42,13 +42,21 @@
         max-width: 100%;
     }
     
+    .header {
+        padding: 0 16px;
+    }
+
     .header-container {
+        height: auto;
+        padding: 12px 0;
         flex-direction: column;
+        gap: 10px;
         text-align: center;
     }
-    
+
     .nav-links {
         justify-content: center;
+        gap: 4px;
     }
     
     .features-grid {

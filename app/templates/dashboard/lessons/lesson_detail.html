@@ -59,15 +59,14 @@
                         <div class="flashcard-front">
                             <div class="flashcard-hanzi">{{ word.hanzi }}</div>
                             <div class="flashcard-transcription">{{ word.transcription }}</div>
+                            {% if word.audio_url %}
+                            <audio id="audio-{{ word.id }}" src="{{ word.audio_url }}" preload="none"></audio>
+                            <button class="audio-play-btn" onclick="event.stopPropagation(); document.getElementById('audio-{{ word.id }}').play()">🔊 Слушать</button>
+                            {% endif %}
                             <div class="flashcard-hint">👆 Нажми для перевода</div>
                         </div>
                         <div class="flashcard-back">
                             <div class="flashcard-translation">{{ word.translation }}</div>
-                            {% if word.audio_url %}
-                            <div class="flashcard-audio">
-                                <audio controls src="{{ word.audio_url }}"></audio>
-                            </div>
-                            {% endif %}
                             {% if word.example_sentence %}
                             <div class="flashcard-example">
                                 <div class="example-sentence">{{ word.example_sentence }}</div>
@@ -123,8 +122,7 @@
     const flashcards = document.querySelectorAll('.flashcard');
     flashcards.forEach(card => {
         card.addEventListener('click', function(e) {
-            // Предотвращаем срабатывание если клик на аудио
-            if (e.target.tagName === 'AUDIO' || e.target.tagName === 'SOURCE') {
+            if (e.target.tagName === 'AUDIO' || e.target.tagName === 'SOURCE' || e.target.tagName === 'BUTTON') {
                 return;
             }
             this.classList.toggle('flipped');

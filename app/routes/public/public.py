@@ -27,3 +27,13 @@ async def about(
     return templates.TemplateResponse(
         "public/about.html", {"request": request, "user": current_user}
     )
+
+
+@router.get("/contacts", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
+async def contacts(
+    request: Request,
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    return templates.TemplateResponse(
+        "public/contacts.html", {"request": request, "user": current_user}
+    )

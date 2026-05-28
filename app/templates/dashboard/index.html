@@ -29,7 +29,7 @@
                     <span class="wpr-fraction">{{ total_completed }}&thinsp;/&thinsp;{{ total_lessons }} уроков</span>
                 </div>
                 <div class="progress-bar-large">
-                    <div class="progress-fill w-{{ progress_percent|int }}">
+                    <div class="progress-fill" style="width: {{ progress_percent|int }}%">
                         <span class="progress-percent">{{ progress_percent }}%</span>
                     </div>
                 </div>
