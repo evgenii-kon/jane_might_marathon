@@ -2,7 +2,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
 from typing import List, Optional
 from app.models.word import Word
-from app.models.lesson import Lesson
 from app.models.lesson_word_association import lesson_word_association
 
 

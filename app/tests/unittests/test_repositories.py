@@ -3,9 +3,7 @@ Async тесты всех репозиториев.
 Каждый тест получает изолированную async-сессию (rollback после теста).
 """
 
-import pytest
 from datetime import datetime, timezone, timedelta
-from sqlalchemy.exc import IntegrityError
 
 from app.models.user import User
 from app.models.week import Week
@@ -13,8 +11,6 @@ from app.models.lesson import Lesson
 from app.models.word import Word
 from app.models.exercise import Exercise
 from app.models.article import Article
-from app.models.feedback import FeedBack
-from app.models.user_week_progress import UserWeekProgress
 from app.models.user_word_progress import UserWordProgress
 
 from app.repositories.user_repository import UserRepository
@@ -30,7 +26,6 @@ from app.repositories.user_week_progress_repository import UserWeekProgressRepos
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
 from app.repositories.lesson_word_association_repository import LessonWordAssociationRepository
 
-from app.schemas.user import UserUpdate
 from app.schemas.week import WeekCreate
 from app.schemas.lesson import LessonCreate
 from app.schemas.exercise import ExerciseCreate

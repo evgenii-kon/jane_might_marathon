@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional
+from typing import List
 from fastapi import HTTPException, status
 from ..repositories.week_repository import WeekRepository
 from ..schemas.week import WeekCreate, WeekResponse, WeekUpdate

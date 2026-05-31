@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select
 from app.models.feedback import FeedBack
 from app.schemas.feedback import FeedbackCreate
 from typing import Optional, List

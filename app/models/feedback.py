@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, Text, DateTime, func
 from sqlalchemy.orm import relationship
-from datetime import datetime
 from ..database import Base
 
 class FeedBack(Base):

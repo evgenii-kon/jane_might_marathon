@@ -22,7 +22,6 @@ load_dotenv(".env.test")
 
 # Обязательно импортируем все модели, чтобы Base.metadata знала обо всех таблицах
 from app.database import Base  # noqa: E402
-import app.models  # noqa: E402  (импортирует все модели через __init__.py)
 
 TEST_DB_USER = os.getenv("TEST_DB_USER", "postgres")
 TEST_DB_PASSWORD = os.getenv("TEST_DB_PASSWORD", "postgres")
