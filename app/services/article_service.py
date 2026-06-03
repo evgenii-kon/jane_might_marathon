@@ -3,37 +3,57 @@ from typing import List
 from fastapi import HTTPException, status
 from ..repositories.article_repository import ArticleRepository
 from ..schemas.article import ArticleCreate, ArticleUpdate, ArticleResponse
+from ..services.cashe_service import CacheService
 
 
 class ArticleService:
     def __init__(self, db: AsyncSession):
         self.db = db
         self.repository = ArticleRepository(db)
+        self.cache = CacheService(prefix="articles", ttl=600)
 
     async def get_all_articles(self) -> List[ArticleResponse]:
         """Получить все статьи"""
+        cached = await self.cache.get("all")
+        if cached: 
+            return [ArticleResponse.model_validate(a) for a in cached]
+
         articles = await self.repository.get_all()
-        return [ArticleResponse.model_validate(a) for a in articles]
+        result = [ArticleResponse.model_validate(a) for a in articles]
+        await self.cache.set([a.model_dump() for a in result], "all")
+        return result
 
     async def get_article_by_id(self, article_id: int) -> ArticleResponse:
         """Получить статью по ID"""
+        cached = await self.cache.get('id', article_id)
+        if cached:
+            return ArticleResponse.model_validate(cached)
+        
         article = await self.repository.get_by_id(article_id)
         if not article:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Article with id={article_id} not found",
             )
-        return ArticleResponse.model_validate(article)
+        result = ArticleResponse.model_validate(article)
+        await self.cache.set(result.model_dump(), "id", article_id)
+        return result
 
     async def get_article_by_slug(self, slug: str) -> ArticleResponse:
         """Получить статью по slug"""
+        cached = await self.cache.get('slug', slug)
+        if cached:
+            return ArticleResponse.model_validate(cached)
+
         article = await self.repository.get_by_slug(slug)
         if not article:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Article with slug='{slug}' not found",
             )
-        return ArticleResponse.model_validate(article)
+        result = ArticleResponse.model_validate(article)
+        await self.cache.set(result.model_dump(), "slug", slug)
+        return result
 
     async def create_article(self, article_data: ArticleCreate) -> ArticleResponse:
         """Создать новую статью"""
@@ -44,7 +64,8 @@ class ArticleService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Article with slug='{article_data.slug}' already exists",
             )
-
+        
+        await self.cache.delete_pattern("*")
         new_article = await self.repository.create(article_data)
         return ArticleResponse.model_validate(new_article)
 
@@ -67,7 +88,7 @@ class ArticleService:
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=f"Article with slug='{article_data.slug}' already exists",
                 )
-
+        await self.cache.delete_pattern("*")
         update_dict = article_data.model_dump(exclude_unset=True)
         updated_article = await self.repository.update(article_id, update_dict)
         return ArticleResponse.model_validate(updated_article)
@@ -80,7 +101,7 @@ class ArticleService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Article with id={article_id} not found",
             )
-
+        await self.cache.delete_pattern("*")
         await self.repository.delete(article_id)
 
     async def get_articles_count(self) -> int:

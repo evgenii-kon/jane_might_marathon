@@ -4,11 +4,13 @@ from fastapi import HTTPException, status
 from ..repositories.week_repository import WeekRepository
 from ..schemas.week import WeekCreate, WeekResponse, WeekUpdate
 from ..models.week import Week
+from ..services.cashe_service import CacheService
 
 
 class WeekService:
     def __init__(self, db: AsyncSession):
         self.repository = WeekRepository(db)
+        self.cache = CacheService(prefix="weeks", ttl=600)
 
     async def _get_existing_week(self, week_id: int) -> Week:
         week = await self.repository.get_by_id(week_id)
@@ -38,35 +40,59 @@ class WeekService:
                 )
 
     async def get_all_weeks(self) -> List[WeekResponse]:
+        cached = await self.cache.get("all")
+        if cached:
+            return [WeekResponse.model_validate(w) for w in cached]
+
         weeks = await self.repository.get_all()
-        return [WeekResponse.model_validate(week) for week in weeks]
+        result = [WeekResponse.model_validate(week) for week in weeks]
+        await self.cache.set([w.model_dump() for w in result], "all")
+        return result
 
     async def get_week_by_id(self, week_id: int) -> WeekResponse:
+        cached = await self.cache.get("id", week_id)
+        if cached:
+            return WeekResponse.model_validate(cached)
+
         week = await self.repository.get_by_id(week_id)
         if not week:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Week with id={week_id} not found",
             )
-        return WeekResponse.model_validate(week)
+        result = WeekResponse.model_validate(week)
+        await self.cache.set(result.model_dump(), "id", week_id)
+        return result
 
     async def get_week_by_slug(self, slug: str) -> WeekResponse:
+        cached = await self.cache.get("slug", slug)
+        if cached:
+            return WeekResponse.model_validate(cached)
+
         week = await self.repository.get_by_slug(slug)
         if not week:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Week with slug={slug} not found",
             )
-        return WeekResponse.model_validate(week)
+        result = WeekResponse.model_validate(week)
+        await self.cache.set(result.model_dump(), "slug", slug)
+        return result
 
     async def get_week_by_number(self, number: int) -> WeekResponse:
+        cached = await self.cache.get("number", number)
+        if cached:
+            return WeekResponse.model_validate(cached)
+
         week = await self.repository.get_by_number(number)
         if not week:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Week with number={number} not found",
             )
-        return WeekResponse.model_validate(week)
+        result = WeekResponse.model_validate(week)
+        await self.cache.set(result.model_dump(), "number", number)
+        return result
 
     async def create_week(self, week_data: WeekCreate) -> WeekResponse:
         slug_exists = await self.repository.get_by_slug(week_data.slug)
@@ -83,6 +109,7 @@ class WeekService:
                 detail=f"Week with number={week_data.number} already exists",
             )
 
+        await self.cache.delete_pattern("*")
         new_week = await self.repository.create(week_data)
         return WeekResponse.model_validate(new_week)
 
@@ -91,6 +118,7 @@ class WeekService:
         await self._check_unique_slug(week_data.slug, existing_week.slug)
         await self._check_unique_number(week_data.number, existing_week.number)
 
+        await self.cache.delete_pattern("*")
         update_dict = week_data.model_dump(exclude_unset=True)
         updated_week = await self.repository.update(week_id, update_dict)
         return WeekResponse.model_validate(updated_week)
@@ -102,4 +130,5 @@ class WeekService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Week with id={week_id} not found",
             )
+        await self.cache.delete_pattern("*")
         return await self.repository.delete(week_id)

@@ -22,6 +22,21 @@ class Settings(BaseSettings):
     def database_url_async(self) -> str:
         """Формирование URL для подключения к БД (асинхронная версия)"""
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    
+
+    # Redis settings
+    REDIS_HOST: str = Field("localhost", description="Redis host")
+    REDIS_PORT: int = Field(6379, description="Redis port")
+    REDIS_DB: int = Field(0, description="Redis database index")
+    REDIS_PASSWORD: str = Field("", description="Redis password (if any)")
+
+    @property
+    def redis_url(self) -> str:
+        if self.REDIS_PASSWORD:
+            return f"redis://:{self.REDIS_PASSWORD}@{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
+        else:
+            return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
+
 
     # CORS settings
     cors_origins: List[str] = [

@@ -61,6 +61,11 @@ class WordTrainerService:
         """
         Получить все слова в случайном порядке
         """
+        cached = await self.cache.get("all")
+        if cached:
+            random.shuffle(cached)
+            return cached
+        
         words = list(await self.word_repo.get_all())
         random.shuffle(words)
         return words

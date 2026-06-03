@@ -5,6 +5,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
+from app.redis_client import close_redis, init_redis
+
 from .routes.admin.dashboard import router as admin_router
 from .routes.dashboard.dashboard import router as dashboard_router
 from .routes.admin.lesson import router as lesson_router
@@ -36,8 +38,10 @@ from .database import init_db, engine
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    await init_redis()
     yield
     await engine.dispose()
+    await close_redis()
 
 
 app = FastAPI(lifespan=lifespan)

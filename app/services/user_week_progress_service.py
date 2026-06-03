@@ -10,6 +10,8 @@ from app.schemas.user_week_progress import (
     UserWeekProgressResponse,
     WeekWithProgressResponse,
 )
+from ..services.cashe_service import CacheService
+
 
 
 class UserWeekProgressService:
@@ -18,6 +20,7 @@ class UserWeekProgressService:
         self.repository = UserWeekProgressRepository(db)
         self.week_repo = WeekRepository(db)
         self.user_repo = UserRepository(db)
+        self.cache = CacheService(prefix = 'user_week_progress', ttl = 300)
 
     async def _calculate_opens_at(self, user_id: int, week_number: int) -> datetime:
         user = await self.user_repo.get_by_id(user_id)
@@ -36,6 +39,10 @@ class UserWeekProgressService:
 
     async def get_or_create(self, user_id: int, week_id: int) -> UserWeekProgressResponse:
         """Получить или создать прогресс для недели"""
+        cached = await self.cache.get(user_id, week_id)
+        if cached:
+            return UserWeekProgressResponse.model_validate(cached)
+        
         progress = await self.repository.get_by_user_and_week(user_id, week_id)
 
         if not progress:
@@ -46,7 +53,9 @@ class UserWeekProgressService:
             opens_at = await self._calculate_opens_at(user_id, week.number)
             progress = await self.repository.create(user_id, week_id, opens_at)
 
-        return UserWeekProgressResponse.model_validate(progress)
+        result = UserWeekProgressResponse.model_validate(progress)
+        await self.cache.set(result.model_dump(), user_id, week_id)
+        return result
 
     async def init_user_weeks(self, user_id: int) -> None:
         """Инициализировать прогресс для всех недель при регистрации"""
@@ -81,6 +90,7 @@ class UserWeekProgressService:
         self, user_id: int, week_id: int
     ) -> UserWeekProgressResponse:
         """Отметить неделю как пройденную"""
+        await self.cache.delete(user_id, week_id)
         progress = await self.repository.mark_completed(user_id, week_id)
         if not progress:
             raise HTTPException(
