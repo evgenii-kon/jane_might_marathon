@@ -5,6 +5,7 @@ from app.database import get_db
 from app.services.user_service import UserService
 from app.utils.jwt import decode_token
 from app.models.user import User
+from ..utils.token_blacklist import is_token_in_blacklist
 
 
 class AuthService:
@@ -90,6 +91,9 @@ class AuthService:
 async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)) -> User:
     """Получает текущего пользователя (обязательная авторизация)"""
     token = AuthService.extract_token(request)
+    if await is_token_in_blacklist(token):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Token revoked")
+
     payload = AuthService.validate_token(token)
     user_id = AuthService.get_user_id(payload)
     user = await AuthService.get_user_by_id(db, user_id)

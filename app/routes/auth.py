@@ -14,6 +14,8 @@ from app.utils.jwt import create_access_token
 from app.utils.rate_limiter import limiter
 from app.csrf import get_csrf_token
 from app.config import settings
+from ..utils.token_blacklist import blacklist_token
+
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -141,6 +143,12 @@ async def logout_get(
 
 @router.post("/logout")
 async def logout_post():
+    token = request.cookies.get("access_token")
+    
+    if token:
+        if token.startswith("Bearer "):
+            token = token[7:]
+        await blacklist_token(token)
     response = RedirectResponse(url="/", status_code=302)
     response.delete_cookie("access_token")
     return response

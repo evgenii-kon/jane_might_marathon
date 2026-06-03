@@ -152,6 +152,9 @@ async def check_exercise_answer(
     exercise = await exercise_service.get_exercise_by_id(exercise_id)
     if not exercise:
         return {"error": "Exercise not found", "is_correct": False}
+    
+    if exercise.lesson_id != lesson_id:
+        raise HTTPException(403, "Exercise does not belong to this lesson")
 
     # 2. Проверяем ответ
     is_correct = selected_option == exercise.correct_answer
