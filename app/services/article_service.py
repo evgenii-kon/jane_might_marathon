@@ -20,7 +20,7 @@ class ArticleService:
 
         articles = await self.repository.get_all()
         result = [ArticleResponse.model_validate(a) for a in articles]
-        await self.cache.set([a.model_dump() for a in result], "all")
+        await self.cache.set([a.model_dump(mode='json') for a in result], "all")
         return result
 
     async def get_article_by_id(self, article_id: int) -> ArticleResponse:
@@ -36,7 +36,7 @@ class ArticleService:
                 detail=f"Article with id={article_id} not found",
             )
         result = ArticleResponse.model_validate(article)
-        await self.cache.set(result.model_dump(), "id", article_id)
+        await self.cache.set(result.model_dump(mode='json'), "id", article_id)
         return result
 
     async def get_article_by_slug(self, slug: str) -> ArticleResponse:
@@ -52,7 +52,7 @@ class ArticleService:
                 detail=f"Article with slug='{slug}' not found",
             )
         result = ArticleResponse.model_validate(article)
-        await self.cache.set(result.model_dump(), "slug", slug)
+        await self.cache.set(result.model_dump(mode='json'), "slug", slug)
         return result
 
     async def create_article(self, article_data: ArticleCreate) -> ArticleResponse:

@@ -18,7 +18,7 @@ class LessonService:
 
         lessons = await self.repository.get_all()
         result = [LessonResponse.model_validate(lesson) for lesson in lessons]
-        await self.cache.set([l.model_dump() for l in result], "all")
+        await self.cache.set([l.model_dump(mode='json') for l in result], "all")
         return result
 
     async def get_lesson_by_id(self, lesson_id: int) -> LessonResponse:
@@ -33,7 +33,7 @@ class LessonService:
                 detail=f"lesson with id={lesson_id} not found",
             )
         result = LessonResponse.model_validate(lesson)
-        await self.cache.set(result.model_dump(), "id", lesson_id)
+        await self.cache.set(result.model_dump(mode='json'), "id", lesson_id)
         return result
 
     async def create_lesson(self, lesson_data: LessonCreate) -> LessonResponse:
@@ -85,7 +85,7 @@ class LessonService:
 
         lessons = await self.repository.get_by_week_id(week_id)
         result = [LessonResponse.model_validate(lesson) for lesson in lessons]
-        await self.cache.set([l.model_dump() for l in result], "week", week_id)
+        await self.cache.set([l.model_dump(mode='json') for l in result], "week", week_id)
         return result
 
     async def get_lessons_count(self) -> int:

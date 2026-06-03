@@ -8,6 +8,7 @@ from app.repositories.lesson_word_association_repository import (
 )
 from app.models.word import Word
 from app.models.user_word_progress import UserWordProgress
+from app.services.cashe_service import CacheService
 
 
 class WordTrainerService:
@@ -16,6 +17,7 @@ class WordTrainerService:
         self.progress_repo = UserWordProgressRepository(db)
         self.word_repo = WordRepository(db)
         self.lesson_word_repo = LessonWordAssociationRepository(db)
+        self.cache = CacheService('word_trainer', ttl = 300)
 
     async def add_lesson_words_to_progress(self, user_id: int, lesson_id: int) -> int:
         """

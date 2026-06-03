@@ -25,7 +25,7 @@ class ExerciseService:
         
         exercises = await self.repository.get_all()
         result = [ExerciseResponse.model_validate(e) for e in exercises]
-        await self.cache.set([e.model_dump() for e in result], 'all') 
+        await self.cache.set([e.model_dump(mode='json') for e in result], 'all') 
         return result
 
     async def get_exercise_by_id(self, exercise_id: int) -> ExerciseResponse:
@@ -41,7 +41,7 @@ class ExerciseService:
                 detail=f"Exercise with id={exercise_id} not found",
             )
         result = ExerciseResponse.model_validate(exercise)
-        await self.cache.set(result.model_dump(), 'id', exercise_id)
+        await self.cache.set(result.model_dump(mode='json'), 'id', exercise_id)
         return result
 
     async def get_exercises_by_lesson(self, lesson_id: int) -> List[ExerciseResponse]:
@@ -52,7 +52,7 @@ class ExerciseService:
         exercises = await self.repository.get_by_lesson(lesson_id)
 
         result = [ExerciseResponse.model_validate(e) for e in exercises]
-        await self.cache.set([e.model_dump() for e in result], 'lesson', lesson_id)
+        await self.cache.set([e.model_dump(mode='json') for e in result], 'lesson', lesson_id)
         return result
 
     async def create_exercise(self, exercise_data: ExerciseCreate) -> ExerciseResponse:

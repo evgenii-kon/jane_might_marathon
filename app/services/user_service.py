@@ -44,7 +44,7 @@ class UserService:
 
         users = await self.repository.get_all()
         result = [UserResponse.model_validate(user) for user in users]
-        await self.cache.set([u.model_dump() for u in result], "all")
+        await self.cache.set([u.model_dump(mode='json') for u in result], "all")
         return result
 
     async def get_user_by_id(self, user_id: int) -> UserResponse:
@@ -59,7 +59,7 @@ class UserService:
                 detail=f"user with id={user_id} not found",
             )
         result = UserResponse.model_validate(user)
-        await self.cache.set(result.model_dump(), "id", user_id)
+        await self.cache.set(result.model_dump(mode='json'), "id", user_id)
         return result
 
     async def get_user_by_email(self, user_email: str) -> UserResponse:
@@ -74,7 +74,7 @@ class UserService:
                 detail=f"user with email {user_email} not found",
             )
         result = UserResponse.model_validate(user)
-        await self.cache.set(result.model_dump(), "email", user_email)
+        await self.cache.set(result.model_dump(mode='json'), "email", user_email)
         return result
 
     async def get_user_by_name(self, user_name: str) -> UserResponse:
@@ -89,7 +89,7 @@ class UserService:
                 detail=f"user with name {user_name} not found",
             )
         result = UserResponse.model_validate(user)
-        await self.cache.set(result.model_dump(), "name", user_name)
+        await self.cache.set(result.model_dump(mode='json'), "name", user_name)
         return result
 
     async def create_user(self, user_data: UserCreate) -> UserResponse:
@@ -100,7 +100,7 @@ class UserService:
                 detail=f"user with email {user_data.email} is already exist",
             )
         await self.cache.delete_pattern("*")
-        data_dict = user_data.model_dump()
+        data_dict = user_data.model_dump(mode='json')
         password_hash = self._hash_password(data_dict.pop("password"))
         data_dict["password_hash"] = password_hash
         user = await self.repository.create(data_dict)

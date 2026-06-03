@@ -16,6 +16,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.pool import NullPool
 from dotenv import load_dotenv
+import fakeredis.aioredis
+import app.redis_client as redis_module
+
+@pytest_asyncio.fixture(autouse=True)
+async def fake_redis():
+    fake = fakeredis.aioredis.FakeRedis(decode_responses=True)
+    redis_module.redis_client = fake
+    yield fake
+    await fake.aclose()
+    redis_module.redis_client = None
 
 # Загружаем .env.test до импорта app-конфига
 load_dotenv(".env.test")

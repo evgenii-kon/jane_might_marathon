@@ -23,7 +23,7 @@ class WordService:
 
         words = await self.repository.get_all()
         result = [WordResponse.model_validate(word) for word in words]
-        await self.cache.set([w.model_dump() for w in result], "all")
+        await self.cache.set([w.model_dump(mode='json') for w in result], "all")
         return result
 
     async def get_word_by_id(self, word_id: int) -> WordResponse:
@@ -38,7 +38,7 @@ class WordService:
                 detail=f"Word with id {word_id} not found",
             )
         result = WordResponse.model_validate(word)
-        await self.cache.set(result.model_dump(), "id", word_id)
+        await self.cache.set(result.model_dump(mode='json'), "id", word_id)
         return result
 
     async def get_word_with_lessons(self, word_id: int) -> WordWithLessonsResponse:
@@ -67,7 +67,7 @@ class WordService:
             audio_url=word.audio_url,
             lesson_ids=lesson_ids,
         )
-        await self.cache.set(result.model_dump(), "with_lessons", word_id)
+        await self.cache.set(result.model_dump(mode='json'), "with_lessons", word_id)
         return result
 
     async def get_words_by_lesson(self, lesson_id: int) -> List[WordResponse]:
@@ -78,12 +78,12 @@ class WordService:
 
         words = await self.repository.get_by_lesson(lesson_id)
         result = [WordResponse.model_validate(word) for word in words]
-        await self.cache.set([w.model_dump() for w in result], "lesson", lesson_id)
+        await self.cache.set([w.model_dump(mode='json') for w in result], "lesson", lesson_id)
         return result
 
     async def create_word(self, word_data: WordCreate) -> WordResponse:
         await self.cache.delete_pattern("*")
-        word = await self.repository.create(word_data.model_dump())
+        word = await self.repository.create(word_data.model_dump(mode='json'))
         return WordResponse.model_validate(word)
 
     async def update_word(self, word_id: int, word_data: WordUpdate) -> WordResponse:

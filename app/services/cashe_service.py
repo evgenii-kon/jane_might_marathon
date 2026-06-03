@@ -12,7 +12,7 @@ class CacheService:
     async def get(self, *key_parts):
         redis = get_redis()
         data = await redis.get(self._key(*key_parts))
-        if data:
+        if data is not None:
             return json.loads(data)
         return None
 

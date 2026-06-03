@@ -46,7 +46,7 @@ class WeekService:
 
         weeks = await self.repository.get_all()
         result = [WeekResponse.model_validate(week) for week in weeks]
-        await self.cache.set([w.model_dump() for w in result], "all")
+        await self.cache.set([w.model_dump(mode='json') for w in result], "all")
         return result
 
     async def get_week_by_id(self, week_id: int) -> WeekResponse:
@@ -61,7 +61,7 @@ class WeekService:
                 detail=f"Week with id={week_id} not found",
             )
         result = WeekResponse.model_validate(week)
-        await self.cache.set(result.model_dump(), "id", week_id)
+        await self.cache.set(result.model_dump(mode='json'), "id", week_id)
         return result
 
     async def get_week_by_slug(self, slug: str) -> WeekResponse:
@@ -76,7 +76,7 @@ class WeekService:
                 detail=f"Week with slug={slug} not found",
             )
         result = WeekResponse.model_validate(week)
-        await self.cache.set(result.model_dump(), "slug", slug)
+        await self.cache.set(result.model_dump(mode='json'), "slug", slug)
         return result
 
     async def get_week_by_number(self, number: int) -> WeekResponse:
@@ -91,7 +91,7 @@ class WeekService:
                 detail=f"Week with number={number} not found",
             )
         result = WeekResponse.model_validate(week)
-        await self.cache.set(result.model_dump(), "number", number)
+        await self.cache.set(result.model_dump(mode='json'), "number", number)
         return result
 
     async def create_week(self, week_data: WeekCreate) -> WeekResponse:

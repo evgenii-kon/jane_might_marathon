@@ -54,7 +54,7 @@ class UserWeekProgressService:
             progress = await self.repository.create(user_id, week_id, opens_at)
 
         result = UserWeekProgressResponse.model_validate(progress)
-        await self.cache.set(result.model_dump(), user_id, week_id)
+        await self.cache.set(result.model_dump(mode='json'), user_id, week_id)
         return result
 
     async def init_user_weeks(self, user_id: int) -> None:

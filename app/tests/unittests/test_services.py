@@ -397,7 +397,14 @@ class TestLessonService:
         svc = LessonService(db_session)
         wk = await _mk_week(db_session, slug="ls-cnt-wk", number=318)
         before = await svc.get_lessons_count()
-        await _mk_lesson(db_session, wk.id, name="LS Count Test")
+        
+        await svc.create_lesson(LessonCreate(
+            name="LS Count Test", 
+            week_id=wk.id, 
+            order_in_week=1, 
+            content_html="c"
+        ))
+        
         after = await svc.get_lessons_count()
         assert after == before + 1
 
