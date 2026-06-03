@@ -142,7 +142,7 @@ async def logout_get(
 
 
 @router.post("/logout")
-async def logout_post():
+async def logout_post(request: Request):
     token = request.cookies.get("access_token")
     
     if token:
