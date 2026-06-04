@@ -2203,17 +2203,17 @@ def run():
     print("\n📖 Вставляю слова HSK-1...")
     inserted_words = 0
     skipped_words = 0
-    for hanzi, transcription, translation, pos, example_s, example_t in HSK1_WORDS:
+    for hanzi, transcription, translation, audio_url, pos, example_s, example_t in HSK1_WORDS:
         cur.execute("SELECT id FROM words WHERE hanzi = %s AND transcription = %s", (hanzi, transcription))
         if cur.fetchone():
             skipped_words += 1
             continue
         cur.execute(
             """INSERT INTO words
-               (hanzi, transcription, translation, audio_url, part_of_speech,
+              (hanzi, transcription, translation, audio_url, part_of_speech,
                 example_sentence, example_translation)
-               VALUES (%s, %s, %s, NULL, %s, %s, %s)""",
-            (hanzi, transcription, translation, pos, example_s, example_t),
+              VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+            (hanzi, transcription, translation, audio_url, pos, example_s, example_t),
         )
         inserted_words += 1
     conn.commit()
