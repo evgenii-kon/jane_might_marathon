@@ -1562,14 +1562,20 @@ def run():
     print("\n📰 Вставляю статьи...")
     for a in ARTICLES:
         cur.execute(
+            "SELECT id FROM articles WHERE slug = %s",
+            (a["slug"],),
+        )
+        if cur.fetchone():
+            print(f"   ~ «{a['name']}» уже существует, пропускаю.")
+            continue
+        cur.execute(
             """INSERT INTO articles (name, slug, description, text, images)
-               VALUES (%s, %s, %s, %s, %s)
-               ON CONFLICT (slug) DO NOTHING""",
+               VALUES (%s, %s, %s, %s, %s)""",
             (a["name"], a["slug"], a["description"], a["text"], json.dumps(a["images"])),
         )
         print(f"   + «{a['name']}»")
     conn.commit()
-    print(f"   ✅ Вставлено {len(ARTICLES)} статей.")
+    print(f"   ✅ Статьи вставлены.")
 
     cur.close()
     conn.close()
