@@ -1421,7 +1421,63 @@ def run():
 
     print("🔗 Подключение к БД установлено.")
 
-    # ── 1. Обновить описания недель ──────────────────────────
+    # ── 0. Создать недели 1-6 ─────────────────────────────────
+    print("\n📅 Создаю недели 1-6...")
+    weeks_data = [
+        (1, "week-1", "Базовое общение", "Первая неделя марафона: учимся здороваться, представляться, считать, говорить о семье и еде.", 40, 40),
+        (2, "week-2", "Повседневная жизнь", "Вторая неделя: время суток и распорядок дня, повседневные действия, ориентирование в городе.", 40, 40),
+        (3, "week-3", "Работа и досуг", "Третья неделя: профессии и рабочее место, хобби и свободное время, эмоции и чувства.", 40, 40),
+        (4, "week-4", "Покупки и быт", "Четвёртая неделя: шоппинг и торг, деньги и цены, одежда, описание дома и квартиры.", 40, 40),
+        (5, "week-5", "Здоровье и технологии", "Пятая неделя: части тела, болезни и симптомы, визит к врачу, спорт и здоровый образ жизни.", 40, 40),
+        (6, "week-6", "Культура Китая (бонус)", "Бонусная шестая неделя: китайский Новый год и праздники, традиционная кухня, обычаи и традиции.", 40, 40),
+    ]
+    week_number_to_id = {}
+    for number, slug, short_desc, long_desc, target_words, target_exercises in weeks_data:
+        cur.execute(
+            """INSERT INTO weeks (number, slug, short_description, long_description, target_words_count, target_exercises_count)
+               VALUES (%s, %s, %s, %s, %s, %s)
+               ON CONFLICT (number) DO UPDATE SET short_description=EXCLUDED.short_description, long_description=EXCLUDED.long_description
+               RETURNING id""",
+            (number, slug, short_desc, long_desc, target_words, target_exercises),
+        )
+        week_id = cur.fetchone()[0]
+        week_number_to_id[number] = week_id
+        print(f"   + Неделя {number} → id={week_id}")
+    conn.commit()
+    print("   ✅ Недели созданы.")
+
+    # ── 1. Создать уроки для недель 1-2 ──────────────────────
+    print("\n📚 Создаю уроки для недель 1-2...")
+    lessons_weeks_1_2 = [
+        (1, "Приветствия и знакомство", 1, "<h2>Приветствия и знакомство</h2><p>Базовые приветствия на китайском языке.</p>"),
+        (1, "Числа и счёт", 2, "<h2>Числа и счёт</h2><p>Числа от 1 до 100 на китайском языке.</p>"),
+        (1, "Семья", 3, "<h2>Семья</h2><p>Члены семьи на китайском языке.</p>"),
+        (1, "Еда и напитки", 4, "<h2>Еда и напитки</h2><p>Основные продукты и блюда на китайском языке.</p>"),
+        (2, "Время и распорядок дня", 1, "<h2>Время и распорядок дня</h2><p>Как говорить о времени по-китайски.</p>"),
+        (2, "Повседневные действия", 2, "<h2>Повседневные действия</h2><p>Глаголы повседневной жизни.</p>"),
+        (2, "Местоположение и направление", 3, "<h2>Местоположение и направление</h2><p>Как ориентироваться в городе.</p>"),
+        (2, "Цвета и прилагательные", 4, "<h2>Цвета и прилагательные</h2><p>Цвета и описание предметов.</p>"),
+        (2, "Путешествия и транспорт", 5, "<h2>Путешествия и транспорт</h2><p>Транспорт и путешествия.</p>"),
+        (2, "Историческая лексика", 6, "<h2>Историческая лексика</h2><p>Слова из истории Китая.</p>"),
+    ]
+    lesson_name_to_id_1_2 = {}
+    lesson_order = {1: 0, 2: 0}
+    for week_number, name, order_n, content_html in lessons_weeks_1_2:
+        week_id = week_number_to_id[week_number]
+        cur.execute(
+            """INSERT INTO lessons (name, week_id, order_in_week, content_html)
+               VALUES (%s, %s, %s, %s)
+               ON CONFLICT (name) DO UPDATE SET content_html=EXCLUDED.content_html
+               RETURNING id""",
+            (name, week_id, order_n, content_html),
+        )
+        lesson_id = cur.fetchone()[0]
+        lesson_name_to_id_1_2[name] = lesson_id
+        print(f"   + Урок «{name}» → id={lesson_id}")
+    conn.commit()
+    print("   ✅ Уроки недель 1-2 созданы.")
+
+    # ── 2. Обновить описания недель ──────────────────────────
     print("\n📅 Обновляю описания недель...")
     for week_number, short_desc, long_desc in WEEK_UPDATES:
         cur.execute(
@@ -1431,24 +1487,38 @@ def run():
     conn.commit()
     print("   ✅ Описания недель обновлены.")
 
-    # ── 2. Удалить тестовые упражнения ───────────────────────
-    print("\n🗑  Удаляю 2 тестовых упражнения (id=1, id=2)...")
-    cur.execute("DELETE FROM user_exercise_progress WHERE exercise_id IN (1, 2)")
-    cur.execute("DELETE FROM exercises WHERE id IN (1, 2)")
-    conn.commit()
-    print("   ✅ Тестовые упражнения удалены.")
-
     # ── 3. Вставить упражнения для недель 1-2 ────────────────
     print("\n📝 Вставляю упражнения для уроков 1-10 (недели 1-2)...")
+    lesson_names_ordered = [
+        "Приветствия и знакомство",  # lesson_id 1
+        "Числа и счёт",              # lesson_id 2
+        "Семья",                     # lesson_id 3
+        "Еда и напитки",             # lesson_id 4
+        "Время и распорядок дня",    # lesson_id 5
+        "Повседневные действия",     # lesson_id 6
+        "Местоположение и направление",  # lesson_id 7
+        "Цвета и прилагательные",    # lesson_id 8
+        "Путешествия и транспорт",   # lesson_id 9
+        "Историческая лексика",      # lesson_id 10
+    ]
+    lesson_index_to_id = {
+        i + 1: lesson_name_to_id_1_2[name]
+        for i, name in enumerate(lesson_names_ordered)
+    }
+
     for row in EXERCISES_WEEKS_1_2:
-        lesson_id, desc, question, o1, o2, o3, o4, correct, explanation, order_n = row
+        old_lesson_id, desc, question, o1, o2, o3, o4, correct, explanation, order_n = row
+        real_lesson_id = lesson_index_to_id.get(old_lesson_id)
+        if not real_lesson_id:
+            print(f"   ⚠️  Урок с индексом {old_lesson_id} не найден, пропускаю.")
+            continue
         cur.execute(
             """INSERT INTO exercises
                (lesson_id, question_description, question_text,
                 option_1, option_2, option_3, option_4,
                 correct_answer, explanation, order_in_lesson)
                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-            (lesson_id, desc, question, o1, o2, o3, o4, correct, explanation, order_n),
+            (real_lesson_id, desc, question, o1, o2, o3, o4, correct, explanation, order_n),
         )
     conn.commit()
     print(f"   ✅ Вставлено {len(EXERCISES_WEEKS_1_2)} упражнений.")
@@ -1456,15 +1526,18 @@ def run():
     # ── 4. Вставить уроки для недель 3-6 ─────────────────────
     print("\n📚 Создаю уроки для недель 3-6...")
     lesson_name_to_id = {}
-    for week_id, name, order_n, content_html in LESSONS_WEEKS_3_6:
+    for week_number, name, order_n, content_html in LESSONS_WEEKS_3_6:
+        week_id = week_number_to_id[week_number]
         cur.execute(
             """INSERT INTO lessons (name, week_id, order_in_week, content_html)
-               VALUES (%s,%s,%s,%s) RETURNING id""",
+               VALUES (%s,%s,%s,%s)
+               ON CONFLICT (name) DO UPDATE SET content_html=EXCLUDED.content_html
+               RETURNING id""",
             (name, week_id, order_n, content_html),
         )
         lesson_id = cur.fetchone()[0]
         lesson_name_to_id[name] = lesson_id
-        print(f"   + Урок «{name}» → id={lesson_id} (неделя {week_id})")
+        print(f"   + Урок «{name}» → id={lesson_id} (неделя {week_number})")
     conn.commit()
     print(f"   ✅ Создано {len(LESSONS_WEEKS_3_6)} уроков.")
 
@@ -1494,7 +1567,8 @@ def run():
     for a in ARTICLES:
         cur.execute(
             """INSERT INTO articles (name, slug, description, text, images)
-               VALUES (%s, %s, %s, %s, %s)""",
+               VALUES (%s, %s, %s, %s, %s)
+               ON CONFLICT (slug) DO NOTHING""",
             (a["name"], a["slug"], a["description"], a["text"], json.dumps(a["images"])),
         )
         print(f"   + «{a['name']}»")
