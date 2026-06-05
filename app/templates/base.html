@@ -16,6 +16,14 @@
                     <img src="/static/images/orange_logo.png" alt="Логотип" class="logo">
                 </a>
             </div>
+            {% if not user %}
+            <nav class="nav-landing">
+                <a href="#features" class="nav-landing__link">Возможности</a>
+                <a href="#topics" class="nav-landing__link">Темы курса</a>
+                <a href="#author" class="nav-landing__link">Преподаватель</a>
+                <a href="#faq" class="nav-landing__link">Частые вопросы</a>
+            </nav>
+            {% endif %}
             <nav class="nav-links">
                 {% if user %}
                     <a href="/dashboard">Главная</a>
@@ -39,7 +47,7 @@
                     <a href="/auth/logout" class="btn-outline">Выйти</a>
                 {% else %}
                     <a href="/auth/login">Вход</a>
-                    <a href="/auth/register" class="btn-solid">Старт</a>
+                    <a href="/auth/register" class="btn-solid">Зарегистрироваться</a>
                 {% endif %}
             </nav>
         </div>
