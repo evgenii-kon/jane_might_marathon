@@ -314,12 +314,16 @@
     }
 
     .landing-hero__photo-wrap {
+        position: relative;
+        right: auto;
+        top: auto;
+        bottom: auto;
         align-self: center;
     }
 
     .landing-hero__photo {
-        width: 264px;
-        height: 348px;
+        width: auto;
+        height: 300px;
     }
 
     .landing-hero__deco-l,

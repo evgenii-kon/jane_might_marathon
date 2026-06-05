@@ -9,7 +9,7 @@
     min-height: 480px;
     display: flex;
     align-items: flex-end;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 40px;
     margin-bottom: 32px;
 }
@@ -19,6 +19,7 @@
     z-index: 2;
     max-width: 540px;
     padding-bottom: 8px;
+    padding-left: 48px;
 }
 
 .landing-hero__badge {
@@ -75,23 +76,21 @@
 
 /* ========== HERO PHOTO ========== */
 .landing-hero__photo-wrap {
-    position: relative;
+    position: absolute;
+    right: 150px;
+    top: 24px;
+    bottom: 0;
     z-index: 2;
-    flex-shrink: 0;
-    align-self: flex-end;
-    margin-right: 150px;
 }
 
 .landing-hero__photo {
-    width: 336px;
-    height: 444px;
-    object-fit: cover;
-    object-position: center top;
-    border-radius: 20px 20px 0 0;
+    width: auto;
+    height: 100%;
     display: block;
+    border-radius: 20px 20px 0 0;
     box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
-    mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 }
 
 .landing-hero__cta {
