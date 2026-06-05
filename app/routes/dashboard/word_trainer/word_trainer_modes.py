@@ -10,6 +10,7 @@ from app.services.word_trainer_service import WordTrainerService
 from app.repositories.word_repository import WordRepository
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
 from app.csrf import get_csrf_token
+import re
 
 router = APIRouter(prefix="/word-trainer", tags=["word_trainer"])
 templates = Jinja2Templates(directory="app/templates")
@@ -105,8 +106,11 @@ async def check_answer(
     word = await word_repo.get_by_id(word_id)
     if not word:
         return {"error": "Word not found"}
+    
+    cleaned = re.sub(r'\(.*?\)', '', word.translation)
+    parts = {p.strip().lower() for p in re.split(r'[/,]', cleaned) if p.strip()}
 
-    is_correct = user_answer.lower().strip() == word.translation.lower().strip()
+    is_correct = user_answer.lower().strip() in parts
 
     if mode == "daily":
         # Обновляем прогресс только для ежедневного режима
