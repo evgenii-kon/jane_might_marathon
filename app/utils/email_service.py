@@ -7,7 +7,7 @@ resend.api_key = settings.RESEND_API_KEY
 async def send_verification_email(to: str, token: str) -> None:
     link = f"{settings.APP_URL}/auth/verify-email?token={token}"
     resend.Emails.send({
-        "from": settings.SMTP_FROM,
+        "from": settings.EMAIL_FROM,
         "to": to,
         "subject": "Подтверждение email — Jane Marathon",
         "html": f"""
@@ -25,7 +25,7 @@ async def send_verification_email(to: str, token: str) -> None:
 async def send_reset_password_email(to: str, token: str) -> None:
     link = f"{settings.APP_URL}/auth/reset-password?token={token}"
     resend.Emails.send({
-        "from": settings.SMTP_FROM,
+        "from": settings.EMAIL_FROM,
         "to": to,
         "subject": "Сброс пароля — Jane Marathon",
         "html": f"""
