@@ -16,6 +16,11 @@
         </div>
         {% endif %}
 
+        {% if message %}
+        <div class="auth-success">
+            ✅ {{ message }}
+        </div>
+        {% else %}
         <form method="post" class="auth-form">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div class="form-group">
@@ -41,6 +46,7 @@
 
             <button type="submit" class="btn-primary btn-block">🚀 Зарегистрироваться</button>
         </form>
+        {% endif %}
 
         <div class="auth-footer">
             <p>Уже есть аккаунт? <a href="/auth/login">Войти →</a></p>
