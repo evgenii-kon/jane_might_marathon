@@ -45,6 +45,9 @@ class Settings(BaseSettings):
     SMTP_FROM: str = Field(..., description="From email address")
     APP_URL: str = Field("http://localhost:8000", description="App base URL")
 
+    RESEND_API_KEY: str = Field(..., description="Resend API key")
+
+
 
     # CORS settings
     cors_origins: List[str] = [
