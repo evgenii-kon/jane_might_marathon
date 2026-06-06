@@ -22,6 +22,12 @@
         </div>
         {% endif %}
 
+        {% if message %}
+        <div class="auth-success">
+            ✅ {{ message }}
+        </div>
+        {% endif %}
+
         <form method="post" class="auth-form">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div class="form-group">
@@ -39,7 +45,7 @@
 
         <div class="auth-footer">
             <p>Нет аккаунта? <a href="/auth/register">Зарегистрироваться →</a></p>
-            <p><a href="/auth/reset-password" style="font-size: 14px;">Забыли пароль?</a></p>
+            <p><a href="/auth/forgot-password" style="font-size: 14px;">Забыли пароль?</a></p>
         </div>
     </div>
 </div>

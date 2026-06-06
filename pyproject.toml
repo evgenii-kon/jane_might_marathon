@@ -29,6 +29,7 @@ dependencies = [
     "slowapi>=0.1.9",
     "redis[hiredis]>=8.0.0",
     "fakeredis>=2.36.0",
+    "aiosmtplib>=5.1.1",
 ]
 
 [dependency-groups]

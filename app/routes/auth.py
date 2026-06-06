@@ -14,8 +14,17 @@ from app.utils.jwt import create_access_token
 from app.utils.rate_limiter import limiter
 from app.csrf import get_csrf_token
 from app.config import settings
-from ..utils.token_blacklist import blacklist_token
-
+from app.utils.token_blacklist import blacklist_token
+from app.utils.token_service import (
+    create_verification_token,
+    verify_email_token,
+    create_reset_password_token,
+    verify_reset_password_token,
+)
+from app.utils.email_service import (
+    send_verification_email,
+    send_reset_password_email,
+)
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -33,10 +42,10 @@ async def register_get(
 ):
     return templates.TemplateResponse(
         "auth/register.html", {
-            "request": request, 
+            "request": request,
             "user": current_user,
             "csrf_token": get_csrf_token(request),
-            }
+        }
     )
 
 
@@ -55,15 +64,27 @@ async def register_post(
         new_user = await user_service.create_user(user_data)
         await week_progress_service.init_user_weeks(new_user.id)
 
-        return RedirectResponse(url="/auth/login", status_code=302)
+        token = await create_verification_token(new_user.id)
+        await send_verification_email(new_user.email, token)
+
+        return templates.TemplateResponse(
+            "auth/register.html",
+            {
+                "request": request,
+                "user": current_user,
+                "csrf_token": get_csrf_token(request),
+                "message": "Регистрация успешна! Проверьте почту — мы отправили письмо с подтверждением.",
+            },
+        )
     except HTTPException as e:
         return templates.TemplateResponse(
             "auth/register.html",
             {
-                "request": request, 
-                "error": e.detail, 
+                "request": request,
+                "error": e.detail,
                 "user": current_user,
-                "csrf_token": get_csrf_token(request)},
+                "csrf_token": get_csrf_token(request),
+            },
         )
 
 
@@ -73,15 +94,24 @@ async def register_post(
 @router.get("/login", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 async def login_get(
     request: Request,
+    verified: Optional[str] = None,
+    reset: Optional[str] = None,
     db: AsyncSession = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
+    message = None
+    if verified == "1":
+        message = "Email подтверждён! Теперь можете войти."
+    elif reset == "1":
+        message = "Пароль успешно изменён. Войдите с новым паролем."
+
     return templates.TemplateResponse(
         "auth/login.html", {
-            "request": request, 
+            "request": request,
             "user": current_user,
             "csrf_token": get_csrf_token(request),
-            }
+            "message": message,
+        }
     )
 
 
@@ -98,8 +128,19 @@ async def login_post(
 
     try:
         user = await user_service.authenticate_user(email, password)
-        access_token = create_access_token(data={"user_id": user.id})
 
+        if not user.is_verified:
+            return templates.TemplateResponse(
+                "auth/login.html",
+                {
+                    "request": request,
+                    "error": "Подтвердите email перед входом. Письмо было отправлено при регистрации.",
+                    "user": current_user,
+                    "csrf_token": get_csrf_token(request),
+                },
+            )
+
+        access_token = create_access_token(data={"user_id": user.id})
         response = RedirectResponse(url="/dashboard", status_code=302)
         response.set_cookie(
             key="access_token",
@@ -116,11 +157,127 @@ async def login_post(
             "auth/login.html",
             {
                 "request": request,
-                "error": "Invalid email or password",
+                "error": "Неверный email или пароль",
                 "user": current_user,
-                "csrf_token": get_csrf_token(request)
+                "csrf_token": get_csrf_token(request),
             },
         )
+
+
+# ============ ПОДТВЕРЖДЕНИЕ EMAIL ============
+
+
+@router.get("/verify-email", response_class=HTMLResponse)
+async def verify_email(
+    request: Request,
+    token: str,
+    db: AsyncSession = Depends(get_db),
+):
+    user_id = await verify_email_token(token)
+    if not user_id:
+        return templates.TemplateResponse(
+            "auth/verify_email_error.html",
+            {
+                "request": request,
+                "error": "Ссылка недействительна или истекла",
+            },
+        )
+
+    user_service = UserService(db)
+    await user_service.update_user_by_id(user_id, {"is_verified": True})
+    return RedirectResponse(url="/auth/login?verified=1", status_code=302)
+
+
+# ============ ЗАБЫЛИ ПАРОЛЬ ============
+
+
+@router.get("/forgot-password", response_class=HTMLResponse)
+async def forgot_password_get(
+    request: Request,
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    return templates.TemplateResponse(
+        "auth/forgot_password.html",
+        {
+            "request": request,
+            "user": current_user,
+            "csrf_token": get_csrf_token(request),
+        },
+    )
+
+
+@router.post("/forgot-password", response_class=HTMLResponse)
+@limiter.limit("3/minute")
+async def forgot_password_post(
+    request: Request,
+    email: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    user_service = UserService(db)
+    user = await user_service.get_user_by_email_optional(email)
+
+    if user:
+        token = await create_reset_password_token(user.id)
+        await send_reset_password_email(email, token)
+
+    return templates.TemplateResponse(
+        "auth/forgot_password.html",
+        {
+            "request": request,
+            "user": current_user,
+            "csrf_token": get_csrf_token(request),
+            "message": "Если этот email зарегистрирован — письмо отправлено.",
+        },
+    )
+
+
+# ============ СБРОС ПАРОЛЯ ============
+
+
+@router.get("/reset-password", response_class=HTMLResponse)
+async def reset_password_get(
+    request: Request,
+    token: str,
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    return templates.TemplateResponse(
+        "auth/reset_password.html",
+        {
+            "request": request,
+            "user": current_user,
+            "token": token,
+            "csrf_token": get_csrf_token(request),
+        },
+    )
+
+
+@router.post("/reset-password", response_class=HTMLResponse)
+@limiter.limit("3/minute")
+async def reset_password_post(
+    request: Request,
+    token: str = Form(...),
+    new_password: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    user_id = await verify_reset_password_token(token)
+    if not user_id:
+        return templates.TemplateResponse(
+            "auth/reset_password.html",
+            {
+                "request": request,
+                "user": current_user,
+                "token": token,
+                "csrf_token": get_csrf_token(request),
+                "error": "Ссылка недействительна или истекла.",
+            },
+        )
+
+    user_service = UserService(db)
+    hashed = user_service._hash_password(new_password)
+    await user_service.update_user_by_id(user_id, {"password_hash": hashed})
+    return RedirectResponse(url="/auth/login?reset=1", status_code=302)
 
 
 # ============ ВЫХОД ============
@@ -134,17 +291,16 @@ async def logout_get(
 ):
     return templates.TemplateResponse(
         "auth/logout.html", {
-            "request": request, 
+            "request": request,
             "user": current_user,
             "csrf_token": get_csrf_token(request),
-            }
+        }
     )
 
 
 @router.post("/logout")
 async def logout_post(request: Request):
     token = request.cookies.get("access_token")
-    
     if token:
         if token.startswith("Bearer "):
             token = token[7:]
@@ -183,7 +339,7 @@ async def get_profile(
             "total_lessons": total_lessons,
             "completed_lessons": completed_lessons,
             "progress_percent": progress_percent,
-            "csrf_token": get_csrf_token(request)
+            "csrf_token": get_csrf_token(request),
         },
     )
 
@@ -195,10 +351,10 @@ async def edit_profile_get(
 ):
     return templates.TemplateResponse(
         "auth/user_edit_form.html", {
-            "request": request, 
+            "request": request,
             "user": current_user,
             "csrf_token": get_csrf_token(request),
-            }
+        }
     )
 
 
@@ -217,11 +373,11 @@ async def edit_profile_post(
         return templates.TemplateResponse(
             "auth/user_edit_form.html",
             {
-                "request": request, 
-                "user": current_user, 
+                "request": request,
+                "user": current_user,
                 "error": e.detail,
                 "csrf_token": get_csrf_token(request),
-                },
+            },
         )
 
 
@@ -235,10 +391,10 @@ async def delete_account_get(
 ):
     return templates.TemplateResponse(
         "auth/delete_user_confirm.html", {
-            "request": request, 
+            "request": request,
             "user": current_user,
             "csrf_token": get_csrf_token(request),
-            }
+        }
     )
 
 
@@ -249,7 +405,6 @@ async def delete_account_post(
 ):
     user_service = UserService(db)
     await user_service.delete_user(current_user.id)
-
     response = RedirectResponse(url="/", status_code=302)
     response.delete_cookie("access_token")
     return response

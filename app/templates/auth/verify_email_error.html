@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Ошибка подтверждения - HSK-4 Марафон{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>❌ Ссылка недействительна</h1>
+            <p>{{ error }}</p>
+        </div>
+
+        <div class="auth-footer">
+            <p>Ссылка могла истечь — попробуйте зарегистрироваться заново.</p>
+            <p><a href="/auth/register">Зарегистрироваться →</a></p>
+            <p><a href="/auth/login">← Войти</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

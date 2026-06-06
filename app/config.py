@@ -38,6 +38,14 @@ class Settings(BaseSettings):
             return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
 
 
+    SMTP_HOST: str = Field("smtp.gmail.com", description="SMTP host")
+    SMTP_PORT: int = Field(465, description="SMTP port")
+    SMTP_USER: str = Field(..., description="SMTP username")
+    SMTP_PASSWORD: str = Field(..., description="SMTP password")
+    SMTP_FROM: str = Field(..., description="From email address")
+    APP_URL: str = Field("http://localhost:8000", description="App base URL")
+
+
     # CORS settings
     cors_origins: List[str] = [
         "http://localhost:5173",

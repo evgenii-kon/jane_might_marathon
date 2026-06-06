@@ -126,3 +126,12 @@ class UserService:
                 detail=f"user with id={user_id} not found",
             )
         return UserResponse.model_validate(user)
+    
+    async def update_user_by_id(self, user_id: int, data: dict) -> None:
+        """Обновить пользователя напрямую по словарю — для внутренних нужд (верификация, сброс пароля)"""
+        await self.cache.delete_pattern("*")
+        await self.repository.update(user_id, data)
+
+    async def get_user_by_email_optional(self, email: str):
+        """Получить пользователя по email без исключения — возвращает None если не найден"""
+        return await self.repository.get_by_email(email)

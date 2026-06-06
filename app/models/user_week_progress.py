@@ -6,7 +6,7 @@ from ..database import Base
 class UserWeekProgress(Base):
     __tablename__ = "user_week_progress"
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     week_id = Column(Integer, ForeignKey("weeks.id"))
 
     opens_at = Column(DateTime(timezone=True), nullable=False)
