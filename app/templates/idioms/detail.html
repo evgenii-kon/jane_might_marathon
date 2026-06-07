@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}{{ idiom.hanzi }} — {{ idiom.translate }} - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="article-detail-page">
+    <div class="article-detail-container">
+        <div class="article-nav">
+            <a href="/idioms" class="back-link">← Все идиомы</a>
+        </div>
+
+        <div class="article-header" style="text-align: center; padding: 2rem 0;">
+            <div style="font-size: 4rem; letter-spacing: 0.2em; margin-bottom: 0.5rem;">{{ idiom.hanzi }}</div>
+            <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 0.5rem;">{{ idiom.pinyin }}</p>
+            <p style="font-style: italic; font-size: 1.1rem;">{{ idiom.translate }}</p>
+        </div>
+
+        {% if idiom.audio_url %}
+        <div style="text-align: center; margin-bottom: 1rem;">
+            <button id="idiom-audio-btn" class="idiom-audio-btn" onclick="toggleIdiomAudio()">🔊 Слушать</button>
+            <audio id="idiom-audio" src="{{ idiom.audio_url }}" preload="metadata"></audio>
+        </div>
+        {% endif %}
+
+        {% if user %}
+        <div class="idiom-progress-wrap">
+            <p class="idiom-progress-label">Самооценка</p>
+            <div class="idiom-progress-slider" id="progress-slider" data-idiom-id="{{ idiom.id }}" data-current="{{ idiom_status }}">
+                <button class="ipr-btn" data-val="not_known">Не знаю</button>
+                <button class="ipr-btn" data-val="learning">В процессе</button>
+                <button class="ipr-btn" data-val="known">Знаю хорошо</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="article-content-body">
+            <section style="margin-bottom: 2rem;">
+                <h2>Значение</h2>
+                <p>{{ idiom.meaning }}</p>
+            </section>
+
+            {% if idiom.story %}
+            <section style="margin-bottom: 2rem;">
+                <h2>История происхождения</h2>
+                <p>{{ idiom.story }}</p>
+            </section>
+            {% endif %}
+
+            {% if idiom.example %}
+            <section style="margin-bottom: 2rem;">
+                <h2>Пример употребления</h2>
+                <blockquote style="border-left: 4px solid var(--orange); padding-left: 1rem; margin: 0;">
+                    <p style="font-size: 1.2rem;">{{ idiom.example }}</p>
+                    {% if idiom.example_translation %}
+                    <p style="color: var(--text-muted); font-style: italic;">{{ idiom.example_translation }}</p>
+                    {% endif %}
+                </blockquote>
+            </section>
+            {% endif %}
+        </div>
+
+        <div class="article-footer-nav">
+            <a href="/idioms" class="btn-secondary">← Все идиомы</a>
+            <a href="/dashboard" class="btn-primary">На главную</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.idiom-audio-btn {
+    background: #f97316;
+    border: none;
+    color: white;
+    padding: 10px 28px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background .2s ease;
+}
+.idiom-audio-btn:hover { background: #ea580c; }
+
+/* ── Progress slider ── */
+.idiom-progress-wrap {
+    text-align: center;
+    margin: 0.5rem 0 2rem;
+}
+.idiom-progress-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+.idiom-progress-slider {
+    display: inline-flex;
+    background: var(--card-bg, #1e293b);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 100px;
+    padding: 4px;
+    gap: 2px;
+}
+.ipr-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted, #94a3b8);
+    padding: 8px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .18s ease, color .18s ease;
+    white-space: nowrap;
+}
+.ipr-btn:hover { color: #fff; }
+.ipr-btn.active[data-val="not_known"] { background: #ef4444; color: #fff; }
+.ipr-btn.active[data-val="learning"]  { background: #f97316; color: #fff; }
+.ipr-btn.active[data-val="known"]     { background: #22c55e; color: #fff; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Audio ──────────────────────────────────────────────────
+const idiomAudio = document.getElementById('idiom-audio');
+const idiomAudioBtn = document.getElementById('idiom-audio-btn');
+if (idiomAudio && idiomAudioBtn) {
+    idiomAudio.onended = () => { idiomAudioBtn.textContent = '🔊 Слушать'; };
+}
+function toggleIdiomAudio() {
+    if (!idiomAudio) return;
+    if (idiomAudio.paused) { idiomAudio.play(); idiomAudioBtn.textContent = '⏸ Пауза'; }
+    else                   { idiomAudio.pause(); idiomAudioBtn.textContent = '🔊 Слушать'; }
+}
+
+// ── Progress slider ────────────────────────────────────────
+const slider = document.getElementById('progress-slider');
+if (slider) {
+    const idiomId = slider.dataset.idiomId;
+    const btns = slider.querySelectorAll('.ipr-btn');
+
+    function setActive(val) {
+        btns.forEach(b => b.classList.toggle('active', b.dataset.val === val));
+    }
+
+    setActive(slider.dataset.current);
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const val = btn.dataset.val;
+            setActive(val);
+            try {
+                await fetch(`/idioms/${idiomId}/progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({ status: val }),
+                });
+            } catch (e) {
+                console.error('Progress update failed', e);
+            }
+        });
+    });
+}
+</script>
+{% endblock %}

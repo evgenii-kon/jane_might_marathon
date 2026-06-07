@@ -9,3 +9,5 @@ from .user_week_progress import UserWeekProgress
 from .user_exercise_progress import UserExerciseProgress
 from .article import Article
 from .feedback import FeedBack
+from .idiom import Idiom
+from .user_idiom_progress import UserIdiomProgress

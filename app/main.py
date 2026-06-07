@@ -25,6 +25,8 @@ from .routes.dashboard.word_trainer.word_trainer_modes import router as word_tra
 from .routes.public.articles import router as article_router
 from app.routes.dashboard.feedback import router as feedback_router
 from .routes.admin.feedback import router as admin_feedback_router
+from .routes.public.idioms import router as idiom_router
+from .routes.admin.idioms import router as idiom_admin_router
 
 from .csrf import CSRFMiddleware, get_csrf_token
 from app.utils.rate_limiter import limiter, _rate_limit_exceeded_handler
@@ -71,6 +73,8 @@ app.include_router(article_router)
 app.include_router(word_trainer_router)
 app.include_router(feedback_router)
 app.include_router(admin_feedback_router)
+app.include_router(idiom_router)
+app.include_router(idiom_admin_router)
 
 templates = Jinja2Templates("app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

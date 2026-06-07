@@ -31,3 +31,6 @@ class User(Base):
     feedback = relationship(
         'FeedBack', back_populates='user', cascade='all, delete-orphan'
     )
+    idiom_progress = relationship(
+        "UserIdiomProgress", back_populates="user", cascade="all, delete-orphan"
+    )

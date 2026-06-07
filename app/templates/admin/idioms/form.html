@@ -1,0 +1,90 @@
+{% extends "admin/base.html" %}
+
+{% if idiom %}
+{% block title %}Редактировать идиому — {{ idiom.hanzi }} - Админка{% endblock %}
+{% else %}
+{% block title %}Добавить идиому - Админка{% endblock %}
+{% endif %}
+
+{% block content %}
+<div class="admin-form-container">
+    <div class="admin-header">
+        {% if idiom %}
+        <h1>Редактировать: {{ idiom.hanzi }}</h1>
+        {% else %}
+        <h1>Добавить идиому</h1>
+        {% endif %}
+        <a href="/admin/idioms" class="btn-secondary">← Назад к списку</a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    {% set fd = form_data or {} %}
+    {% set action = "/admin/idioms/" ~ idiom.id ~ "/edit" if idiom else "/admin/idioms/create" %}
+
+    <form method="post" action="{{ action }}" class="admin-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="hanzi">Иероглифы (汉字) *</label>
+                <input type="text" id="hanzi" name="hanzi" required
+                       value="{{ fd.hanzi if fd.hanzi else (idiom.hanzi if idiom else '') }}"
+                       placeholder="例：一石二鸟">
+            </div>
+
+            <div class="form-group">
+                <label for="pinyin">Пиньинь *</label>
+                <input type="text" id="pinyin" name="pinyin" required
+                       value="{{ fd.pinyin if fd.pinyin else (idiom.pinyin if idiom else '') }}"
+                       placeholder="例：yī shí èr niǎo">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="translate">Дословный перевод *</label>
+                <input type="text" id="translate" name="translate" required
+                       value="{{ fd.translate if fd.translate else (idiom.translate if idiom else '') }}"
+                       placeholder="Убить двух птиц одним камнем">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="meaning">Значение / толкование *</label>
+                <textarea id="meaning" name="meaning" rows="4" required
+                          placeholder="Достичь двух целей одним действием.">{{ fd.meaning if fd.meaning else (idiom.meaning if idiom else '') }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="story">История происхождения</label>
+                <textarea id="story" name="story" rows="5"
+                          placeholder="Откуда пошла эта идиома...">{{ fd.story if fd.story else (idiom.story if idiom else '') }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="example">Пример употребления</label>
+                <textarea id="example" name="example" rows="3"
+                          placeholder="Предложение с использованием идиомы">{{ fd.example if fd.example else (idiom.example if idiom else '') }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="example_translation">Перевод примера</label>
+                <textarea id="example_translation" name="example_translation" rows="3"
+                          placeholder="Перевод примера на русский">{{ fd.example_translation if fd.example_translation else (idiom.example_translation if idiom else '') }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="audio_url">Ссылка на аудио (URL)</label>
+                <input type="text" id="audio_url" name="audio_url"
+                       value="{{ fd.audio_url if fd.audio_url else (idiom.audio_url if idiom else '') }}"
+                       placeholder="/static/audio/idioms/yi_shi_er_niao.mp3">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Сохранить</button>
+            <a href="/admin/idioms" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
