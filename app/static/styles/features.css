@@ -7,10 +7,10 @@
 
 .lf-card {
     position: relative;
-    background: #e8edf5;
+    background: var(--bg-card-alt);
     border-radius: 20px;
     padding: 28px 28px 72px;   /* нижний padding под кнопку */
-    border: 1px solid #d8dfe9;
+    border: 1px solid var(--border-color);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -19,8 +19,8 @@
 }
 
 .lf-card:hover {
-    box-shadow: 0 12px 32px rgba(15, 43, 109, 0.1);
-    border-color: #cbd5e1;
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border-solid);
 }
 
 .lf-card--wide {
@@ -35,13 +35,13 @@
 .lf-card__title {
     font-size: 20px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-heading);
     margin-bottom: 8px;
 }
 
 .lf-card__desc {
     font-size: 14px;
-    color: #64748b;
+    color: var(--text-secondary);
     line-height: 1.55;
     max-width: 320px;
 }
@@ -93,11 +93,11 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 18px;
     padding: 18px 22px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
     width: 62%;
     min-width: 260px;
 }
@@ -129,7 +129,7 @@
 .mock-lesson__title {
     font-size: 14px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-heading);
     margin-bottom: 5px;
     white-space: nowrap;
     overflow: hidden;
@@ -138,13 +138,13 @@
 
 .mock-lesson__chars {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-secondary);
     margin-bottom: 8px;
 }
 
 .mock-pbar {
     height: 14px;
-    background: #e5e7eb;
+    background: var(--track-bg);
     border-radius: 7px;
     overflow: hidden;
 }
@@ -157,7 +157,7 @@
 
 .mock-badge {
     flex-shrink: 0;
-    background: #ffedd5;
+    background: rgba(249, 115, 22, 0.12);
     color: #ea580c;
     font-size: 12px;
     font-weight: 700;
@@ -166,7 +166,7 @@
 }
 
 .mock-badge--done {
-    background: #dcfce7;
+    background: rgba(22, 163, 74, 0.12);
     color: #16a34a;
 }
 
@@ -200,15 +200,15 @@
 }
 
 .mock-window__body {
-    background: white;
+    background: var(--bg-card);
     padding: 18px 20px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color);
     border-top: none;
 }
 
 .mock-line {
     font-size: 13px;
-    color: #374151;
+    color: var(--text-primary);
     line-height: 1.7;
 }
 
@@ -216,7 +216,7 @@
     height: 8px;
 }
 
-.mock-kw  { color: #0f2b6d; font-weight: 600; }
+.mock-kw  { color: var(--orange); font-weight: 600; }
 .mock-str { color: #ea580c; font-weight: 600; }
 .mock-num { color: #0369a1; }
 .mock-comment { color: #9ca3af; font-style: italic; font-size: 12px; }
@@ -236,6 +236,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+html[data-theme="dark"] .lf-sr-info {
+    background: rgba(30, 64, 175, 0.12);
+    border-color: rgba(96, 165, 250, 0.2);
 }
 
 .lf-sr-chips {
@@ -259,11 +263,21 @@
     border: 1px solid #bfdbfe;
     color: #1e40af;
 }
+html[data-theme="dark"] .lf-sr-chip--blue {
+    background: rgba(30, 64, 175, 0.15);
+    border-color: rgba(96, 165, 250, 0.25);
+    color: #93c5fd;
+}
 
 .lf-sr-chip--orange {
     background: #fff7ed;
     border: 1px solid #fed7aa;
     color: #c2410c;
+}
+html[data-theme="dark"] .lf-sr-chip--orange {
+    background: rgba(249, 115, 22, 0.1);
+    border-color: rgba(249, 115, 22, 0.25);
+    color: #fb923c;
 }
 
 .lf-sr-caption {
@@ -272,6 +286,7 @@
     line-height: 1.45;
     margin: 0;
 }
+html[data-theme="dark"] .lf-sr-caption { color: #93c5fd; }
 
 /* Таймлайн интервалов */
 .lf-sr-timeline {
@@ -295,7 +310,7 @@
     height: 10px;
     border-radius: 50%;
     background: #1e40af;
-    border: 2px solid #eff6ff;
+    border: 2px solid var(--bg-card-alt);
     box-shadow: 0 0 0 1.5px #1e40af;
     flex-shrink: 0;
 }
@@ -313,7 +328,7 @@
 .lf-sr-node__day {
     font-size: 9px;
     font-weight: 700;
-    color: #1e3a8a;
+    color: var(--text-heading);
     white-space: nowrap;
     line-height: 1;
 }
@@ -344,6 +359,10 @@
     flex-direction: column;
     gap: 10px;
 }
+html[data-theme="dark"] .lf-adapt-info {
+    background: rgba(249, 115, 22, 0.08);
+    border-color: rgba(249, 115, 22, 0.22);
+}
 
 .lf-adapt-levels {
     display: flex;
@@ -367,7 +386,7 @@
 .lf-adapt-level__lbl {
     font-size: 11px;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     flex: 1;
 }
 
@@ -393,10 +412,10 @@
 
 .mock-fc {
     position: absolute;
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -408,7 +427,7 @@
 
 .mock-fc--back {
     transform: translateX(-50%) rotate(-4deg) translateY(12px);
-    background: #eff6ff;
+    background: var(--bg-card-alt);
     z-index: 1;
 }
 
@@ -421,28 +440,28 @@
 .mock-fc__char {
     font-size: 52px;
     font-weight: 700;
-    color: #0f2b6d;
+    color: var(--orange);
     margin-bottom: 12px;
     line-height: 1;
 }
 
 .mock-fc__pinyin {
     font-size: 16px;
-    color: #6b7280;
+    color: var(--text-secondary);
     margin-bottom: 4px;
 }
 
 .mock-fc__rus {
     font-size: 14px;
-    color: #374151;
+    color: var(--text-primary);
     font-weight: 500;
     text-align: center;
 }
 
 .mock-fc__next {
     font-size: 10px;
-    color: #6b7280;
-    background: #f1f5f9;
+    color: var(--text-secondary);
+    background: var(--bg-card-alt);
     border-radius: 8px;
     padding: 4px 10px;
     margin-top: 4px;
@@ -469,10 +488,18 @@
     background: #fee2e2;
     color: #dc2626;
 }
+html[data-theme="dark"] .mock-fc__btn--fail {
+    background: rgba(220, 38, 38, 0.15);
+    color: #f87171;
+}
 
 .mock-fc__btn--ok {
     background: #dcfce7;
     color: #16a34a;
+}
+html[data-theme="dark"] .mock-fc__btn--ok {
+    background: rgba(22, 163, 74, 0.15);
+    color: #4ade80;
 }
 
 /* ========== MOCK: ТРЕНАЖЁР СЛОВ ========== */
@@ -508,7 +535,7 @@
 .mock-word__char {
     font-size: 20px;
     font-weight: 700;
-    color: #0f2b6d;
+    color: var(--orange);
     width: 28px;
     text-align: center;
     flex-shrink: 0;
@@ -516,7 +543,7 @@
 
 .mock-word__ru {
     font-size: 12px;
-    color: #6b7280;
+    color: var(--text-secondary);
     width: 56px;
     flex-shrink: 0;
 }
@@ -524,7 +551,7 @@
 .mock-word__bar {
     flex: 1;
     height: 6px;
-    background: #f1f5f9;
+    background: var(--track-bg);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -537,7 +564,7 @@
 
 .mock-word__pct {
     font-size: 11px;
-    color: #6b7280;
+    color: var(--text-secondary);
     width: 32px;
     text-align: right;
     flex-shrink: 0;
@@ -563,8 +590,8 @@
 }
 
 .mock-dash__kpi-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 23px 20px;
     display: flex;
@@ -586,18 +613,18 @@
 
 .mock-dash__kpi-of {
     font-size: 19px;
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
 .mock-dash__kpi-lbl {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-secondary);
     line-height: 1.35;
 }
 
 .mock-dash__kpi-delta {
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--text-muted);
     margin-top: 2px;
 }
 
@@ -616,7 +643,7 @@
 .mock-dash__section-title {
     font-size: 13px;
     font-weight: 700;
-    color: #6b7280;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-bottom: 15px;
@@ -636,14 +663,14 @@
 
 .mock-dash__label {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-secondary);
     width: 58px;
     flex-shrink: 0;
 }
 
 .mock-dash__pct {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-secondary);
     width: 42px;
     text-align: right;
     flex-shrink: 0;
@@ -736,10 +763,10 @@
 }
 
 .landing-topic {
-    background: white;
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 28px 24px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -748,8 +775,8 @@
 
 .landing-topic:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 36px rgba(15, 43, 109, 0.1);
-    border-color: #bfdbfe;
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border-solid);
 }
 
 .landing-topic__emoji {
@@ -761,13 +788,13 @@
 .landing-topic__title {
     font-size: 20px;
     font-weight: 700;
-    color: #0f2b6d;
+    color: var(--text-heading);
     margin: 0;
 }
 
 .landing-topic__desc {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-secondary);
     line-height: 1.5;
     flex: 1;
 }
@@ -1167,7 +1194,7 @@
 }
 
 .nav-landing__link {
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--nav-link, rgba(255,255,255,0.65));
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
@@ -1178,8 +1205,8 @@
 }
 
 .nav-landing__link:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.08);
+    color: var(--nav-link-hover, #fff);
+    background: var(--nav-link-hover-bg, rgba(255,255,255,0.08));
 }
 
 /* ========== FAQ SECTION ========== */
@@ -1192,16 +1219,16 @@
 }
 
 .faq-item {
-    background: white;
-    border: 1px solid #e9ecef;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     overflow: hidden;
     transition: border-color 0.25s, box-shadow 0.25s;
 }
 
 .faq-item.open {
-    border-color: #bfdbfe;
-    box-shadow: 0 4px 20px rgba(15, 43, 109, 0.09);
+    border-color: var(--border-solid);
+    box-shadow: var(--shadow-card);
 }
 
 .faq-question {
@@ -1217,7 +1244,7 @@
 .faq-question__text {
     font-size: 16px;
     font-weight: 600;
-    color: #0f172a;
+    color: var(--text-heading);
     line-height: 1.4;
 }
 
@@ -1226,19 +1253,19 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: #f1f5f9;
+    background: var(--bg-card-alt);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 13px;
-    color: #0f2b6d;
+    color: var(--text-secondary);
     transition: transform 0.3s ease, background 0.25s, color 0.25s;
 }
 
 .faq-item.open .faq-question__arrow {
     transform: rotate(180deg);
-    background: #dbeafe;
-    color: #1e40af;
+    background: rgba(30, 64, 175, 0.15);
+    color: #60a5fa;
 }
 
 .faq-answer {
@@ -1255,10 +1282,9 @@
 
 .faq-answer p {
     font-size: 15px;
-    color: #4b5563;
+    color: var(--text-secondary);
     line-height: 1.75;
-    padding-top: 4px;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--border-color);
     padding-top: 16px;
 }
 

@@ -6,11 +6,12 @@
 }
 
 .profile-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 24px;
     padding: 32px;
     margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
 }
 
 .profile-header {
@@ -19,7 +20,7 @@
     gap: 24px;
     margin-bottom: 32px;
     padding-bottom: 24px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .profile-avatar {
@@ -39,7 +40,9 @@
 .profile-title h1 {
     margin: 0 0 4px 0;
     font-size: 28px;
-    color: #1f2937;
+    color: var(--text-heading);
+    background: none;
+    -webkit-text-fill-color: unset;
 }
 
 .profile-role {
@@ -60,13 +63,13 @@
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #888;
+    color: var(--text-muted);
     margin-bottom: 4px;
 }
 
 .info-group p {
     font-size: 18px;
-    color: #1f2937;
+    color: var(--text-primary);
 }
 
 .profile-actions {
@@ -82,11 +85,12 @@
 }
 
 .stat-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
     padding: 24px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
 }
 
 .stat-value {
@@ -98,7 +102,7 @@
 
 .stat-label {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 /* Profile Edit */
@@ -109,10 +113,11 @@
 }
 
 .profile-edit-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 24px;
     padding: 32px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
 }
 
 .profile-edit-header {
@@ -126,7 +131,7 @@
 }
 
 .profile-edit-header p {
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 .profile-edit-form .form-group {
@@ -137,15 +142,17 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #374151;
+    color: var(--text-primary);
 }
 
 .profile-edit-form input {
     width: 100%;
     padding: 12px 16px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     font-size: 16px;
+    background: var(--bg-input);
+    color: var(--text-primary);
     transition: all 0.2s;
 }
 
@@ -159,7 +166,7 @@
     display: block;
     margin-top: 6px;
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
 .profile-edit-actions {

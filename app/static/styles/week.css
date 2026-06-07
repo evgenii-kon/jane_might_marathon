@@ -16,9 +16,9 @@
 .week-title {
     font-size: 20px;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-heading);
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #0f2b6d 0%, #1e40af 50%, #ea580c 100%);
+    background: var(--h1-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -65,10 +65,11 @@
 
 /* Список уроков */
 .week-lessons-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 24px;
     padding: 28px 32px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
 }
 
 .week-lessons-heading {
@@ -81,14 +82,14 @@
 .week-lessons-title {
     font-size: 18px;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-heading);
 }
 
 .week-lessons-count {
     font-size: 13px;
     color: #f97316;
     font-weight: 600;
-    background: #fef3c7;
+    background: rgba(249,115,22,0.12);
     padding: 4px 10px;
     border-radius: 20px;
 }
@@ -101,9 +102,9 @@
     gap: 16px;
     padding: 16px;
     border-radius: 16px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-color);
     margin-bottom: 12px;
-    background: #fafafa;
+    background: var(--bg-card-alt);
     transition: all 0.2s;
 }
 
@@ -118,13 +119,13 @@
 }
 
 .week-lesson-row.wl-completed {
-    background: #ffffff;
-    border-color: #d1fae5;
+    background: var(--bg-card);
+    border-color: rgba(16,185,129,0.3);
 }
 
 .week-lesson-row.wl-started {
-    background: #ffffff;
-    border-color: #fde68a;
+    background: var(--bg-card);
+    border-color: rgba(245,158,11,0.35);
 }
 
 /* Контент урока */
@@ -166,7 +167,7 @@
 .wl-name {
     font-weight: 600;
     font-size: 15px;
-    color: #1f2937;
+    color: var(--text-heading);
     margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -175,13 +176,13 @@
 
 .wl-desc {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 .wl-exercises-badge {
     margin-top: 6px;
     font-size: 12px;
-    color: #6b7280;
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -279,7 +280,7 @@
 .week-locked-info {
     text-align: center;
     padding: 40px 20px;
-    background: #f8fafc;
+    background: var(--bg-card-alt);
     border-radius: 24px;
     margin-top: 30px;
 }
@@ -291,12 +292,14 @@
 
 .week-locked-info h2 {
     font-size: 24px;
-    color: #1f2937;
+    color: var(--text-heading);
     margin-bottom: 16px;
+    background: none;
+    -webkit-text-fill-color: unset;
 }
 
 .week-locked-info p {
-    color: #6b7280;
+    color: var(--text-secondary);
     margin-bottom: 24px;
 }
 
@@ -310,11 +313,12 @@
 
 .countdown-block {
     text-align: center;
-    background: white;
+    background: var(--bg-card);
     padding: 16px 20px;
     border-radius: 16px;
     min-width: 80px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
 }
 
 .countdown-number {
@@ -327,7 +331,7 @@
 
 .countdown-label {
     font-size: 12px;
-    color: #6b7280;
+    color: var(--text-secondary);
     text-transform: uppercase;
 }
 

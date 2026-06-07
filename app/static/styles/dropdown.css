@@ -9,7 +9,7 @@
     border: none;
     padding: 7px 14px;
     border-radius: 10px;
-    color: rgba(255,255,255,0.72) !important;
+    color: var(--nav-link, rgba(255,255,255,0.72)) !important;
     cursor: pointer;
     font-weight: 500;
     font-size: 14px;
@@ -22,8 +22,8 @@
 }
 
 .dropdown-btn:hover {
-    background: rgba(255,255,255,0.07);
-    color: #fff !important;
+    background: var(--nav-link-hover-bg, rgba(255,255,255,0.07));
+    color: var(--nav-link-hover, #fff) !important;
 }
 
 .dropdown-arrow {

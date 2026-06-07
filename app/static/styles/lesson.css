@@ -10,17 +10,20 @@
 }
 
 .lesson-header {
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
 }
 
 .lesson-header h1 {
     margin: 0 0 12px 0;
     font-size: 28px;
-    color: #1f2937;
+    color: var(--text-heading);
+    background: none;
+    -webkit-text-fill-color: unset;
 }
 
 .lesson-status {
@@ -56,11 +59,12 @@
 
 /* Lesson Video */
 .lesson-video {
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
 }
 
 .video-container {
@@ -81,33 +85,34 @@
 
 /* Lesson Content */
 .lesson-content {
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
     padding: 32px;
     margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
     line-height: 1.8;
 }
 
 .lesson-content h2 {
     margin: 24px 0 12px 0;
-    color: #1f2937;
+    color: var(--text-heading);
 }
 
 .lesson-content h3 {
     margin: 20px 0 10px 0;
-    color: #374151;
+    color: var(--text-primary);
 }
 
 .lesson-content p {
     margin-bottom: 16px;
-    color: #4b5563;
+    color: var(--text-secondary);
 }
 
-.lesson-content ul, 
+.lesson-content ul,
 .lesson-content ol {
     margin: 12px 0 16px 24px;
-    color: #4b5563;
+    color: var(--text-secondary);
 }
 
 .lesson-content li {
@@ -124,7 +129,7 @@
     display: flex;
     gap: 8px;
     margin-bottom: 24px;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .tab-btn {
@@ -133,7 +138,7 @@
     padding: 12px 24px;
     font-size: 16px;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s;
     border-bottom: 2px solid transparent;

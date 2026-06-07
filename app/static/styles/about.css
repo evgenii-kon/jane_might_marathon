@@ -17,21 +17,22 @@
 
 .about-subtitle {
     font-size: 18px;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 .about-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 24px;
     padding: 32px;
     margin-bottom: 32px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .about-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-hover);
 }
 
 .about-icon {
@@ -42,11 +43,11 @@
 .about-card h2 {
     font-size: 24px;
     margin-bottom: 20px;
-    color: #0f2b6d;
+    color: var(--text-heading);
 }
 
 .about-card p {
-    color: #4b5563;
+    color: var(--text-secondary);
     line-height: 1.7;
     margin-bottom: 16px;
     font-size: 16px;
@@ -68,9 +69,9 @@
     align-items: center;
     gap: 12px;
     font-size: 18px;
-    color: #1f2937;
+    color: var(--text-primary);
     padding: 12px;
-    background: #f8fafc;
+    background: var(--bg-card-alt);
     border-radius: 16px;
 }
 
@@ -96,11 +97,12 @@
 }
 
 .about-stats .stat-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 24px 16px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
     transition: transform 0.3s;
 }
 
@@ -117,7 +119,7 @@
 
 .about-stats .stat-description {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 .about-cta {
@@ -217,13 +219,13 @@
     display: flex;
     align-items: center;
     gap: 18px;
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 24px 22px;
     text-decoration: none;
     color: inherit;
-    border: 1px solid #e8edf3;
-    box-shadow: 0 1px 4px rgba(15,23,42,.05), 0 4px 16px rgba(15,23,42,.06);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card);
     transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
 }
 
@@ -266,7 +268,7 @@
 .contact-card-value {
     font-size: 16px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-heading);
     margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -275,13 +277,13 @@
 
 .contact-card-desc {
     font-size: 13px;
-    color: #64748b;
+    color: var(--text-secondary);
     line-height: 1.4;
 }
 
 .contact-card-arrow {
     font-size: 18px;
-    color: #cbd5e1;
+    color: var(--border-solid);
     flex-shrink: 0;
     transition: transform .2s, color .2s;
 }
@@ -292,17 +294,17 @@
 }
 
 .contacts-faq {
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: 24px;
     padding: 36px 36px;
-    border: 1px solid #e8edf3;
-    box-shadow: 0 1px 4px rgba(15,23,42,.05);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card);
 }
 
 .contacts-faq-title {
     font-size: 22px;
     font-weight: 700;
-    color: #0f2b6d;
+    color: var(--text-heading);
     margin-bottom: 24px;
 }
 
@@ -314,7 +316,7 @@
 
 .faq-item {
     padding: 20px 0;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .faq-item:last-child {
@@ -325,13 +327,13 @@
 .faq-q {
     font-size: 15px;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-heading);
     margin-bottom: 8px;
 }
 
 .faq-a {
     font-size: 14px;
-    color: #64748b;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 

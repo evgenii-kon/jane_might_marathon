@@ -148,11 +148,10 @@
    MAIN CARD
    ════════════════════════════════════════════════════════════ */
 .rp-main {
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: 24px;
-    border: 1px solid rgba(226,232,240,.85);
-    box-shadow: 0 1px 3px rgba(15,23,42,.04),
-                0 6px 20px rgba(15,23,42,.05);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card);
     overflow: hidden;
 }
 
@@ -172,9 +171,9 @@
     gap: 7px;
     padding: 8px 16px;
     border-radius: 100px;
-    border: 1px solid #e2e8f0;
-    background: #f8fafc;
-    color: #475569;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card-alt);
+    color: var(--text-secondary);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -182,9 +181,9 @@
     outline: none;
 }
 .filter-btn:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-    color: #0f172a;
+    background: var(--border-color);
+    border-color: var(--border-solid);
+    color: var(--text-heading);
 }
 .filter-btn.active {
     background: linear-gradient(135deg, #f97316, #ea580c);
@@ -198,8 +197,8 @@
 }
 
 .filter-count {
-    background: #e8edf3;
-    color: #64748b;
+    background: var(--border-solid);
+    color: var(--text-secondary);
     border-radius: 100px;
     padding: 1px 7px;
     font-size: 11px;
@@ -218,7 +217,7 @@
     gap: 0;
     padding: 14px 24px 10px;
     margin-top: 16px;
-    border-bottom: 2px solid #f1f5f9;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .rp-col {
@@ -250,13 +249,13 @@
 }
 
 .word-row:hover {
-    background: #f8fafc;
+    background: var(--bg-card-alt);
     transform: translateX(2px);
 }
 
 /* Accent colour by mastery level */
-.word-row[data-mastery="5"] { background: #f0fdf9; }
-.word-row[data-mastery="5"]:hover { background: #ecfdf5; }
+.word-row[data-mastery="5"] { background: rgba(16,185,129,0.07); }
+.word-row[data-mastery="5"]:hover { background: rgba(16,185,129,0.12); }
 
 /* Hanzi cell */
 .wr-hanzi {
@@ -270,7 +269,7 @@
 .hanzi-char {
     font-size: 26px;
     font-weight: 600;
-    color: #0f172a;
+    color: var(--text-heading);
     line-height: 1;
     font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
 }
@@ -289,7 +288,7 @@
 
 .wr-translation {
     font-size: 14px;
-    color: #334155;
+    color: var(--text-primary);
     font-weight: 500;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -316,7 +315,7 @@
     flex: 1;
     height: 6px;
     border-radius: 10px;
-    background: #e2e8f0;
+    background: var(--track-bg);
     transition: background .2s ease;
 }
 
@@ -364,20 +363,20 @@
 .stats-correct {
     font-size: 16px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-heading);
 }
 .stats-sep {
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 .stats-total {
     font-size: 13px;
-    color: #64748b;
+    color: var(--text-secondary);
 }
 
 .stats-none {
     font-size: 14px;
-    color: #cbd5e1;
+    color: var(--border-solid);
     font-weight: 500;
 }
 

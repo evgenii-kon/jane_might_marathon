@@ -1,9 +1,10 @@
 /* ========== FLASHCARDS ========== */
 .words-flashcards {
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
 }
 
 .flashcards-grid {
@@ -141,12 +142,13 @@
 }
 
 .lesson-words-empty {
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
     padding: 48px;
     text-align: center;
-    color: #6b7280;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-color);
 }
 
 .flashcard-audio {

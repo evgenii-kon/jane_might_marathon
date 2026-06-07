@@ -97,8 +97,8 @@
 }
 .idiom-progress-slider {
     display: inline-flex;
-    background: var(--card-bg, #1e293b);
-    border: 1px solid rgba(255,255,255,.1);
+    background: var(--bg-card-alt, #243148);
+    border: 1px solid var(--border-color, rgba(255,255,255,.1));
     border-radius: 100px;
     padding: 4px;
     gap: 2px;
@@ -115,7 +115,7 @@
     transition: background .18s ease, color .18s ease;
     white-space: nowrap;
 }
-.ipr-btn:hover { color: #fff; }
+.ipr-btn:hover { color: var(--text-heading, #fff); }
 .ipr-btn.active[data-val="not_known"] { background: #ef4444; color: #fff; }
 .ipr-btn.active[data-val="learning"]  { background: #f97316; color: #fff; }
 .ipr-btn.active[data-val="known"]     { background: #22c55e; color: #fff; }
