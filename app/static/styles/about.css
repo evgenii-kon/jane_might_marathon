@@ -54,7 +54,7 @@
 }
 
 .about-card strong {
-    color: #f97316;
+    color: #a78bfa;
 }
 
 .approach-items {
@@ -81,7 +81,7 @@
     justify-content: center;
     width: 28px;
     height: 28px;
-    background: #f97316;
+    background: #a78bfa;
     color: white;
     border-radius: 50%;
     font-weight: bold;
@@ -113,7 +113,7 @@
 .about-stats .stat-number {
     font-size: 36px;
     font-weight: 800;
-    color: #f97316;
+    color: #a78bfa;
     margin-bottom: 8px;
 }
 
@@ -123,7 +123,7 @@
 }
 
 .about-cta {
-    background: linear-gradient(135deg, #f97316, #ea580c);
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
     border-radius: 24px;
     padding: 48px;
     text-align: center;
@@ -143,7 +143,7 @@
 
 .about-cta .btn-primary {
     background: white;
-    color: #ea580c !important;
+    color: #7c3aed !important;
     box-shadow: none;
     display: inline-block;
 }
@@ -162,7 +162,7 @@
 }
 
 .contacts-hero {
-    background: linear-gradient(135deg, #0a1441 0%, #1e40af 60%, #7c2d12 100%);
+    background: linear-gradient(135deg, #0f0720 0%, #7c3aed 60%, #3b0764 100%);
     border-radius: 26px;
     padding: 52px 48px;
     position: relative;
@@ -185,7 +185,7 @@
 .contacts-hero-deco--1 {
     width: 320px; height: 320px;
     top: -100px; right: -60px;
-    background: radial-gradient(circle, rgba(249,115,22,.26) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(167,139,250,.26) 0%, transparent 65%);
 }
 
 .contacts-hero-deco--2 {
@@ -248,8 +248,8 @@
 
 .contact-card--tg .contact-card-icon  { background: linear-gradient(135deg, #0088cc, #00a6ed); }
 .contact-card--ig .contact-card-icon  { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
-.contact-card--email .contact-card-icon { background: linear-gradient(135deg, #0a1441, #1e40af); }
-.contact-card--school .contact-card-icon { background: linear-gradient(135deg, #ea580c, #f97316); }
+.contact-card--email .contact-card-icon { background: linear-gradient(135deg, #0f0720, #7c3aed); }
+.contact-card--school .contact-card-icon { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
 
 .contact-card-content {
     flex: 1;
@@ -289,7 +289,7 @@
 }
 
 .contact-card:hover .contact-card-arrow {
-    color: #f97316;
+    color: #a78bfa;
     transform: translateX(4px);
 }
 

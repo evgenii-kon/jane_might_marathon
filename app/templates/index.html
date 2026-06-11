@@ -1,554 +1,448 @@
 {% extends "base.html" %}
 
-{% block title %}HSK-1 за 60 дней — курс китайского с Jane Might{% endblock %}
+{% block body_class %}page-landing{% endblock %}
+
+{% block title %}Практикум по китайскому — School Might{% endblock %}
 
 {% block content %}
 
-<!-- ===== HERO BANNER ===== -->
+<!-- ===== HERO ===== -->
 <section class="landing-hero">
     <div class="landing-hero__content">
-        <span class="landing-hero__badge">🎯 АКЦИЯ: ПЕРВЫЙ УРОК БЕСПЛАТНО</span>
+        <span class="landing-hero__badge">практикум по китайскому</span>
         <h1 class="landing-hero__title">
-            Марафон<br>
-            китайского
-            <span class="landing-hero__tag">
-                HSK-1 за 60 дней
-                <span class="landing-hero__tag-sub">авторский курс Jane Might</span>
-            </span>
+            За 30 дней ты поймёшь,<br>
+            способен ли выучить<br>
+            китайский
         </h1>
-        <a href="/auth/register" class="landing-hero__cta">
-            Начать бесплатно <span aria-hidden="true">→</span>
-        </a>
+        <p class="landing-hero__subtitle">
+            Не знаешь, стоит ли вообще связывать будущее с Китаем?
+            За месяц попробуешь китайский по-настоящему и поймёшь сам —
+            интересно тебе это или нет.
+        </p>
+        <div class="landing-hero__ctas">
+            <a href="/auth/register" class="landing-hero__cta">
+                Начать за 6 990 ₽ <span aria-hidden="true">→</span>
+            </a>
+            <a href="#pricing" class="landing-hero__cta-outline">Что внутри</a>
+        </div>
+        <p class="landing-hero__hint">
+            20–30 минут в день. Без переездов и обязательств — просто попробовать.
+        </p>
     </div>
-    <div class="landing-hero__photo-wrap">
-        <img src="/static/images/index_photo_png.png" alt="Jane Might" class="landing-hero__photo">
-    </div>
-    <div class="landing-hero__deco-l" aria-hidden="true">汉</div>
-    <div class="landing-hero__deco-r" aria-hidden="true">语</div>
+
+    <img src="/static/images/index_photo_png.png" alt="Практикум по китайскому" class="landing-hero__photo">
 </section>
 
-<!-- ===== STATS STRIP ===== -->
-<div class="landing-stats">
-    <div class="landing-stats__item">
-        <span class="landing-stats__num">500+</span>
-        <span class="landing-stats__label">выпускников</span>
-    </div>
-    <div class="landing-stats__divider"></div>
-    <div class="landing-stats__item">
-        <span class="landing-stats__num">98%</span>
-        <span class="landing-stats__label">успешно сдали HSK</span>
-    </div>
-    <div class="landing-stats__divider"></div>
-    <div class="landing-stats__item">
-        <span class="landing-stats__num">60</span>
-        <span class="landing-stats__label">дней до результата</span>
-    </div>
-    <div class="landing-stats__divider"></div>
-    <div class="landing-stats__item">
-        <span class="landing-stats__num">8+</span>
-        <span class="landing-stats__label">лет опыта</span>
+
+<!-- ===== TICKER STRIP ===== -->
+<div class="landing-ticker" aria-hidden="true">
+    <div class="landing-ticker__track">
+        <span class="landing-ticker__item">20–30 минут в день</span>
+        <span class="landing-ticker__item">бесплатный тренажёр слов</span>
+        <span class="landing-ticker__item">комьюнити</span>
+        <span class="landing-ticker__item">полезные статьи</span>
+        <span class="landing-ticker__item">рэд и грин флаги</span>
+        <span class="landing-ticker__item">база уровня HSK 1</span>
+        <span class="landing-ticker__item">20–30 минут в день</span>
+        <span class="landing-ticker__item">бесплатный тренажёр слов</span>
+        <span class="landing-ticker__item">комьюнити</span>
+        <span class="landing-ticker__item">полезные статьи</span>
+        <span class="landing-ticker__item">рэд и грин флаги</span>
+        <span class="landing-ticker__item">база уровня HSK 1</span>
     </div>
 </div>
 
-<!-- ===== FEATURES SECTION ===== -->
-<section class="landing-section scroll-target" id="features">
-    <header class="landing-section__header">
-        <h2 class="landing-section__title">Почему этот курс работает</h2>
-        <p class="landing-section__subtitle">Научная методика + живое сообщество + интерактивный формат — всё в одном месте</p>
-    </header>
 
-    <div class="lf-grid">
-
-        <!-- CARD 1: Тематические уроки и статьи (широкая) -->
-        <div class="lf-card lf-card--wide">
-            <div class="lf-card__text">
-                <h3 class="lf-card__title">Тематические уроки и статьи</h3>
-                <p class="lf-card__desc">60 структурированных уроков по темам HSK-1 — от приветствий до путешествий. Теория, диалоги, словарь темы и авторские статьи о культуре Китая в каждом уроке</p>
-            </div>
-            <div class="lf-card__preview lf-card__preview--lessons">
-                <div class="mock-lesson mock-lesson--1">
-                    <div class="mock-lesson__icon">✏️</div>
-                    <div class="mock-lesson__body">
-                        <div class="mock-lesson__title">Урок 5: Числа 1–10</div>
-                        <div class="mock-lesson__chars">一 二 三 四 五...</div>
-                        <div class="mock-pbar"><div class="mock-pbar__fill" style="width:60%"></div></div>
-                    </div>
-                    <div class="mock-badge">60%</div>
-                </div>
-                <div class="mock-lesson mock-lesson--2">
-                    <div class="mock-lesson__icon">📖</div>
-                    <div class="mock-lesson__body">
-                        <div class="mock-lesson__title">Урок 12: Приветствия</div>
-                        <div class="mock-lesson__chars">你好 · 谢谢 · 再见</div>
-                        <div class="mock-pbar"><div class="mock-pbar__fill" style="width:100%"></div></div>
-                    </div>
-                    <div class="mock-badge mock-badge--done">✓</div>
-                </div>
-                <div class="mock-window">
-                    <div class="mock-window__header">
-                        <span class="mock-dot"></span>
-                        <span class="mock-dot"></span>
-                        <span class="mock-dot"></span>
-                    </div>
-                    <div class="mock-window__body">
-                        <div class="mock-line"><span class="mock-kw">Иероглиф:</span> <span class="mock-str">你好</span></div>
-                        <div class="mock-line"><span class="mock-kw">Пиньинь:</span> <span class="mock-num">nǐ hǎo</span></div>
-                        <div class="mock-line"><span class="mock-kw">Значение:</span> Привет / Здравствуйте</div>
-                        <div class="mock-line mock-line--empty"></div>
-                        <div class="mock-line"><span class="mock-kw">📰 Статья:</span></div>
-                        <div class="mock-line"><span class="mock-comment">«Как китайцы приветствуют — история и традиции»</span></div>
-                    </div>
-                </div>
-                <div class="mock-window mock-window--2">
-                    <div class="mock-window__header">
-                        <span class="mock-dot"></span>
-                        <span class="mock-dot"></span>
-                        <span class="mock-dot"></span>
-                    </div>
-                    <div class="mock-window__body">
-                        <div class="mock-line"><span class="mock-kw">Иероглиф:</span> <span class="mock-str">家</span></div>
-                        <div class="mock-line"><span class="mock-kw">Пиньинь:</span> <span class="mock-num">jiā</span></div>
-                        <div class="mock-line"><span class="mock-kw">Значение:</span> Дом / Семья</div>
-                        <div class="mock-line mock-line--empty"></div>
-                        <div class="mock-line"><span class="mock-kw">📰 Статья:</span></div>
-                        <div class="mock-line"><span class="mock-comment">«Семья в Китае — ценности и традиции»</span></div>
-                    </div>
-                </div>
-            </div>
-            <a href="/auth/register" class="lf-card__btn">Перейти</a>
+<!-- ===== FEARS ("Знакомо?") ===== -->
+<div class="landing-fears scroll-target" id="fears">
+    <div class="landing-fears__title">«А вдруг я просто не потяну?»</div>
+    <p class="landing-fears__desc">
+        Ты ещё даже не начал, а в голове уже идёт спор. Китайский кажется слишком сложным,
+        иероглифов слишком много, времени слишком мало. Кажется, что нужен особый талант,
+        идеальная память или что начинать надо было ещё в детстве. А если снова бросишь на
+        полпути? Эти мысли знакомы почти каждому, кто задумывался о китайском.
+    </p>
+    <div class="landing-fears__quotes">
+        <div class="fear-quote">
+            <p>«китайский язык — это нечто страшное и ужасное, что нужно учить всю жизнь.»</p>
         </div>
-
-        <!-- CARD 2: Интервальное повторение (узкая) -->
-        <div class="lf-card">
-            <div class="lf-card__text">
-                <h3 class="lf-card__title">Интервальное повторение слов</h3>
-                <p class="lf-card__desc">Алгоритм <strong>SM-2</strong> вычисляет идеальный момент для каждого слова — повторяете ровно тогда, когда нужно</p>
-            </div>
-
-            <div class="lf-sr-info">
-                <div class="lf-sr-chips">
-                    <span class="lf-sr-chip lf-sr-chip--blue">⚡ Алгоритм SM-2</span>
-                    <span class="lf-sr-chip lf-sr-chip--blue">📈 Кривая Эббингауза</span>
-                    <span class="lf-sr-chip lf-sr-chip--orange">🧠 Адаптация под вас</span>
-                </div>
-                <p class="lf-sr-caption">Интервал растёт с каждым верным ответом — слово уходит в долгосрочную память:</p>
-                <div class="lf-sr-timeline">
-                    <div class="lf-sr-node">
-                        <div class="lf-sr-node__dot lf-sr-node__dot--first"></div>
-                        <div class="lf-sr-node__day">Сейчас</div>
-                        <div class="lf-sr-node__lbl">Учим</div>
-                    </div>
-                    <div class="lf-sr-line"></div>
-                    <div class="lf-sr-node">
-                        <div class="lf-sr-node__dot"></div>
-                        <div class="lf-sr-node__day">+1 д</div>
-                        <div class="lf-sr-node__lbl">Повтор</div>
-                    </div>
-                    <div class="lf-sr-line"></div>
-                    <div class="lf-sr-node">
-                        <div class="lf-sr-node__dot"></div>
-                        <div class="lf-sr-node__day">+4 д</div>
-                        <div class="lf-sr-node__lbl">Закрепление</div>
-                    </div>
-                    <div class="lf-sr-line"></div>
-                    <div class="lf-sr-node">
-                        <div class="lf-sr-node__dot"></div>
-                        <div class="lf-sr-node__day">+14 д</div>
-                        <div class="lf-sr-node__lbl">Долгосрочно</div>
-                    </div>
-                    <div class="lf-sr-line"></div>
-                    <div class="lf-sr-node">
-                        <div class="lf-sr-node__dot lf-sr-node__dot--last"></div>
-                        <div class="lf-sr-node__day">∞</div>
-                        <div class="lf-sr-node__lbl">Навсегда</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lf-card__preview lf-card__preview--fc">
-                <div class="mock-fc-stack">
-                    <div class="mock-fc mock-fc--back">
-                        <div class="mock-fc__pinyin">nǐ hǎo</div>
-                        <div class="mock-fc__rus">Здравствуйте / Привет</div>
-                    </div>
-                    <div class="mock-fc mock-fc--front">
-                        <div class="mock-fc__char">你好</div>
-                        <div class="mock-fc__next">⏱ Следующий повтор: через 4 дня</div>
-                        <div class="mock-fc__actions">
-                            <button class="mock-fc__btn mock-fc__btn--fail" tabindex="-1">✗ Ещё раз</button>
-                            <button class="mock-fc__btn mock-fc__btn--ok" tabindex="-1">✓ Знаю</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a href="/auth/register" class="lf-card__btn">Перейти</a>
+        <div class="fear-quote">
+            <p>«Я пыталась учить, но бросила — слишком много времени надо на это.»</p>
         </div>
-
-        <!-- CARD 3: Рейтинг слов (узкая) -->
-        <div class="lf-card">
-            <div class="lf-card__text">
-                <h3 class="lf-card__title">Рейтинг слов</h3>
-                <p class="lf-card__desc">Каждому слову присваивается персональный рейтинг. Система выстраивает умную очередь — трудные слова появляются чаще</p>
-            </div>
-
-            <div class="lf-adapt-info">
-                <div class="lf-sr-chips">
-                    <span class="lf-sr-chip lf-sr-chip--blue">⭐ Рейтинг каждого слова</span>
-                    <span class="lf-sr-chip lf-sr-chip--orange">🔄 Приоритет слабых слов</span>
-                </div>
-                <div class="lf-adapt-levels">
-                    <div class="lf-adapt-level">
-                        <div class="lf-adapt-level__dot" style="background:#16a34a"></div>
-                        <span class="lf-adapt-level__lbl">Уверенно знаю</span>
-                        <span class="lf-adapt-level__hint">редкий повтор</span>
-                    </div>
-                    <div class="lf-adapt-level">
-                        <div class="lf-adapt-level__dot" style="background:#f97316"></div>
-                        <span class="lf-adapt-level__lbl">Изучаю</span>
-                        <span class="lf-adapt-level__hint">частый повтор</span>
-                    </div>
-                    <div class="lf-adapt-level">
-                        <div class="lf-adapt-level__dot" style="background:#dc2626"></div>
-                        <span class="lf-adapt-level__lbl">Трудное слово</span>
-                        <span class="lf-adapt-level__hint">усиленный режим</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lf-card__preview lf-card__preview--words">
-                <div class="mock-words">
-                    <div class="mock-word">
-                        <div class="mock-word__diff mock-word__diff--easy" title="Легко"></div>
-                        <span class="mock-word__char">猫</span>
-                        <span class="mock-word__ru">кот</span>
-                        <div class="mock-word__bar"><div style="width:92%;background:#16a34a;"></div></div>
-                        <span class="mock-word__pct">92%</span>
-                    </div>
-                    <div class="mock-word">
-                        <div class="mock-word__diff mock-word__diff--mid" title="Средне"></div>
-                        <span class="mock-word__char">水</span>
-                        <span class="mock-word__ru">вода</span>
-                        <div class="mock-word__bar"><div style="width:68%;background:#f97316;"></div></div>
-                        <span class="mock-word__pct">68%</span>
-                    </div>
-                    <div class="mock-word">
-                        <div class="mock-word__diff mock-word__diff--mid" title="Средне"></div>
-                        <span class="mock-word__char">书</span>
-                        <span class="mock-word__ru">книга</span>
-                        <div class="mock-word__bar"><div style="width:45%;background:#f97316;"></div></div>
-                        <span class="mock-word__pct">45%</span>
-                    </div>
-                    <div class="mock-word">
-                        <div class="mock-word__diff mock-word__diff--hard" title="Сложно"></div>
-                        <span class="mock-word__char">人</span>
-                        <span class="mock-word__ru">человек</span>
-                        <div class="mock-word__bar"><div style="width:30%;background:#dc2626;"></div></div>
-                        <span class="mock-word__pct">30%</span>
-                    </div>
-                </div>
-            </div>
-            <a href="/auth/register" class="lf-card__btn">Перейти</a>
+        <div class="fear-quote">
+            <p>«Через 2–3 дня меня накрыло. Слова начали наваливаться. Я не мог уследить за всеми иероглифами и в итоге почувствовал себя разбитым, потерял мотивацию и бросил.»</p>
         </div>
-
-        <!-- CARD 4: Видео уроки и упражнения (узкая) -->
-        <div class="lf-card">
-            <div class="lf-card__text">
-                <h3 class="lf-card__title">Видео уроки и упражнения</h3>
-                <p class="lf-card__desc">Теория подкреплена видео от Jane Might. После каждого урока — интерактивные упражнения: слушайте, выбирайте, пишите иероглифы</p>
-            </div>
-
-            <div class="lf-sr-chips" style="flex-shrink:0;">
-                <span class="lf-sr-chip lf-sr-chip--blue">🎥 Видео с разбором</span>
-                <span class="lf-sr-chip lf-sr-chip--orange">✏️ Упражнения</span>
-                <span class="lf-sr-chip lf-sr-chip--blue">🔊 Аудио произношение</span>
-            </div>
-
-            <div class="lf-card__preview" style="min-height:120px;flex:0 0 auto;">
-                <div class="mock-video">
-                    <div class="mock-video__screen">
-                        <div class="mock-video__chars">你好 · 学习 · 中文</div>
-                        <div class="mock-video__play">▶</div>
-                    </div>
-                    <div class="mock-video__title">Урок 1: Первые иероглифы — разбор с Jane</div>
-                    <div class="mock-video__bar">
-                        <div class="mock-video__progress" style="width:40%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lf-exercise-types">
-                <div class="lf-exercise-type">🎯 Выбор правильного ответа</div>
-                <div class="lf-exercise-type">✍️ Написание иероглифов</div>
-                <div class="lf-exercise-type">👂 Аудирование</div>
-            </div>
-            <a href="/auth/register" class="lf-card__btn">Перейти</a>
-        </div>
-
-        <!-- CARD 5: Telegram сообщество (узкая) -->
-        <div class="lf-card">
-            <div class="lf-card__text">
-                <h3 class="lf-card__title">Telegram сообщество</h3>
-                <p class="lf-card__desc">Закрытый чат учеников курса — живое общение, ответы от Jane Might и поддержка на каждом шаге марафона</p>
-            </div>
-
-            <div class="lf-sr-chips" style="flex-shrink:0;">
-                <span class="lf-sr-chip lf-sr-chip--blue">💬 Живое общение</span>
-                <span class="lf-sr-chip lf-sr-chip--orange">🎓 Поддержка Jane</span>
-                <span class="lf-sr-chip lf-sr-chip--blue">🔒 Закрытая группа</span>
-            </div>
-
-            <div class="lf-card__preview" style="min-height:auto;flex:1;">
-                <div class="mock-tg">
-                    <div class="mock-tg__header">
-                        <span class="mock-tg__avatar">🐼</span>
-                        <span class="mock-tg__name">HSK-1 Марафон 🇨🇳</span>
-                        <span class="mock-tg__members">847 участников</span>
-                    </div>
-                    <div class="mock-tg__messages">
-                        <div class="mock-tg__msg">
-                            <span class="mock-tg__author">Jane Might</span>
-                            <span class="mock-tg__text">Иероглиф 家 значит одновременно «дом» и «семья» — очень поэтично 🏠</span>
-                        </div>
-                        <div class="mock-tg__msg mock-tg__msg--right">
-                            <span class="mock-tg__text">Наконец-то запомнила! 我爱我的家 🎉</span>
-                        </div>
-                        <div class="mock-tg__msg">
-                            <span class="mock-tg__author">Анна К.</span>
-                            <span class="mock-tg__text">Иероглиф похож на крышу со свиньёй — это не случайно 😄</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a href="/auth/register" class="lf-card__btn">Присоединиться</a>
-        </div>
-
-        <!-- CARD 6: Прогресс и статистика (полная ширина, тёмный) -->
-        <div class="lf-card lf-card--full lf-card--dark">
-
-            <span class="lf-dchar" style="font-size:220px;bottom:-50px;right:-20px;">进</span>
-            <span class="lf-dchar" style="font-size:180px;top:-45px;left:-25px;">学</span>
-            <span class="lf-dchar" style="font-size:120px;top:20px;right:280px;color:#fdba74;opacity:0.12;">步</span>
-            <span class="lf-dchar" style="font-size:140px;bottom:-30px;left:38%;opacity:0.07;">习</span>
-
-            <div class="lf-card__text">
-                <h3 class="lf-card__title">Прогресс и статистика</h3>
-                <p class="lf-card__desc">Отслеживайте прогресс по неделям и темам, смотрите словарный запас и серию дней в реальном времени</p>
-            </div>
-            <div class="lf-card__preview lf-card__preview--dash">
-                <div class="mock-dash">
-
-                    <div class="mock-dash__kpis">
-                        <div class="mock-dash__kpi-card">
-                            <span class="mock-dash__kpi-num" style="color:#fb923c">248</span>
-                            <span class="mock-dash__kpi-lbl">слов выучено</span>
-                            <span class="mock-dash__kpi-delta mock-dash__kpi-delta--up">↑ +12 за неделю</span>
-                        </div>
-                        <div class="mock-dash__kpi-card">
-                            <div class="mock-dash__kpi-fraction">
-                                <span class="mock-dash__kpi-num" style="color:white">15</span>
-                                <span class="mock-dash__kpi-of">/60</span>
-                            </div>
-                            <span class="mock-dash__kpi-lbl">уроков пройдено</span>
-                            <div class="mock-pbar" style="margin-top:5px"><div class="mock-pbar__fill" style="width:25%"></div></div>
-                        </div>
-                        <div class="mock-dash__kpi-card">
-                            <span class="mock-dash__kpi-num">🔥 7</span>
-                            <span class="mock-dash__kpi-lbl">дней подряд</span>
-                            <span class="mock-dash__kpi-delta" style="color:#fb923c">🏆 личный рекорд</span>
-                        </div>
-                        <div class="mock-dash__kpi-card">
-                            <span class="mock-dash__kpi-num" style="color:#4ade80">84%</span>
-                            <span class="mock-dash__kpi-lbl">точность ответов</span>
-                            <span class="mock-dash__kpi-delta mock-dash__kpi-delta--up">↑ было 79%</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <a href="/auth/register" class="lf-card__btn lf-card__btn--light">Перейти</a>
-        </div>
-
-    </div>
-</section>
-
-<!-- ===== TOPICS SECTION ===== -->
-<section class="landing-section scroll-target" id="topics">
-    <header class="landing-section__header">
-        <h2 class="landing-section__title">Темы курса</h2>
-        <p class="landing-section__subtitle">Изучайте китайский по структурированным темам программы HSK-1</p>
-    </header>
-    <div class="landing-topics">
-        <div class="landing-topic">
-            <div class="landing-topic__emoji">👋</div>
-            <h3 class="landing-topic__title">Приветствия</h3>
-            <p class="landing-topic__desc">Базовые фразы для знакомства и ежедневного общения</p>
-            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
-        </div>
-        <div class="landing-topic">
-            <div class="landing-topic__emoji">🔢</div>
-            <h3 class="landing-topic__title">Числа</h3>
-            <p class="landing-topic__desc">От 1 до 1000, счётные слова и даты</p>
-            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
-        </div>
-        <div class="landing-topic">
-            <div class="landing-topic__emoji">👨‍👩‍👧</div>
-            <h3 class="landing-topic__title">Семья</h3>
-            <p class="landing-topic__desc">Родственники, отношения и семейная лексика</p>
-            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
-        </div>
-        <div class="landing-topic">
-            <div class="landing-topic__emoji">🍜</div>
-            <h3 class="landing-topic__title">Еда</h3>
-            <p class="landing-topic__desc">Продукты, блюда, рестораны и кафе</p>
-            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
-        </div>
-        <div class="landing-topic">
-            <div class="landing-topic__emoji">🚇</div>
-            <h3 class="landing-topic__title">Транспорт</h3>
-            <p class="landing-topic__desc">Метро, такси, автобус и путешествия</p>
-            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
-        </div>
-        <div class="landing-topic">
-            <div class="landing-topic__emoji">🏙️</div>
-            <h3 class="landing-topic__title">Город</h3>
-            <p class="landing-topic__desc">Места, магазины, улицы и учреждения</p>
-            <a href="/auth/register" class="landing-topic__btn">Перейти к теме</a>
+        <div class="fear-quote">
+            <p>«Тебе почти 30, идиот… китайский ты никогда не выучишь.»</p>
         </div>
     </div>
-</section>
+</div>
 
-<!-- ===== АВТОР ===== -->
+
+<!-- ===== CALM ("Спокойно") ===== -->
+<div class="landing-calm scroll-target" id="calm">
+    <div class="landing-calm__header">
+        <div class="landing-calm__title">На самом деле всё не так страшно</div>
+        <p class="landing-calm__desc">
+            Многие с удивлением обнаруживают: здесь нет времён, падежей, родов и
+            бесконечных исключений, из-за которых обычно страдают в других языках.
+        </p>
+        <p class="landing-calm__desc">
+            Со стороны иероглифы выглядят как набор непонятных значков, но у многих из них есть
+            простая и понятная логика.
+        </p>
+    </div>
+
+    <div class="landing-calm__cards">
+        <div class="calm-card">
+            <div class="calm-card__char">人</div>
+            <div class="calm-card__label">человек</div>
+            <div class="calm-card__explanation">
+                Смотри: две ноги, как будто человек идёт.
+            </div>
+        </div>
+        <div class="calm-card">
+            <div class="calm-card__char">木</div>
+            <div class="calm-card__label">дерево</div>
+            <div class="calm-card__explanation">
+                Добавляем ещё одно <strong>木</strong> → 林 («деревья»).<br>
+                Добавляем третье → 森 («лес»).
+            </div>
+        </div>
+        <div class="calm-card">
+            <div class="calm-card__char">你好</div>
+            <div class="calm-card__label">привет</div>
+            <div class="calm-card__explanation">
+                Иероглиф у каждого слова — это смысл, а не просто буква. Выучил один — запомнил целое слово.
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===== OUTCOMES ("Что будет через месяц") ===== -->
+<div class="landing-outcomes scroll-target" id="outcomes">
+    <div class="landing-outcomes__title">Вот что изменится всего за месяц</div>
+    <ul class="outcomes-list">
+        <li>Перестанешь думать, что китайский — это что-то запредельно сложное.</li>
+        <li>Поймёшь, нравится тебе китайский или нет.</li>
+        <li>Сможешь рассказать о себе на китайском.</li>
+        <li>Поздороваешься, познакомишься и поддержишь разговор.</li>
+        <li>Начнёшь понимать китайскую речь на слух.</li>
+    </ul>
+    <div class="landing-outcomes__note">
+        Я разрабатывала этот курс на основе международных стандартов, поэтому, если китайский
+        тебя затянет, к концу обучения у тебя уже будет база уровня HSK 1 — первой международной
+        ступени владения китайским языком.
+    </div>
+</div>
+
+
+<!-- ===== AUTHOR ("Кто будет учить") ===== -->
 <div class="author-section scroll-target" id="author">
-
-    <!-- Фото -->
     <div class="author-photo-wrap">
-        <img src="/static/images/jane_photo.png" alt="Jane Might" class="author-photo">
-        <div class="author-photo-badge">HSK-6 🏆</div>
+        <img src="/static/images/jane_photo.png" alt="Евгения — преподаватель" class="author-photo">
+        <div class="author-photo-badge">8+ лет 🏆</div>
     </div>
 
-    <!-- Инфо -->
     <div class="author-info">
-        <span class="author-eyebrow">Преподаватель курса</span>
-        <div class="author-name">Евгения Горбунова</div>
-        <div class="author-title">Jane Might — эксперт по китайскому языку 🇨🇳</div>
+        <span class="author-eyebrow">Кто будет учить</span>
+        <div class="author-name">Евгения 迪尼娅 (Díníyǎ)</div>
+        <div class="author-title">
+            Главный иероглиф в моём китайском имени — 迪 (Dí). Он означает «направлять», «вести вперёд», «показывать путь».
+        </div>
         <div class="author-bio">
-            Сертифицированный преподаватель китайского языка с опытом более 8 лет.
-            Жила и обучалась в Пекине, владеет языком на уровне носителя (HSK-6).
-            Автор уникальной методики, которая помогла более 500 студентам
-            уверенно сдать HSK и заговорить на китайском с нуля.
+            Уже больше 8 лет я учу людей языкам и за это время поняла одну вещь — большинство бросает
+            не потому, что неспособны, а именно:
+            <br><br>
+            — Потому что уверены, что у них нет способностей к языкам.<br>
+            — Потому что однажды уже бросили английский, испанский или другой язык.<br>
+            — Потому что считают, что начинать уже поздно.<br>
+            — Потому что смотрят на иероглифы и думают: «Я это никогда не запомню».
+            <br><br>
+            Поэтому моя главная задача — сделать так, чтобы ты спокойно дошёл до результата и не сдался на полпути.
         </div>
 
-        <!-- Достижения -->
         <div class="author-achievements">
             <div class="author-ach">
                 <span class="author-ach__num">8+</span>
-                <span class="author-ach__lbl">лет преподавания</span>
+                <span class="author-ach__lbl">лет преподаю языки</span>
             </div>
             <div class="author-ach">
-                <span class="author-ach__num">500+</span>
-                <span class="author-ach__lbl">выпускников</span>
+                <span class="author-ach__num">10 000+</span>
+                <span class="author-ach__lbl">часов работы с учениками</span>
             </div>
             <div class="author-ach">
-                <span class="author-ach__num">98%</span>
-                <span class="author-ach__lbl">успешно сдали HSK</span>
+                <span class="author-ach__num">3 года</span>
+                <span class="author-ach__lbl">ведущий преподаватель в «Тетрике»</span>
             </div>
             <div class="author-ach">
-                <span class="author-ach__num">HSK-6</span>
-                <span class="author-ach__lbl">уровень носителя</span>
+                <span class="author-ach__num">5 лет</span>
+                <span class="author-ach__lbl">собственная школа School Might</span>
             </div>
         </div>
 
-        <!-- Значки -->
+        <div style="margin-top: 16px; margin-bottom: 16px;">
+            <div class="author-feature">Объясняю сложные вещи простым человеческим языком.</div>
+            <div class="author-feature">Не ругаю за ошибки. Ошибки — это часть обучения, а не повод чувствовать себя глупо.</div>
+            <div class="author-feature">Показываю язык таким, каким он живёт в реальности, а не только в учебниках.</div>
+            <div class="author-feature">Даю много практики и примеров из жизни вместо бесконечной теории.</div>
+            <div class="author-feature">Всегда остаюсь на связи, если что-то непонятно.</div>
+        </div>
+
         <div class="author-creds">
-            <span class="author-cred">📍 3 года в Пекине</span>
-            <span class="author-cred">🎓 Авторская методика</span>
+            <span class="author-cred">📍 диплом переводчика, СПбГУП</span>
             <span class="author-cred">💬 Поддержка в Telegram</span>
             <span class="author-cred">🎥 Видео-уроки с разбором</span>
         </div>
     </div>
-
 </div>
+
+
+<!-- ===== REVIEWS ("У них получилось") ===== -->
+<section class="landing-reviews scroll-target" id="reviews">
+    <div class="landing-reviews__header">
+        <div class="landing-reviews__title">У них получилось</div>
+        <p class="landing-reviews__sub">Это реальные ученики, каждый отзыв можно и нужно проверить — просто напиши им в тг.</p>
+    </div>
+
+    <div class="reviews-grid">
+        <div class="review-card">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="review-card__avatar-placeholder">А</div>
+                <div>
+                    <div class="review-card__name">Анна</div>
+                    <div class="review-card__handle">@tg_anna</div>
+                </div>
+            </div>
+            <div class="review-card__text">«Никогда не думала, что смогу хоть что-то сказать по-китайски. Уже через неделю поняла — это реально!»</div>
+        </div>
+        <div class="review-card">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="review-card__avatar-placeholder">М</div>
+                <div>
+                    <div class="review-card__name">Михаил</div>
+                    <div class="review-card__handle">@tg_misha</div>
+                </div>
+            </div>
+            <div class="review-card__text">«Боялся иероглифов, но Евгения объяснила их так, что теперь я даже запоминаю их логику. Спасибо!»</div>
+        </div>
+
+        <!-- CTA card -->
+        <div class="review-card review-card--cta">
+            <div class="review-cta__pinyin">nǐ de</div>
+            <div class="review-cta__char">你的</div>
+            <div class="review-cta__label">твой</div>
+            <div class="review-cta__title">Дальше здесь будет твой результат</div>
+            <div class="review-cta__sub">Попробуй и посмотри, как пойдёт</div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===== PRICING ("Тарифы") ===== -->
+<section class="landing-pricing scroll-target" id="pricing">
+    <div class="landing-pricing__header">
+        <div class="landing-pricing__title">Выбери комфортный темп</div>
+        <p class="landing-pricing__sub">Три варианта — для разных целей и ритма жизни</p>
+    </div>
+
+    <div class="pricing-grid">
+        <!-- Plan 1 -->
+        <div class="pricing-card">
+            <div>
+                <div class="pricing-name">Попробовать</div>
+                <div class="pricing-price">4 990 ₽</div>
+                <p class="pricing-desc">Для тех, кто хочет попробовать китайский и понять, нравится ли ему этот язык.</p>
+            </div>
+            <ul class="pricing-features">
+                <li>10 модулей с видео и заданиями</li>
+                <li>Тренажёр для запоминания слов и иероглифов</li>
+                <li>Итоговый тест на уровень HSK 1</li>
+                <li>Материалы о Китае (традиции, обучение, работа)</li>
+                <li>Доступ ко всем материалам 1,5 месяца</li>
+            </ul>
+            <a href="/auth/register" class="pricing-cta">Начать со «Старта»</a>
+        </div>
+
+        <!-- Plan 2 (featured) -->
+        <div class="pricing-card pricing-card--featured">
+            <div>
+                <span class="pricing-badge">🔥 Выбирают чаще всего</span>
+                <div class="pricing-name" style="color:white;margin-top:8px;">База</div>
+                <div class="pricing-price" style="color:#e9d5ff;">6 990 ₽</div>
+                <p class="pricing-desc" style="color:rgba(255,255,255,0.72);">Если не любишь спешку и хочешь спокойно пройти курс в своём ритме.</p>
+            </div>
+            <ul class="pricing-features">
+                <li>Всё из тарифа «Попробовать»</li>
+                <li>Доступ к материалам и тренажёру на 3 месяца</li>
+                <li>Доступ в закрытое Telegram-сообщество единомышленников</li>
+                <li>Библиотека фильмов, сериалов и музыки уровня HSK 1</li>
+                <li>Дополнительные практические модули</li>
+                <li class="pricing-features__bold">Поддержка кураторов в чате — отвечаем в течение 24 часов</li>
+            </ul>
+            <a href="/auth/register" class="pricing-cta">Выбрать «Оптимальный»</a>
+        </div>
+
+        <!-- Plan 3 -->
+        <div class="pricing-card">
+            <div>
+                <div class="pricing-name">С наставником</div>
+                <div class="pricing-price">9 990 ₽</div>
+                <p class="pricing-desc">Для тех, кто хочет сохранить материалы под рукой и возвращаться к ним в течение года.</p>
+            </div>
+            <ul class="pricing-features">
+                <li>Всё из тарифа «Оптимальный»</li>
+                <li>Доступ ко всем материалам на 12 месяцев</li>
+                <li class="pricing-features__bold">Общий чат с Евгенией — ответы лично от неё</li>
+                <li>Большой конспект по всему HSK 1 и список всех иероглифов навсегда</li>
+                <li>Мотивация от Евгении в течение всего курса, следим и не даём бросить</li>
+            </ul>
+            <a href="/auth/register" class="pricing-cta">Выбрать «Максимум»</a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===== PLATFORM ("Не только месяц занятий") ===== -->
+<div class="landing-platform scroll-target" id="platform">
+    <div class="landing-platform__title">Этот практикум — не просто месяц занятий по китайскому</div>
+    <p class="landing-platform__desc">
+        Если язык тебя затянет, не придётся часами искать информацию по форумам, телеграм-чатам
+        и случайным статьям. Мы собрали в одном месте всё, что обычно приходится искать по
+        крупицам: от поступления в Китай до особенностей жизни, учёбы и работы там.
+    </p>
+    <div class="platform-features">
+        <div class="platform-feature">🎯 Где искать гранты и стипендии</div>
+        <div class="platform-feature">🎯 Как поступить в китайский вуз</div>
+        <div class="platform-feature">🎯 Учёба, карьера и работа с Китаем</div>
+        <div class="platform-feature">🎯 Что может неприятно удивить в Китае</div>
+        <div class="platform-feature">🎯 Реальные истории студентов</div>
+        <div class="platform-feature">🎯 Что важно знать о китайской культуре</div>
+        <div class="platform-feature">🎯 Тренажёр слов и иероглифов</div>
+        <div class="platform-feature">И многое другое!</div>
+    </div>
+</div>
+
+
+<!-- ===== PARENTS ===== -->
+<div class="landing-parents scroll-target" id="parents">
+    <div class="landing-parents__title">Для родителей</div>
+    <p class="landing-parents__intro">
+        Если переживаете — это нормально. Китай для многих родителей кажется чем-то очень
+        далёким и непонятным: другой язык, другая культура, другая система образования.
+        Поэтому вместе с курсом вы получите не только базу китайского языка, но и понятную
+        информацию о том, что ждёт ребёнка, если однажды он захочет связать свою жизнь с Китаем.
+    </p>
+
+    <div class="parents-faq">
+        <div class="parents-faq__item">
+            <div class="parents-faq__q">Как понять, подходит ли это вообще моему ребёнку?</div>
+            <div class="parents-faq__a">
+                Именно для этого и создан практикум. За месяц ребёнок сможет познакомиться с языком и
+                культурой, а вы — увидеть, есть ли у него реальный интерес к этому направлению, прежде
+                чем принимать какие-либо серьёзные решения.
+            </div>
+        </div>
+        <div class="parents-faq__item">
+            <div class="parents-faq__q">А если потом захочется учиться в Китае? Где искать информацию?</div>
+            <div class="parents-faq__a">
+                Мы собрали материалы о вузах, грантах, поступлении и реальном опыте студентов в одном месте.
+                Вам не придётся неделями искать ответы по форумам и собирать информацию по крупицам.
+            </div>
+        </div>
+        <div class="parents-faq__item">
+            <div class="parents-faq__q">Насколько вообще безопасно и реально учиться в Китае?</div>
+            <div class="parents-faq__a">
+                Внутри практикума вы найдёте не только красивые истории успеха, но и честные рассказы
+                студентов о трудностях, адаптации, бытовых вопросах и том, с чем они столкнулись на самом деле.
+            </div>
+        </div>
+        <div class="parents-faq__item">
+            <div class="parents-faq__q">Я боюсь принять неправильное решение.</div>
+            <div class="parents-faq__a">
+                Именно поэтому сейчас не нужно принимать никаких больших решений. Этот месяц нужен
+                только для одного — спокойно разобраться, интересно ли ребёнку это направление и хочется
+                ли ему двигаться дальше.
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- ===== FAQ ===== -->
 <section class="landing-section scroll-target" id="faq">
     <header class="landing-section__header">
-        <h2 class="landing-section__title">Частые вопросы</h2>
-        <p class="landing-section__subtitle">Ответы на самые популярные вопросы о курсе</p>
+        <h2 class="landing-section__title">Мне только спросить!</h2>
+        <p class="landing-section__subtitle">Ответы на самые частые вопросы</p>
     </header>
 
     <div class="landing-faq">
 
         <div class="faq-item">
             <div class="faq-question">
-                <span class="faq-question__text">Нужен ли опыт изучения китайского, чтобы начать?</span>
+                <span class="faq-question__text">Я вообще ничего не знаю по-китайски и про Китай. Мне подойдёт?</span>
                 <span class="faq-question__arrow">▼</span>
             </div>
             <div class="faq-answer">
-                <p>Нет, никакого предварительного опыта не требуется. Курс начинается с самых азов: система тонов, пиньинь, первые иероглифы. Всё объясняется с нуля — понятно и последовательно.</p>
+                <p>Да, как раз для этого всё и сделано. Начинаем с самого начала. Ничего знать заранее не нужно.</p>
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                <span class="faq-question__text">Сколько времени нужно уделять занятиям каждый день?</span>
+                <span class="faq-question__text">Сколько времени нужно в день?</span>
                 <span class="faq-question__arrow">▼</span>
             </div>
             <div class="faq-answer">
-                <p>Достаточно 30–45 минут в день. Уроки структурированы так, чтобы не перегружать: теория + упражнения + повторение слов по алгоритму. Система сама напомнит, когда пора заниматься.</p>
+                <p>от 10 до 40 минут в день. Обучение спокойно совмещается со школой, университетом или работой.</p>
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                <span class="faq-question__text">Что такое HSK-1 и зачем его сдавать?</span>
+                <span class="faq-question__text">А если пойму, что это не моё?</span>
                 <span class="faq-question__arrow">▼</span>
             </div>
             <div class="faq-answer">
-                <p>HSK (汉语水平考试) — официальный международный экзамен по китайскому языку, признаваемый университетами и работодателями по всему миру. Уровень HSK-1 подтверждает владение около 150 базовыми словами и умение понимать простые фразы. Это отличная стартовая точка и мотивирующая цель.</p>
+                <p>Нормальный итог. Смысл месяца как раз в том, чтобы понять это сейчас, а не через несколько лет. Лучше узнать быстро и недорого, чем гадать годами.</p>
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                <span class="faq-question__text">Как работает интервальное повторение слов?</span>
+                <span class="faq-question__text">Я смогу поступить в Китай после вашего практикума?</span>
                 <span class="faq-question__arrow">▼</span>
             </div>
             <div class="faq-answer">
-                <p>Система отслеживает, насколько хорошо вы знаете каждое слово, и показывает его ровно перед тем, как вы его забудете. Это основано на алгоритме SM-2 и кривой забывания Эббингауза. Слова, которые вы знаете уверенно, появляются редко — трудные слова повторяются чаще. В результате вы запоминаете навсегда, а не «до завтра».</p>
+                <p>Сразу честно: это не услуга «поступим вас в вуз». Это первый шаг — попробовать язык и понять, твоё или нет. Но внутри есть материалы про вузы, гранты и поступление, и если решишь идти дальше — подскажу, что делать.</p>
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                <span class="faq-question__text">Когда я получу доступ к Telegram-сообществу?</span>
+                <span class="faq-question__text">Что такое HSK 1?</span>
                 <span class="faq-question__arrow">▼</span>
             </div>
             <div class="faq-answer">
-                <p>Сразу после регистрации. Ссылка на закрытый чат будет доступна в личном кабинете. В сообществе уже сотни студентов — там можно задавать вопросы, делиться успехами и получать ответы от Jane Might.</p>
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">
-                <span class="faq-question__text">Подготовит ли курс к сдаче официального экзамена HSK-1?</span>
-                <span class="faq-question__arrow">▼</span>
-            </div>
-            <div class="faq-answer">
-                <p>Да. За 60 дней марафона вы освоите весь словарный запас HSK-1 (150 слов), базовые грамматические конструкции и формат экзамена. 98% наших выпускников успешно сдают HSK с первого раза.</p>
+                <p>HSK — это международный экзамен по китайскому языку (как IELTS или TOEFL в английском). HSK 1 — это первая, начальная ступенька этой лестницы. Если за месяц выходишь на этот уровень — значит, у тебя реальный результат, который можно подтвердить.</p>
             </div>
         </div>
 
     </div>
 </section>
 
+
 <!-- ===== CTA ===== -->
 <div class="cta-section">
-    <h2>🔥 Готовы к марафону?</h2>
-    <p>Зарегистрируйтесь сегодня и получите первый урок бесплатно!</p>
-    <a href="/auth/register" class="btn-primary">Присоединиться сейчас →</a>
+    <h2>Можно просто попробовать и понять</h2>
+    <p>Не обязательно думать об этом ещё год и бояться ошибиться.</p>
+    <a href="/auth/register" class="btn-primary">Попробовать за 6 990 ₽</a>
 </div>
 
 {% endblock %}
+
 
 {% block extra_js %}
 <script>
@@ -556,9 +450,7 @@ document.querySelectorAll('.faq-question').forEach(function(btn) {
     btn.addEventListener('click', function() {
         var item = this.closest('.faq-item');
         var isOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item.open').forEach(function(el) {
-            el.classList.remove('open');
-        });
+        document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
         if (!isOpen) item.classList.add('open');
     });
 });

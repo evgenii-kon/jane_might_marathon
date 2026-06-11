@@ -32,7 +32,7 @@
 
 .admin-btn {
     display: inline-block;
-    background: #f97316;
+    background: #a78bfa;
     color: white;
     padding: 8px 16px;
     border-radius: 8px;
@@ -42,7 +42,7 @@
 }
 
 .admin-btn:hover {
-    background: #ea580c;
+    background: #7c3aed;
     transform: translateY(-1px);
 }
 
@@ -116,7 +116,7 @@
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #f97316;
+    border-color: #a78bfa;
 }
 
 .checkbox-group {
@@ -221,11 +221,11 @@
     background: white;
     border-radius: 8px;
     text-decoration: none;
-    color: #f97316;
+    color: #a78bfa;
 }
 
 .pagination a:hover {
-    background: #f97316;
+    background: #a78bfa;
     color: white;
 }
 
@@ -322,7 +322,7 @@
     border-radius: 40px;
     font-size: 14px;
     font-weight: 500;
-    color: #0f2b6d;
+    color: #3b1373;
 }
 
 .feedback-table-wrapper {
@@ -365,7 +365,7 @@
 
 .feedback-user {
     font-weight: 500;
-    color: #0f2b6d;
+    color: #3b1373;
 }
 
 .feedback-date {
@@ -382,7 +382,7 @@
 
 .btn-view {
     background: #eef2ff;
-    color: #0f2b6d;
+    color: #3b1373;
     padding: 6px 12px;
     border-radius: 8px;
     text-decoration: none;
@@ -391,7 +391,7 @@
 }
 
 .btn-view:hover {
-    background: #0f2b6d;
+    background: #3b1373;
     color: white;
 }
 
@@ -425,7 +425,7 @@
 }
 
 .feedback-detail-header {
-    background: linear-gradient(135deg, #0f2b6d, #1e40af);
+    background: linear-gradient(135deg, #3b1373, #7c3aed);
     padding: 24px 32px;
     color: white;
 }

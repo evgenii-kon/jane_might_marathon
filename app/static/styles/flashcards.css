@@ -49,15 +49,15 @@
 }
 
 .flashcard-front {
-    background: linear-gradient(135deg, #0a1441 0%, #1e40af 60%, #7c2d12 100%);
+    background: linear-gradient(135deg, #0f0720 0%, #7c3aed 60%, #3b0764 100%);
     color: white;
     box-shadow: 0 12px 40px rgba(10,20,65,.32), 0 2px 8px rgba(10,20,65,.18);
 }
 
 /* ── Trainer session overrides ────────────────────────────── */
 .trainer-card-container .flashcard-front {
-    background: linear-gradient(140deg, #0c2461 0%, #1e40af 55%, #2563eb 100%);
-    box-shadow: 0 14px 40px rgba(12,36,97,.3), 0 2px 8px rgba(12,36,97,.15);
+    background: linear-gradient(140deg, #1a0a40 0%, #7c3aed 55%, #8b5cf6 100%);
+    box-shadow: 0 14px 40px rgba(67,26,140,.3), 0 2px 8px rgba(67,26,140,.15);
     border-radius: 24px;
     overflow: hidden;
 }
@@ -68,7 +68,7 @@
     position: absolute;
     top: -60px; right: -40px;
     width: 220px; height: 220px;
-    background: radial-gradient(circle, rgba(249,115,22,.22) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(167,139,250,.22) 0%, transparent 65%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -102,7 +102,7 @@
 }
 
 .flashcard-back {
-    background: linear-gradient(135deg, #f97316, #ea580c);
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
     color: white;
     transform: rotateY(180deg);
     overflow-y: auto;
@@ -183,7 +183,7 @@
 }
 
 .flashcard-audio audio::-webkit-media-controls-play-button {
-    background-color: #f97316;
+    background-color: #a78bfa;
     border-radius: 50%;
 }
 

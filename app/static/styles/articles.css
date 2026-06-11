@@ -76,7 +76,7 @@
 }
 
 .article-title a:hover {
-    color: #f97316;
+    color: #a78bfa;
 }
 
 .article-meta {
@@ -98,7 +98,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #f97316;
+    color: #a78bfa;
     text-decoration: none;
     font-weight: 500;
     transition: gap 0.2s;
@@ -212,7 +212,7 @@
 }
 
 .article-content-body blockquote {
-    border-left: 4px solid #f97316;
+    border-left: 4px solid #a78bfa;
     padding-left: 20px;
     margin: 24px 0;
     color: var(--text-secondary);

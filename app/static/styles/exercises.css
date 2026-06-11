@@ -35,7 +35,7 @@
 }
 
 .progress-count {
-    color: #f97316;
+    color: #a78bfa;
     font-weight: 600;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .progress-fill {
-    background: linear-gradient(135deg, #f97316, #ea580c);
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
     height: 100%;
     border-radius: 10px;
     transition: width 0.3s ease;
@@ -120,7 +120,7 @@
 
 .quiz-option:hover:not(:disabled) {
     background: var(--bg-hover);
-    border-color: #f97316;
+    border-color: #a78bfa;
     transform: translateX(4px);
 }
 
@@ -139,7 +139,7 @@
 }
 
 .quiz-option:hover:not(:disabled) .option-letter {
-    background: #f97316;
+    background: #a78bfa;
     color: white;
 }
 
@@ -241,7 +241,7 @@
 }
 
 .btn-next {
-    background: linear-gradient(135deg, #f97316, #ea580c);
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
     color: white;
     padding: 14px 32px;
     border-radius: 48px;
@@ -320,7 +320,7 @@
     font-size: 28px;
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, #0f2b6d, #f97316);
+    background: linear-gradient(135deg, #3b1373, #a78bfa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -353,7 +353,7 @@
 .completed-stat-value {
     font-size: 32px;
     font-weight: 800;
-    color: #f97316;
+    color: #a78bfa;
     display: block;
     margin-bottom: 4px;
 }
@@ -369,7 +369,7 @@
     font-size: 28px;
     font-weight: 800;
     margin-bottom: 12px;
-    background: linear-gradient(135deg, #0f2b6d, #f97316);
+    background: linear-gradient(135deg, #3b1373, #a78bfa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -433,8 +433,8 @@
 
 .completed-actions .btn-outline-lesson {
     background: transparent;
-    border: 2px solid #f97316;
-    color: #f97316;
+    border: 2px solid #a78bfa;
+    color: #a78bfa;
     padding: 12px 24px;
     border-radius: 48px;
     text-decoration: none;
@@ -445,7 +445,7 @@
 }
 
 .completed-actions .btn-outline-lesson:hover {
-    background: #f97316;
+    background: #a78bfa;
     color: white;
     transform: translateY(-2px);
 }
