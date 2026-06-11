@@ -11,7 +11,8 @@ from app.services.word_trainer_service import WordTrainerService
 from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.user_week_progress_service import UserWeekProgressService
 from app.services.word_service import WordService
-from app.csrf import get_csrf_token 
+from app.services.user_activity_service import UserActivityService
+from app.csrf import get_csrf_token
 
 
 router = APIRouter(prefix="/dashboard/lessons", tags=["dashboard"])
@@ -72,6 +73,9 @@ async def complete_lesson(
 
     # Отмечаем урок пройденным
     await progress_service.mark_lesson_as_completed(current_user.id, lesson_id)
+
+    activity_service = UserActivityService(db)
+    await activity_service.record_activity(current_user.id)
 
     # Получаем все уроки недели и количество пройденных — двумя запросами вместо N
     lessons_in_week = await lesson_service.get_lessons_by_week(lesson.week_id)

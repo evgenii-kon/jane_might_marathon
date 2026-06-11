@@ -319,17 +319,24 @@ async def get_profile(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    from datetime import date
     from app.services.lesson_service import LessonService
     from app.services.user_lesson_progress_service import UserLessonProgressService
+    from app.services.user_activity_service import UserActivityService
 
     lesson_service = LessonService(db)
     progress_service = UserLessonProgressService(db)
+    activity_service = UserActivityService(db)
 
     total_lessons = await lesson_service.get_lessons_count()
     completed_lessons = await progress_service.get_completed_count_by_user(current_user.id)
     progress_percent = (
         int((completed_lessons / total_lessons) * 100) if total_lessons > 0 else 0
     )
+
+    activity_data = await activity_service.get_year_activity(current_user.id)
+    streak = await activity_service.get_streak(current_user.id)
+    total_active_days = await activity_service.get_total_active_days(current_user.id)
 
     return templates.TemplateResponse(
         "auth/user_data.html",
@@ -339,6 +346,10 @@ async def get_profile(
             "total_lessons": total_lessons,
             "completed_lessons": completed_lessons,
             "progress_percent": progress_percent,
+            "activity_data": activity_data,
+            "streak": streak,
+            "total_days": total_active_days,
+            "today_date": str(date.today()),
             "csrf_token": get_csrf_token(request),
         },
     )

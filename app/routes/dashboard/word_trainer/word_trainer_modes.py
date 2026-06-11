@@ -7,6 +7,7 @@ from app.database import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
 from app.services.word_trainer_service import WordTrainerService
+from app.services.user_activity_service import UserActivityService
 from app.repositories.word_repository import WordRepository
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
 from app.csrf import get_csrf_token
@@ -117,6 +118,9 @@ async def check_answer(
         progress = await service.progress_repo.update_mastery(
             current_user.id, word_id, is_correct
         )
+        if is_correct:
+            activity_service = UserActivityService(db)
+            await activity_service.record_activity(current_user.id)
         return {
             "is_correct": is_correct,
             "translation": word.translation,

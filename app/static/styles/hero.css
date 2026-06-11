@@ -40,9 +40,9 @@
 /* ---- Badge ---- */
 .landing-hero__badge {
     display: inline-block;
-    background: rgba(167, 139, 250, 0.18);
-    border: 1px solid rgba(167, 139, 250, 0.40);
-    color: #c4b5fd;
+    background: rgba(96, 165, 250, 0.18);
+    border: 1px solid rgba(96, 165, 250, 0.40);
+    color: #93c5fd;
     padding: 6px 18px;
     border-radius: 50px;
     font-size: 13px;
@@ -86,7 +86,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
     color: white;
     padding: 16px 40px;
     border-radius: 50px;
@@ -94,12 +94,12 @@
     font-weight: 700;
     text-decoration: none;
     transition: all 0.3s;
-    box-shadow: 0 4px 24px rgba(124, 58, 237, 0.55);
+    box-shadow: 0 4px 24px rgba(37, 99, 235, 0.55);
 }
 
 .landing-hero__cta:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 36px rgba(124, 58, 237, 0.70);
+    box-shadow: 0 8px 36px rgba(37, 99, 235, 0.70);
     color: white;
 }
 
@@ -161,7 +161,7 @@
     color: white;
     line-height: 1.1;
     margin-bottom: 6px;
-    text-shadow: 0 0 20px rgba(167,139,250,0.6);
+    text-shadow: 0 0 20px rgba(96,165,250,0.6);
 }
 
 .landing-hero__card-label {
@@ -172,7 +172,7 @@
 
 .landing-hero__card-note {
     font-size: 11px;
-    color: rgba(196,181,253,0.80);
+    color: rgba(147,197,253,0.80);
     line-height: 1.45;
     border-top: 1px solid rgba(255,255,255,0.15);
     padding-top: 8px;
@@ -246,9 +246,9 @@
 /* ========== SCROLLING TICKER ========== */
 .landing-ticker {
     overflow: hidden;
-    background: rgba(167,139,250,0.08);
-    border-top: 1px solid rgba(167,139,250,0.18);
-    border-bottom: 1px solid rgba(167,139,250,0.18);
+    background: rgba(96,165,250,0.08);
+    border-top: 1px solid rgba(96,165,250,0.18);
+    border-bottom: 1px solid rgba(96,165,250,0.18);
     border-radius: 0;
     padding: 14px 0;
     margin-bottom: 60px;
@@ -333,7 +333,7 @@
 }
 
 .hero-badge {
-    background: rgba(167,139,250,0.15);
+    background: rgba(96,165,250,0.15);
     color: var(--accent-bright);
     padding: 6px 14px;
     border-radius: 40px;
@@ -373,9 +373,9 @@
 /* ========== LIGHT THEME OVERRIDES ========== */
 html[data-theme="light"] .landing-hero {
     background: rgba(109, 40, 217, 0.06);
-    border-color: rgba(124, 58, 237, 0.22);
+    border-color: rgba(37, 99, 235, 0.22);
     color: var(--text-primary);
-    box-shadow: 0 8px 40px rgba(99,60,200,0.12), inset 0 1px 0 rgba(255,255,255,0.80);
+    box-shadow: 0 8px 40px rgba(37,99,235,0.12), inset 0 1px 0 rgba(255,255,255,0.80);
 }
 
 html[data-theme="light"] .landing-hero__title {
@@ -392,26 +392,26 @@ html[data-theme="light"] .landing-hero__hint {
 }
 
 html[data-theme="light"] .landing-hero__badge {
-    background: rgba(124, 58, 237, 0.10);
-    border-color: rgba(124, 58, 237, 0.28);
-    color: #7c3aed;
+    background: rgba(37, 99, 235, 0.10);
+    border-color: rgba(37, 99, 235, 0.28);
+    color: #2563eb;
 }
 
 html[data-theme="light"] .landing-hero__cta-outline {
     color: #0e0a22;
-    border-color: rgba(124, 58, 237, 0.30);
-    background: rgba(124, 58, 237, 0.07);
+    border-color: rgba(37, 99, 235, 0.30);
+    background: rgba(37, 99, 235, 0.07);
 }
 
 html[data-theme="light"] .landing-hero__cta-outline:hover {
-    background: rgba(124, 58, 237, 0.14);
+    background: rgba(37, 99, 235, 0.14);
     color: #0e0a22;
 }
 
 html[data-theme="light"] .landing-hero__card {
     background: rgba(255, 255, 255, 0.80);
-    border-color: rgba(124, 58, 237, 0.22);
-    box-shadow: 0 8px 28px rgba(99,60,200,0.18), inset 0 1px 0 rgba(255,255,255,0.90);
+    border-color: rgba(37, 99, 235, 0.22);
+    box-shadow: 0 8px 28px rgba(37,99,235,0.18), inset 0 1px 0 rgba(255,255,255,0.90);
 }
 
 html[data-theme="light"] .landing-hero__card-pinyin,
@@ -420,26 +420,26 @@ html[data-theme="light"] .landing-hero__card-label {
 }
 
 html[data-theme="light"] .landing-hero__card-char {
-    color: #5b21b6;
-    text-shadow: 0 0 20px rgba(124, 58, 237, 0.25);
+    color: #1d4ed8;
+    text-shadow: 0 0 20px rgba(37, 99, 235, 0.25);
 }
 
 html[data-theme="light"] .landing-hero__card-note {
-    color: #7c3aed;
-    border-top-color: rgba(124, 58, 237, 0.18);
+    color: #2563eb;
+    border-top-color: rgba(37, 99, 235, 0.18);
 }
 
 html[data-theme="light"] .landing-ticker {
-    background: rgba(124, 58, 237, 0.06);
-    border-color: rgba(124, 58, 237, 0.18);
+    background: rgba(37, 99, 235, 0.06);
+    border-color: rgba(37, 99, 235, 0.18);
 }
 
 html[data-theme="light"] .landing-ticker__item {
-    color: #7c3aed;
+    color: #2563eb;
 }
 
 html[data-theme="light"] .landing-stats__num {
-    color: #7c3aed;
+    color: #2563eb;
 }
 
 html[data-theme="light"] .landing-section__title {

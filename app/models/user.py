@@ -34,3 +34,6 @@ class User(Base):
     idiom_progress = relationship(
         "UserIdiomProgress", back_populates="user", cascade="all, delete-orphan"
     )
+    activities = relationship(
+        "UserActivity", back_populates="user", cascade="all, delete-orphan"
+    )

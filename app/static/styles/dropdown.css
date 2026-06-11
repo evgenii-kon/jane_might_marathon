@@ -80,7 +80,7 @@
 
 .dropdown-menu a:hover {
     background: rgba(249,115,22,0.14);
-    color: #a78bfa !important;
+    color: #60a5fa !important;
 }
 
 @media (max-width: 768px) {

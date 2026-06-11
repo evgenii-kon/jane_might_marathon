@@ -11,3 +11,4 @@ from .article import Article
 from .feedback import FeedBack
 from .idiom import Idiom
 from .user_idiom_progress import UserIdiomProgress
+from .user_activity import UserActivity

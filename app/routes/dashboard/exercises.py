@@ -12,6 +12,7 @@ from app.services.exercise_service import ExerciseService
 from app.services.lesson_service import LessonService
 from app.services.user_exercise_progress_service import UserExerciseProgressService
 from app.services.user_lesson_progress_service import UserLessonProgressService
+from app.services.user_activity_service import UserActivityService
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/dashboard/exercises", tags=["dashboard_exercises"])
@@ -164,6 +165,8 @@ async def check_exercise_answer(
         current_user.id, exercise_id
     ):
         await progress_service.mark_exercise_completed(current_user.id, exercise_id)
+        activity_service = UserActivityService(db)
+        await activity_service.record_activity(current_user.id)
 
     # 4. Получаем тексты вариантов
     option_map = _get_option_map(exercise)

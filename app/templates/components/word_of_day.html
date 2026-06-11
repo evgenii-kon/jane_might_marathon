@@ -1,0 +1,38 @@
+{#
+  Параметры:
+    word_of_day — объект Word (hanzi, transcription, translation,
+                  part_of_speech, example_sentence, example_translation)
+#}
+
+{% if word_of_day %}
+<div class="wod-section">
+    <h2>Слово дня</h2>
+
+    <div class="wod-card">
+        <div class="wod-hanzi-col">
+            <div class="wod-hanzi">{{ word_of_day.hanzi }}</div>
+        </div>
+
+        <div class="wod-info">
+            <div class="wod-pinyin">{{ word_of_day.transcription }}</div>
+
+            <div class="wod-divider"></div>
+
+            <div class="wod-translation">{{ word_of_day.translation }}</div>
+
+            {% if word_of_day.part_of_speech %}
+            <div class="wod-pos">{{ word_of_day.part_of_speech }}</div>
+            {% endif %}
+
+            {% if word_of_day.example_sentence %}
+            <div class="wod-example">
+                <div class="wod-example-zh">{{ word_of_day.example_sentence }}</div>
+                {% if word_of_day.example_translation %}
+                <div class="wod-example-ru">{{ word_of_day.example_translation }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}

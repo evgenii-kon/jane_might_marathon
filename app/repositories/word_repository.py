@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, func
 from typing import List, Optional
 from app.models.word import Word
 from app.models.lesson_word_association import lesson_word_association
@@ -8,6 +8,10 @@ from app.models.lesson_word_association import lesson_word_association
 class WordRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
+
+    async def get_random(self) -> Optional[Word]:
+        result = await self.db.execute(select(Word).order_by(func.random()).limit(1))
+        return result.scalar_one_or_none()
 
     async def get_all(self) -> List[Word]:
         result = await self.db.execute(select(Word))

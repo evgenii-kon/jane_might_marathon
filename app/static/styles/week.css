@@ -4,7 +4,7 @@
 
 /* Карточка заголовка недели */
 .week-header-card {
-    background: linear-gradient(135deg, #0f0720 0%, #7c3aed 60%, #3b0764 100%) !important;
+    background: linear-gradient(135deg, #020d1e 0%, #2563eb 60%, #1e3a8a 100%) !important;
     box-shadow: 0 12px 40px rgba(10,20,65,.32), 0 2px 8px rgba(10,20,65,.18) !important;
     margin-bottom: 24px;
 }
@@ -50,7 +50,7 @@
 }
 
 .week-header-card .progress-count {
-    color: #c4b5fd;
+    color: #93c5fd;
 }
 
 .week-header-card .progress-bar {
@@ -87,9 +87,9 @@
 
 .week-lessons-count {
     font-size: 13px;
-    color: #a78bfa;
+    color: #60a5fa;
     font-weight: 600;
-    background: rgba(167,139,250,0.12);
+    background: rgba(96,165,250,0.12);
     padding: 4px 10px;
     border-radius: 20px;
 }
@@ -113,7 +113,7 @@
 }
 
 .week-lesson-row:hover {
-    border-color: #a78bfa;
+    border-color: #60a5fa;
     box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
     transform: translateY(-1px);
 }
@@ -141,7 +141,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
     color: white;
     font-size: 13px;
     font-weight: 700;
@@ -220,7 +220,7 @@
 }
 
 .wl-btn-start {
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
     color: white;
     box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
 }
@@ -253,7 +253,7 @@
 }
 
 .wl-btn-exercises {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
     color: white;
     box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
 }
@@ -324,7 +324,7 @@
 .countdown-number {
     font-size: 36px;
     font-weight: 800;
-    color: #a78bfa;
+    color: #60a5fa;
     display: block;
     line-height: 1.2;
 }
@@ -337,7 +337,7 @@
 
 .lock-days {
     font-size: 12px;
-    color: #a78bfa;
+    color: #60a5fa;
     background: rgba(249, 115, 22, 0.1);
     padding: 2px 8px;
     border-radius: 20px;

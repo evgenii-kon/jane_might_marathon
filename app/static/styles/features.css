@@ -3,8 +3,6 @@
 /* ---- Glass card mixin applied everywhere ---- */
 .glass-card {
     background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--glass-border);
     border-radius: 24px;
     box-shadow: var(--shadow-card);
@@ -20,8 +18,6 @@
 .lf-card {
     position: relative;
     background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
     border-radius: 24px;
     padding: 28px 28px 76px;
     border: 1px solid var(--glass-border);
@@ -36,9 +32,9 @@
 .lf-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 10%; right: 10%;
+    top: 0; left: 5%; right: 5%;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.20) 50%, transparent 100%);
     pointer-events: none;
 }
 
@@ -157,13 +153,13 @@
 
 .mock-badge {
     flex-shrink: 0;
-    background: rgba(167,139,250,0.18);
+    background: rgba(96,165,250,0.18);
     color: var(--accent-bright);
     font-size: 12px;
     font-weight: 700;
     padding: 4px 10px;
     border-radius: 20px;
-    border: 1px solid rgba(167,139,250,0.25);
+    border: 1px solid rgba(96,165,250,0.25);
 }
 
 .mock-badge--done {
@@ -186,7 +182,7 @@
 }
 
 .mock-window__header {
-    background: rgba(124,58,237,0.70);
+    background: rgba(37,99,235,0.70);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     padding: 11px 16px;
@@ -223,8 +219,8 @@
 
 /* ========== SR INFO BLOCK ========== */
 .lf-sr-info {
-    background: rgba(167,139,250,0.08);
-    border: 1px solid rgba(167,139,250,0.20);
+    background: rgba(96,165,250,0.08);
+    border: 1px solid rgba(96,165,250,0.20);
     border-radius: 14px;
     padding: 14px 16px;
     display: flex;
@@ -247,8 +243,8 @@
 }
 
 .lf-sr-chip--blue {
-    background: rgba(167,139,250,0.12);
-    border: 1px solid rgba(167,139,250,0.25);
+    background: rgba(96,165,250,0.12);
+    border: 1px solid rgba(96,165,250,0.25);
     color: var(--accent-bright);
 }
 
@@ -295,7 +291,7 @@
 .lf-sr-line {
     flex: 1;
     height: 2px;
-    background: linear-gradient(90deg, rgba(167,139,250,0.4), rgba(94,234,212,0.4));
+    background: linear-gradient(90deg, rgba(96,165,250,0.4), rgba(94,234,212,0.4));
     margin-top: 3px;
     min-width: 6px;
 }
@@ -439,8 +435,8 @@
 
 /* ========== DARK CARD (progress) ========== */
 .lf-card--dark {
-    background: linear-gradient(135deg, rgba(67,26,140,0.60) 0%, rgba(124,58,237,0.50) 100%);
-    border-color: rgba(167,139,250,0.22);
+    background: linear-gradient(135deg, rgba(20,50,140,0.60) 0%, rgba(37,99,235,0.50) 100%);
+    border-color: rgba(96,165,250,0.22);
 }
 
 .lf-dchar {
@@ -475,9 +471,9 @@
 
 .lf-card__btn--light {
     background: rgba(255,255,255,0.92);
-    color: #1a0a40;
+    color: #0a1635;
 }
-.lf-card__btn--light:hover { background: white; color: #1a0a40; }
+.lf-card__btn--light:hover { background: white; color: #0a1635; }
 
 /* ========== TOPICS ========== */
 .landing-topics {
@@ -659,10 +655,10 @@
 
 /* ========== OUTCOMES ("Что будет через месяц") ========== */
 .landing-outcomes {
-    background: linear-gradient(135deg, rgba(67,26,140,0.55) 0%, rgba(124,58,237,0.45) 100%);
+    background: linear-gradient(135deg, rgba(20,50,140,0.55) 0%, rgba(37,99,235,0.45) 100%);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid rgba(167,139,250,0.25);
+    border: 1px solid rgba(96,165,250,0.25);
     border-radius: 28px;
     padding: 48px 52px;
     margin-bottom: 72px;
@@ -768,7 +764,7 @@
     border-radius: 20px;
     object-fit: cover;
     object-position: center top;
-    border: 2px solid rgba(167,139,250,0.35);
+    border: 2px solid rgba(96,165,250,0.35);
     box-shadow: 0 12px 36px rgba(0,0,0,0.35);
     display: block;
 }
@@ -793,8 +789,8 @@
 
 .author-eyebrow {
     display: inline-block;
-    background: rgba(167,139,250,0.14);
-    border: 1px solid rgba(167,139,250,0.30);
+    background: rgba(96,165,250,0.14);
+    border: 1px solid rgba(96,165,250,0.30);
     color: var(--accent-bright);
     padding: 4px 14px;
     border-radius: 20px;
@@ -914,7 +910,7 @@
     width: 44px; height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(167,139,250,0.30);
+    border: 2px solid rgba(96,165,250,0.30);
 }
 
 .review-card__avatar-placeholder {
@@ -942,8 +938,8 @@
 
 /* CTA card in reviews */
 .review-card--cta {
-    background: linear-gradient(135deg, rgba(67,26,140,0.55) 0%, rgba(124,58,237,0.45) 100%);
-    border-color: rgba(167,139,250,0.25);
+    background: linear-gradient(135deg, rgba(20,50,140,0.55) 0%, rgba(37,99,235,0.45) 100%);
+    border-color: rgba(96,165,250,0.25);
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -955,7 +951,7 @@
     font-weight: 700;
     color: rgba(255,255,255,0.90);
     line-height: 1;
-    text-shadow: 0 0 20px rgba(167,139,250,0.7);
+    text-shadow: 0 0 20px rgba(96,165,250,0.7);
 }
 
 .review-card--cta .review-cta__pinyin { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
@@ -981,8 +977,6 @@
 
 .pricing-card {
     background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--glass-border);
     border-radius: 26px;
     padding: 32px 28px;
@@ -994,31 +988,19 @@
     transition: all 0.28s;
 }
 
-.pricing-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 15%; right: 15%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-}
-
 .pricing-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-hover);
-    border-color: var(--glass-border-hi);
 }
 
 .pricing-card--featured {
-    background: linear-gradient(145deg, rgba(67,26,140,0.60) 0%, rgba(124,58,237,0.50) 100%);
-    border-color: rgba(167,139,250,0.30);
+    background: linear-gradient(145deg, rgba(20,50,140,0.65) 0%, rgba(37,99,235,0.55) 100%);
+    border-color: rgba(96,165,250,0.28);
     transform: scale(1.03);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.20);
 }
 
-.pricing-card--featured:hover { transform: scale(1.03) translateY(-4px); }
-
-.pricing-card--featured::before {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
-}
+.pricing-card--featured:hover { transform: scale(1.03) translateY(-5px); }
 
 .pricing-badge {
     display: inline-block;
@@ -1130,8 +1112,8 @@
 }
 
 .platform-feature:hover {
-    background: rgba(167,139,250,0.10);
-    border-color: rgba(167,139,250,0.22);
+    background: rgba(96,165,250,0.10);
+    border-color: rgba(96,165,250,0.22);
     color: var(--text-primary);
 }
 
@@ -1196,7 +1178,7 @@
 }
 
 .faq-item.open {
-    border-color: rgba(167,139,250,0.30);
+    border-color: rgba(96,165,250,0.30);
     box-shadow: var(--shadow-hover);
 }
 
@@ -1228,8 +1210,8 @@
 
 .faq-item.open .faq-question__arrow {
     transform: rotate(180deg);
-    background: rgba(167,139,250,0.18);
-    border-color: rgba(167,139,250,0.30);
+    background: rgba(96,165,250,0.18);
+    border-color: rgba(96,165,250,0.30);
     color: var(--accent-bright);
 }
 
@@ -1252,10 +1234,10 @@
 
 /* ========== CTA SECTION ========== */
 .cta-section {
-    background: linear-gradient(135deg, rgba(67,26,140,0.55) 0%, rgba(124,58,237,0.50) 100%);
+    background: linear-gradient(135deg, rgba(20,50,140,0.55) 0%, rgba(37,99,235,0.50) 100%);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid rgba(167,139,250,0.28);
+    border: 1px solid rgba(96,165,250,0.28);
     text-align: center;
     padding: 52px 48px;
     border-radius: 32px;
@@ -1287,7 +1269,7 @@
 .mock-video__screen {
     position: relative;
     height: 100px;
-    background: linear-gradient(135deg, rgba(67,26,140,0.80), rgba(124,58,237,0.70));
+    background: linear-gradient(135deg, rgba(20,50,140,0.80), rgba(37,99,235,0.70));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1465,32 +1447,32 @@ html[data-theme="light"] .mock-lesson,
 html[data-theme="light"] .mock-fc,
 html[data-theme="light"] .mock-window__body {
     background: rgba(255, 255, 255, 0.72);
-    border-color: rgba(139, 92, 246, 0.18);
-    box-shadow: 0 4px 16px rgba(99,60,200,0.10), inset 0 1px 0 rgba(255,255,255,0.90);
+    border-color: rgba(59, 130, 246, 0.18);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.10), inset 0 1px 0 rgba(255,255,255,0.90);
 }
 
 html[data-theme="light"] .mock-dash__kpi-card {
     background: rgba(255, 255, 255, 0.70);
-    border-color: rgba(139, 92, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.15);
 }
 
 html[data-theme="light"] .author-ach {
-    background: rgba(139, 92, 246, 0.06);
-    border-color: rgba(139, 92, 246, 0.16);
+    background: rgba(59, 130, 246, 0.06);
+    border-color: rgba(59, 130, 246, 0.16);
 }
 
 html[data-theme="light"] .author-ach:hover {
-    background: rgba(139, 92, 246, 0.10);
+    background: rgba(59, 130, 246, 0.10);
 }
 
 html[data-theme="light"] .author-cred {
-    background: rgba(139, 92, 246, 0.06);
-    border-color: rgba(139, 92, 246, 0.16);
+    background: rgba(59, 130, 246, 0.06);
+    border-color: rgba(59, 130, 246, 0.16);
 }
 
 html[data-theme="light"] .lf-sr-info {
-    background: rgba(124, 58, 237, 0.06);
-    border-color: rgba(124, 58, 237, 0.18);
+    background: rgba(37, 99, 235, 0.06);
+    border-color: rgba(37, 99, 235, 0.18);
 }
 
 html[data-theme="light"] .lf-adapt-info {
@@ -1500,7 +1482,7 @@ html[data-theme="light"] .lf-adapt-info {
 
 html[data-theme="light"] .faq-item {
     background: rgba(255, 255, 255, 0.65);
-    border-color: rgba(139, 92, 246, 0.16);
+    border-color: rgba(59, 130, 246, 0.16);
 }
 
 html[data-theme="light"] .faq-item__question {
@@ -1513,7 +1495,7 @@ html[data-theme="light"] .faq-item__answer {
 
 html[data-theme="light"] .author-section::before,
 html[data-theme="light"] .landing-outcomes::before {
-    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.25), transparent);
+    background: linear-gradient(90deg, transparent, rgba(37,99,235,0.25), transparent);
 }
 
 html[data-theme="light"] .lf-card--dark .mock-dash__kpi-card {

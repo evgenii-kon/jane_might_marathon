@@ -1,0 +1,291 @@
+{#
+  Параметры:
+    activity_data  — dict { "YYYY-MM-DD": count }
+    streak         — int, текущая серия дней
+    total_days     — int, всего активных дней
+    today_date     — str "YYYY-MM-DD"
+#}
+
+<style>
+.activity-section {
+    margin-top: 2rem;
+}
+
+.activity-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary, #f0f0f0);
+    margin-bottom: 1rem;
+}
+
+.cal-card {
+    background: var(--card-bg, #16213e);
+    border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem 1rem;
+    max-width: 340px;
+}
+
+/* Header: prev arrow / month name / next arrow */
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.cal-nav {
+    background: none;
+    border: none;
+    color: var(--text-muted, #888);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    line-height: 1;
+    transition: color 0.15s, background 0.15s;
+}
+
+.cal-nav:hover {
+    color: var(--text-primary, #f0f0f0);
+    background: rgba(255,255,255,0.06);
+}
+
+.cal-month-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary, #f0f0f0);
+    text-transform: capitalize;
+}
+
+/* Day-of-week headers */
+.cal-dow-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 4px;
+}
+
+.cal-dow {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted, #888);
+    padding-bottom: 4px;
+    user-select: none;
+}
+
+/* Day grid */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.cal-day {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    color: var(--text-secondary, #ccc);
+    position: relative;
+    cursor: default;
+    transition: transform 0.1s;
+}
+
+.cal-day:hover { transform: scale(1.15); z-index: 2; }
+
+.cal-day.empty { background: transparent; }
+
+.cal-day.today {
+    font-weight: 700;
+}
+
+/* Activity levels */
+.cal-day[data-level="0"] { background: transparent; color: var(--text-muted, #666); }
+.cal-day[data-level="1"] { background: #b5f7c7; color: #1a3d26; }
+.cal-day[data-level="2"] { background: #6aec8d; color: #0d2e1a; }
+.cal-day[data-level="3"] { background: #19c848; color: #061a0e; font-weight: 600; }
+.cal-day[data-level="4"] { background: #11782d; color: #d4f5e0; font-weight: 600; }
+
+/* Tooltip */
+.cal-day::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--tooltip-bg, #0d0d1a);
+    color: var(--text-primary, #f0f0f0);
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 20;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.cal-day:not(.empty):hover::after { opacity: 1; }
+
+/* Stats */
+.activity-stats {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.activity-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.88rem;
+    color: var(--text-secondary, #ccc);
+}
+
+.activity-stat strong { color: var(--text-primary, #f0f0f0); }
+
+/* Light theme */
+[data-theme="light"] .cal-card {
+    background: #f8f8f8;
+    border-color: rgba(0,0,0,0.1);
+}
+[data-theme="light"] .cal-day[data-level="0"] { background: transparent; color: #aaa; }
+[data-theme="light"] .cal-day::after { background: #333; color: #fff; }
+</style>
+
+<section class="activity-section">
+    <h2>Активность</h2>
+
+    <div class="cal-card">
+        <div class="cal-header">
+            <button class="cal-nav" id="cal-prev">&#8592;</button>
+            <span class="cal-month-label" id="cal-month-label"></span>
+            <button class="cal-nav" id="cal-next">&#8594;</button>
+        </div>
+
+        <div class="cal-dow-row">
+            <div class="cal-dow">Пн</div>
+            <div class="cal-dow">Вт</div>
+            <div class="cal-dow">Ср</div>
+            <div class="cal-dow">Чт</div>
+            <div class="cal-dow">Пт</div>
+            <div class="cal-dow">Сб</div>
+            <div class="cal-dow">Вс</div>
+        </div>
+
+        <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <div class="activity-stats">
+        <div class="activity-stat">
+            <span>🔥</span>
+            <span>Серия: <strong>{{ streak }} {{ 'день' if streak % 10 == 1 and streak % 100 != 11 else ('дня' if 2 <= streak % 10 <= 4 and not 11 <= streak % 100 <= 14 else 'дней') }}</strong></span>
+        </div>
+        <div class="activity-stat">
+            <span>📅</span>
+            <span>Всего активных дней: <strong>{{ total_days }}</strong></span>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    const activityData = {{ activity_data | tojson }};
+    const todayStr = "{{ today_date }}";
+    const today = new Date(todayStr + "T00:00:00");
+
+    const MONTHS_RU = [
+        "Январь","Февраль","Март","Апрель","Май","Июнь",
+        "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"
+    ];
+
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth();
+
+    function dateStr(y, m, d) {
+        return `${y}-${String(m + 1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    }
+
+    function level(count) {
+        if (count > 7)  return 4;
+        if (count >= 4) return 3;
+        if (count >= 3) return 2;
+        if (count >= 1) return 1;
+        return 0;
+    }
+
+    function render() {
+        const grid = document.getElementById("cal-grid");
+        const label = document.getElementById("cal-month-label");
+
+        label.textContent = `${MONTHS_RU[viewMonth]} ${viewYear}`;
+        grid.innerHTML = "";
+
+        // Day of week of the 1st (0=Sun..6=Sat → convert to Mon-based 0..6)
+        const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+        const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+
+        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+        // Empty cells before the 1st
+        for (let i = 0; i < startOffset; i++) {
+            const el = document.createElement("div");
+            el.className = "cal-day empty";
+            grid.appendChild(el);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const ds = dateStr(viewYear, viewMonth, d);
+            const count = activityData[ds] || 0;
+            const lvl = level(count);
+
+            const el = document.createElement("div");
+            el.className = "cal-day";
+            el.dataset.level = lvl;
+            el.textContent = d;
+
+            if (ds === todayStr) el.classList.add("today");
+
+            const dayDate = new Date(viewYear, viewMonth, d);
+            const dayNames = ["вс","пн","вт","ср","чт","пт","сб"];
+            const tip = count > 0
+                ? `${d} ${MONTHS_RU[viewMonth].toLowerCase()}: ${count} действий`
+                : `${d} ${MONTHS_RU[viewMonth].toLowerCase()}`;
+            el.dataset.tip = tip;
+
+            // Future days — no level, muted
+            if (dayDate > today) {
+                el.dataset.level = 0;
+                el.style.opacity = "0.3";
+            }
+
+            grid.appendChild(el);
+        }
+
+        // Disable next if viewing current month
+        const isCurrentMonth = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+        document.getElementById("cal-next").style.opacity = isCurrentMonth ? "0.3" : "1";
+        document.getElementById("cal-next").disabled = isCurrentMonth;
+    }
+
+    document.getElementById("cal-prev").addEventListener("click", () => {
+        viewMonth--;
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        render();
+    });
+
+    document.getElementById("cal-next").addEventListener("click", () => {
+        const isCurrentMonth = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+        if (isCurrentMonth) return;
+        viewMonth++;
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        render();
+    });
+
+    render();
+})();
+</script>

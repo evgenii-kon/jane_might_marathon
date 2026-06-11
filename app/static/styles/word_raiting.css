@@ -17,7 +17,7 @@
    HEADER
    ════════════════════════════════════════════════════════════ */
 .rp-header {
-    background: linear-gradient(135deg, #0f0720 0%, #7c3aed 60%, #3b0764 100%);
+    background: linear-gradient(135deg, #020d1e 0%, #2563eb 60%, #1e3a8a 100%);
     border-radius: 26px;
     padding: 36px 40px 32px;
     position: relative;
@@ -186,7 +186,7 @@
     color: var(--text-heading);
 }
 .filter-btn.active {
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
     border-color: transparent;
     color: #ffffff;
     box-shadow: 0 4px 14px rgba(249,115,22,.3);
@@ -276,7 +276,7 @@
 
 .hanzi-pinyin {
     font-size: 12px;
-    color: #7c3aed;
+    color: #2563eb;
     font-weight: 500;
 }
 
@@ -326,7 +326,7 @@
 }
 .mastery-segs--3 .ms:nth-child(-n+3),
 .mastery-segs--4 .ms:nth-child(-n+4) {
-    background: #a78bfa;   /* orange — learning */
+    background: #60a5fa;   /* orange — learning */
 }
 .mastery-segs--5 .ms {
     background: #10b981;   /* green — mastered */
@@ -342,7 +342,7 @@
 .mastery-label--1,
 .mastery-label--2 { color: #d97706; }
 .mastery-label--3,
-.mastery-label--4 { color: #a78bfa; }
+.mastery-label--4 { color: #60a5fa; }
 .mastery-label--5 { color: #10b981; }
 
 /* Stats */
@@ -395,7 +395,7 @@
     background: linear-gradient(135deg, rgba(249,115,22,.08), rgba(234,88,12,.05));
     border: 1px solid rgba(249,115,22,.18);
     border-radius: 100px;
-    color: #7c3aed;
+    color: #2563eb;
     font-size: 12px;
     font-weight: 600;
     text-decoration: none;
@@ -403,7 +403,7 @@
     white-space: nowrap;
 }
 .btn-repeat:hover {
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
     border-color: transparent;
     color: #ffffff;
     box-shadow: 0 4px 14px rgba(249,115,22,.28);
