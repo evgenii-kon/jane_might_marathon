@@ -15,7 +15,7 @@
         })();
     </script>
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}{% if user and (request.url.path.startswith('/dashboard') or request.url.path.startswith('/auth/me') or request.url.path.startswith('/word-trainer') or request.url.path.startswith('/idioms') or request.url.path.startswith('/articles') or request.url.path.startswith('/about')) %} page-dashboard{% endif %}">
     <header class="header">
         <div class="header-container">
             <div class="logo-area">
@@ -37,18 +37,9 @@
                     <a href="/dashboard">Главная</a>
                     <a href="/auth/me">Профиль</a>
                     
-                    <!-- Выпадающее меню "Дополнительно" - открывается при наведении -->
-                    <div class="dropdown" id="extraDropdown">
-                        <button class="dropdown-btn">
-                            Дополнительно
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a href="/about">📖 О проекте</a>
-                            <a href="/articles">📝 Статьи</a>
-                            <a href="/idioms">成语 Идиомы</a>
-                        </div>
-                    </div>
+                    <a href="/about">О проекте</a>
+                    <a href="/articles">Статьи</a>
+                    <a href="/idioms">Идиомы</a>
                     
                     {% if user.is_admin %}
                         <a href="/admin" class="admin-link">Админка</a>

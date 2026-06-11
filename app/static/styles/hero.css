@@ -1,3 +1,35 @@
+/* ========== HERO ENTRANCE ANIMATIONS ========== */
+@keyframes heroContentIn {
+    from { opacity: 0; transform: translateY(36px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroPhotoIn {
+    from { opacity: 0; transform: translateX(32px) scale(0.97); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.landing-hero__content {
+    animation: heroContentIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.landing-hero__photo {
+    opacity: 0;
+    animation: heroPhotoIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
+}
+
+
+/* Ticker fades in after hero — must keep translateX(-50%) to stay full-width */
+@keyframes tickerFadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(28px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.landing-ticker {
+    animation: tickerFadeIn 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.6s both;
+}
+
+
 /* ========== LANDING HERO — liquid glass ========== */
 .landing-hero {
     position: relative;

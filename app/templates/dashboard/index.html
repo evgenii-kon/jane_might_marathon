@@ -11,28 +11,26 @@
         <div class="welcome-deco welcome-deco--2"></div>
         <div class="welcome-deco welcome-deco--3"></div>
 
+        <!-- Верх: приветствие -->
         <div class="welcome-inner">
-            <div class="welcome-left">
-                <div class="welcome-avatar">{{ user.name[0]|upper }}</div>
-                <div class="welcome-meta">
-                    <h1 class="welcome-title">С возвращением, {{ user.name }}!</h1>
-                    <div class="welcome-chips">
-                        <span class="welcome-chip">📅 День {{ days_after_start }}</span>
-                        <span class="welcome-chip welcome-chip--muted">Китайский ждёт тебя</span>
-                    </div>
+            <div class="welcome-avatar">{{ user.name[0]|upper }}</div>
+            <div class="welcome-meta">
+                <h1 class="welcome-title">С возвращением, {{ user.name }}!</h1>
+                <div class="welcome-chips">
+                    <span class="welcome-chip">📅 День {{ days_after_start }}</span>
+                    <span class="welcome-chip welcome-chip--muted">Китайский ждёт тебя</span>
                 </div>
             </div>
+        </div>
 
-            <div class="welcome-progress-box">
-                <div class="wpr-header">
-                    <span class="wpr-label">Прогресс курса</span>
-                    <span class="wpr-fraction">{{ total_completed }}&thinsp;/&thinsp;{{ total_lessons }} уроков</span>
-                </div>
-                <div class="progress-bar-large">
-                    <div class="progress-fill" style="width: {{ progress_percent|int }}%">
-                        <span class="progress-percent">{{ progress_percent }}%</span>
-                    </div>
-                </div>
+        <!-- Низ: прогресс во всю ширину -->
+        <div class="welcome-progress-full">
+            <div class="wpr-header">
+                <span class="wpr-label">Прогресс курса</span>
+                <span class="wpr-fraction">{{ total_completed }}&thinsp;/&thinsp;{{ total_lessons }} уроков &nbsp;·&nbsp; {{ progress_percent }}%</span>
+            </div>
+            <div class="progress-bar-large">
+                <div class="progress-fill" style="width: {{ progress_percent|int }}%"></div>
             </div>
         </div>
     </div>
