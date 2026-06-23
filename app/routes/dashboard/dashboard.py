@@ -12,7 +12,8 @@ from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.word_trainer_service import WordTrainerService
 from app.services.user_week_progress_service import UserWeekProgressService
 from app.services.user_activity_service import UserActivityService
-from app.repositories.word_repository import WordRepository
+from app.services.word_of_day_service import get_word_of_day
+from app.redis_client import get_redis
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 templates = Jinja2Templates(directory="app/templates")
@@ -104,8 +105,7 @@ async def get_dashboard(
     total_active_days = await activity_service.get_total_active_days(current_user.id)
 
     # Слово дня
-    word_repo = WordRepository(db)
-    word_of_day = await word_repo.get_random()
+    word_of_day = await get_word_of_day(db, get_redis())
 
     return templates.TemplateResponse(
         "dashboard/index.html",

@@ -76,7 +76,7 @@
     flex-direction: row;
 }
 
-/* Left column: big hanzi running bottom → top */
+/* Left column: big hanzi, always horizontal */
 .wod-hanzi-col {
     display: flex;
     align-items: center;
@@ -88,14 +88,15 @@
 }
 
 .wod-hanzi {
-    font-size: 7.7rem;
+    font-size: clamp(2.6rem, 8vw, 7.7rem);
     font-weight: 700;
     line-height: 1;
     color: var(--text-heading);
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
+    writing-mode: horizontal-tb;
     letter-spacing: 0.04em;
     opacity: 0.85;
+    white-space: nowrap;
+    text-align: center;
 }
 
 /* Right column: all info */

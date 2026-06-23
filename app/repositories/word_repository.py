@@ -17,6 +17,10 @@ class WordRepository:
         result = await self.db.execute(select(Word))
         return result.scalars().all()
 
+    async def get_all_ids(self) -> List[int]:
+        result = await self.db.execute(select(Word.id))
+        return result.scalars().all()
+
     async def get_by_id(self, word_id: int) -> Optional[Word]:
         result = await self.db.execute(select(Word).where(Word.id == word_id))
         return result.scalar_one_or_none()

@@ -113,31 +113,21 @@ async def check_answer(
 
     is_correct = user_answer.lower().strip() in parts
 
-    if mode == "daily":
-        # Обновляем прогресс только для ежедневного режима
-        progress = await service.progress_repo.update_mastery(
-            current_user.id, word_id, is_correct
-        )
-        if is_correct:
-            activity_service = UserActivityService(db)
-            await activity_service.record_activity(current_user.id)
-        return {
-            "is_correct": is_correct,
-            "translation": word.translation,
-            "transcription": word.transcription,
-            "example": word.example_sentence,
-            "new_mastery_level": progress.mastery_level,
-            "next_review_days": UserWordProgressRepository.MASTERY_INTERVALS.get(
-                progress.mastery_level, 1
-            ),
-        }
-    else:
-        # Для режима 'all' просто возвращаем результат
-        return {
-            "is_correct": is_correct,
-            "translation": word.translation,
-            "transcription": word.transcription,
-            "example": word.example_sentence,
-            "new_mastery_level": None,
-            "next_review_days": None,
-        }
+    progress = await service.progress_repo.update_mastery(
+        current_user.id, word_id, is_correct
+    )
+
+    if mode == "daily" and is_correct:
+        activity_service = UserActivityService(db)
+        await activity_service.record_activity(current_user.id)
+
+    return {
+        "is_correct": is_correct,
+        "translation": word.translation,
+        "transcription": word.transcription,
+        "example": word.example_sentence,
+        "new_mastery_level": progress.mastery_level,
+        "next_review_days": UserWordProgressRepository.MASTERY_INTERVALS.get(
+            progress.mastery_level, 1
+        ),
+    }

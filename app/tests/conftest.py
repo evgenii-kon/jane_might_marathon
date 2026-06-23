@@ -17,7 +17,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.pool import NullPool
 from dotenv import load_dotenv
 import fakeredis.aioredis
-import app.redis_client as redis_module
+from app import redis_client as redis_module
 
 @pytest_asyncio.fixture(autouse=True)
 async def fake_redis():

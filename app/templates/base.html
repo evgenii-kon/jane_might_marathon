@@ -15,7 +15,7 @@
         })();
     </script>
 </head>
-<body class="{% block body_class %}{% endblock %}{% if user and (request.url.path.startswith('/dashboard') or request.url.path.startswith('/auth/me') or request.url.path.startswith('/word-trainer') or request.url.path.startswith('/idioms') or request.url.path.startswith('/articles') or request.url.path.startswith('/about')) %} page-dashboard{% endif %}">
+<body class="{% block body_class %}{% endblock %}">
     <header class="header">
         <div class="header-container">
             <div class="logo-area">
