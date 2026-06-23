@@ -338,8 +338,34 @@
 }
 
 @media (max-width: 640px) {
-    .contacts-hero { padding: 36px 24px; }
-    .contacts-hero-title { font-size: 28px; }
-    .contacts-grid { grid-template-columns: 1fr; }
-    .contacts-faq { padding: 24px 20px; }
+    .contacts-container { padding: 0 10px 24px; }
+    .contacts-hero { padding: 18px 16px; border-radius: 18px; margin-bottom: 14px; }
+    .contacts-hero-title { font-size: 19px; margin-bottom: 6px; }
+    .contacts-hero-subtitle { font-size: 12.5px; }
+    .contacts-faq { padding: 16px 14px; border-radius: 18px; }
+    .contacts-faq-title { font-size: 16px; margin-bottom: 12px; }
+    .faq-item { padding: 12px 0; }
+    .faq-q { font-size: 12.5px; margin-bottom: 5px; }
+    .faq-a { font-size: 11.5px; }
+
+    /* Keep the 2-column composition; switch each card to a centered
+       stack since icon + text side-by-side has no room left at ~160px */
+    .contacts-grid { gap: 8px; margin-bottom: 16px; }
+    .contact-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 10px;
+        gap: 6px;
+        border-radius: 14px;
+    }
+    .contact-card-icon { width: 32px; height: 32px; border-radius: 9px; }
+    .contact-card-icon svg { width: 18px; height: 18px; }
+    .contact-card-label { font-size: 9.5px; }
+    .contact-card-value {
+        font-size: 12px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+    .contact-card-desc { display: none; }
+    .contact-card-arrow { display: none; }
 }

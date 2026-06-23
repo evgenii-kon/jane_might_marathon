@@ -36,6 +36,7 @@
     margin-top: 0;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .activity-row .activity-section .cal-card {
@@ -73,18 +74,19 @@
     box-shadow: var(--shadow-card);
     overflow: hidden;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
-/* Left column: big hanzi, always horizontal */
+/* Top section: big hanzi, always horizontal */
 .wod-hanzi-col {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 40%;
-    padding: 20px;
+    flex: 0 0 auto;
+    padding: 18px 16px;
     background: rgba(96, 165, 250, 0.06);
-    border-right: 1px solid var(--border-color);
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .wod-hanzi {
@@ -99,7 +101,7 @@
     text-align: center;
 }
 
-/* Right column: all info */
+/* Bottom section: all info */
 .wod-info {
     flex: 1;
     min-width: 0;
@@ -168,15 +170,50 @@
     background: rgba(37,99,235,0.06);
 }
 
-/* Responsive: stack on small screens */
+/* Narrow column (mobile, side-by-side with the calendar): the hanzi now
+   sits in its own full-width row on top of the card, so it gets the
+   whole column width instead of a squeezed 38% — just trim padding/fonts. */
+@media (max-width: 680px) {
+    .wod-card {
+        border-radius: 16px;
+    }
+    .wod-hanzi-col {
+        padding: 10px 8px;
+    }
+    .wod-hanzi {
+        font-size: clamp(1.6rem, 9vw, 7.7rem);
+        letter-spacing: 0;
+    }
+    .wod-info {
+        padding: 10px 12px;
+        gap: 4px;
+    }
+    .wod-pinyin { font-size: 0.78rem; }
+    .wod-translation { font-size: 0.88rem; }
+    .wod-pos {
+        font-size: 0.66rem;
+        padding: 1px 7px;
+    }
+    /* Example sentence dropped at this width — keeps the card from growing
+       much taller than its calendar neighbour; the headword + translation
+       carry the "word of day" purpose on their own here. */
+    .wod-example {
+        display: none;
+    }
+}
+
+/* Responsive: stay side-by-side, scale the two columns down instead of stacking */
 @media (max-width: 680px) {
     .activity-row {
-        flex-direction: column;
+        gap: 10px;
     }
     .activity-row .activity-section,
     .wod-section {
-        width: 100%;
-        max-width: 100%;
+        flex: 1 1 0;
+        flex-shrink: 1;
+        width: auto;
+        max-width: none;
+        min-width: 140px;
     }
 }
 
@@ -546,8 +583,11 @@ html[data-theme="dark"] .week-card--done {
     flex-shrink: 0;
 }
 
-.week-title {
-    font-size: 15px;
+/* Scoped to .week-card: week.css defines an unrelated, unscoped .week-title
+   for the week-detail page header and loads after this file, so it was
+   silently winning the cascade here without this qualifier. */
+.week-card .week-title {
+    font-size: 14px;
     font-weight: 600;
     color: var(--text-heading);
     line-height: 1.4;
@@ -580,7 +620,9 @@ html[data-theme="dark"] .week-card--done {
     align-items: center;
 }
 
-.week-lessons-count {
+/* Scoped to .week-card: week.css defines an unrelated, unscoped
+   .week-lessons-count (pill badge) and loads after this file. */
+.week-card .week-lessons-count {
     font-size: 12px;
     color: var(--text-secondary);
 }
@@ -722,6 +764,18 @@ html[data-theme="dark"] .feedback-label {
     .feedback-icon   { width: 52px; height: 52px; font-size: 30px; }
 }
 
+/* Compact rebuild matching the exercises-page scale */
+@media (max-width: 600px) {
+    .feedback-form    { padding: 14px; border-radius: 18px; }
+    .feedback-header  { gap: 10px; margin-bottom: 14px; }
+    .feedback-icon    { width: 40px; height: 40px; font-size: 22px; border-radius: 14px; }
+    .feedback-header h2 { font-size: 16px; }
+    .feedback-header p  { font-size: 11.5px; margin-top: 3px; }
+    .feedback-label    { font-size: 12.5px; margin-bottom: 8px; }
+    .feedback-textarea { padding: 10px 12px; font-size: 13px; border-radius: 14px; }
+    .feedback-actions  { gap: 8px; margin-top: 14px; }
+}
+
 
 /* ════════════════════════════════════════════════════════════
    GLOBAL BUTTON STYLES  (compact dashboard variants)
@@ -786,15 +840,62 @@ html[data-theme="dark"] .feedback-label {
 }
 
 @media (max-width: 720px) {
-    .actions-grid { grid-template-columns: 1fr; gap: 12px; }
-    .weeks-grid   { grid-template-columns: 1fr; }
+    /* Keep the 2-column composition on mobile — scale cards down, don't stack them */
+    .actions-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .weeks-grid   { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
 
 @media (max-width: 600px) {
-    .dashboard-container { padding: 20px 14px 40px; gap: 14px; }
-    .welcome-card        { padding: 26px 22px; }
+    .dashboard-container { padding: 14px 7px 24px; gap: 10px; }
+
+    /* Welcome card: same compact scale as the exercises page rebuild */
+    .welcome-card        { padding: 16px 14px; border-radius: 18px; }
     .welcome-avatar      { display: none; }
-    .welcome-title       { font-size: 21px !important; }
-    .weeks-section       { padding: 22px 18px; }
+    .welcome-inner       { margin-bottom: 14px; }
+    .welcome-title       { font-size: 17px !important; margin-bottom: 6px !important; }
+    .welcome-chip        { font-size: 11px; padding: 3px 10px; }
+    .welcome-progress-full { padding-top: 12px; }
+    .wpr-header          { margin-bottom: 6px; }
+    .wpr-label, .wpr-fraction { font-size: 11px; }
+    .welcome-progress-full .progress-bar-large { height: 7px; }
+
+    .wod-section h2,
+    .activity-section h2 { font-size: 0.95rem; margin-bottom: 0.6rem; }
+
+    .weeks-section       { padding: 14px 12px; border-radius: 18px; }
+    .section-header      { margin-bottom: 12px; padding-bottom: 12px; }
+    .section-title        { font-size: 16px; }
+    .section-subtitle     { font-size: 11px; }
+    .weeks-badge          { font-size: 11px; padding: 4px 10px; }
     .action-body p       { display: none; }
+
+    /* Action cards: shrink to fit two per row at ~165px each */
+    .action-card {
+        padding: 12px 12px 12px 14px;
+        gap: 10px;
+        border-radius: 16px;
+    }
+    .action-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 17px;
+    }
+    .action-icon--img img { width: 20px; height: 20px; }
+    .action-body h3 {
+        font-size: 12.5px;
+        line-height: 1.3;
+        white-space: normal;
+    }
+    .action-arrow { display: none; }
+
+    /* Week cards: shrink to fit two per row at ~165px each */
+    .week-card {
+        padding: 14px 14px;
+        gap: 8px;
+        border-radius: 14px;
+    }
+    .week-card .week-title { font-size: 13px; }
+    .week-num   { font-size: 9.5px; }
+    .week-cta   { font-size: 12px; }
 }

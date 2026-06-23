@@ -440,7 +440,7 @@
 }
 
 @media (max-width: 680px) {
-    .rp-page { padding: 0 14px 40px; }
+    .rp-page { padding: 0 7px 24px; gap: 14px; }
 
     .rp-stats { flex-wrap: wrap; }
     .rp-stat  { flex: 1 0 40%; }
@@ -460,8 +460,32 @@
     .wr-action  { width: auto; order: 4; margin-left: auto; }
 }
 
+/* Compact rebuild matching the exercises-page scale */
+@media (max-width: 600px) {
+    .rp-header { padding: 16px 14px 14px; border-radius: 18px; }
+    .rp-back   { font-size: 11px; padding: 4px 10px; }
+    .rp-subtitle { font-size: 11px; }
+    .rp-stats  { border-radius: 14px; }
+    .rp-stat   { padding: 10px 8px; }
+    .rp-stat__val { font-size: 18px; }
+    .rp-stat__lbl { font-size: 9.5px; }
+    .rp-stat-divider { height: 26px; }
+
+    .rp-main   { border-radius: 18px; }
+    .rp-filters { padding: 12px 12px 0; gap: 6px; }
+    .filter-btn { padding: 6px 11px; font-size: 11.5px; }
+    .filter-count { font-size: 10px; padding: 1px 6px; }
+
+    .word-row  { padding: 10px; gap: 8px; border-radius: 12px; }
+    .wr-hanzi  { width: 64px; }
+    .hanzi-char { font-size: 19px; }
+    .hanzi-pinyin { font-size: 10px; }
+    .wr-translation { font-size: 12.5px; }
+    .btn-repeat { padding: 5px 11px; font-size: 10.5px; }
+}
+
 @media (max-width: 480px) {
-    .rp-title  { font-size: 22px !important; }
-    .rp-header { padding: 22px 18px; }
+    .rp-title  { font-size: 18px !important; }
+    .rp-header { padding: 14px 12px; }
     .filter-btn span.filter-count { display: none; }
 }

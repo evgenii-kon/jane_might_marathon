@@ -76,9 +76,14 @@
     display: flex;
     justify-content: center;
     margin: -24px 0 2.5rem;
+    padding: 0 8px;
 }
 .idiom-filter-track {
     display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+    box-sizing: border-box;
     background: var(--bg-card, #ffffff);
     border-radius: 18px;
     padding: 5px;
@@ -104,6 +109,18 @@
     letter-spacing: 0.01em;
     transition: background .18s ease, color .18s ease, box-shadow .18s ease;
     white-space: nowrap;
+}
+
+/* 4 filter buttons at desktop padding (9px/22px) overflowed mobile
+   screens — flex-wrap above guarantees it can never spill past the
+   edge (wraps to 2+2 instead), this just shrinks them so it rarely has to. */
+@media (max-width: 480px) {
+    .idiom-filter-wrap { margin: -16px 0 1.5rem; }
+    .idiom-filter-btn {
+        padding: 7px 12px;
+        font-size: 11.5px;
+        gap: 5px;
+    }
 }
 .idiom-filter-btn:hover:not(.active) {
     background: var(--bg-card-alt, #f1f5f9);

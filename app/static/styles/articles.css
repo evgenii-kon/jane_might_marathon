@@ -117,11 +117,6 @@
 }
 
 /* ========== ARTICLE DETAIL PAGE ========== */
-.article-detail-page {
-    background: var(--bg-page);
-    min-height: calc(100vh - 200px);
-}
-
 .article-detail-container {
     max-width: 800px;
     margin: 0 auto;
@@ -249,7 +244,7 @@
 
 @media (max-width: 768px) {
     .articles-page {
-        padding: 20px;
+        padding: 20px 10px;
     }
     
     .articles-header h1 {
@@ -268,36 +263,99 @@
     .article-content {
         padding: 20px;
     }
-    
+
     .article-title {
         font-size: 20px;
     }
-    
+
+    .article-meta {
+        font-size: 12px;
+    }
+
+    .article-description {
+        font-size: 14px;
+    }
+
     .article-detail-container {
-        padding: 20px;
+        padding: 20px 10px;
     }
-    
+
     .article-header h1 {
-        font-size: 28px;
+        font-size: 26px;
     }
-    
+
     .article-description-lead {
-        font-size: 16px;
+        font-size: 15px;
+        padding: 14px 0;
     }
-    
+
     .article-content-body {
-        padding: 24px;
+        padding: 20px 18px;
+        font-size: 14px;
+        line-height: 1.7;
     }
-    
+
     .article-content-body h2 {
-        font-size: 22px;
+        font-size: 20px;
+        margin: 24px 0 12px;
     }
-    
+
+    .article-content-body h3 {
+        font-size: 17px;
+        margin: 18px 0 10px;
+    }
+
+    .article-content-body blockquote {
+        font-size: 13.5px;
+    }
+
     .article-footer-nav {
         flex-direction: column;
     }
-    
+
     .article-footer-nav a {
         text-align: center;
     }
+}
+
+/* Compact rebuild matching the exercises-page scale */
+@media (max-width: 600px) {
+    .articles-page { padding: 14px 10px; }
+    .articles-header { margin-bottom: 24px; }
+    .articles-header h1 { font-size: 22px; margin-bottom: 8px; }
+    .articles-header p  { font-size: 13px; }
+
+    .articles-grid { gap: 16px; }
+    .article-image { height: 150px; }
+    .article-content { padding: 14px; }
+    .article-title  { font-size: 16px; margin-bottom: 6px; }
+    .article-meta   { font-size: 10.5px; margin-bottom: 8px; }
+    .article-description { font-size: 12.5px; margin-bottom: 12px; }
+    .read-more { font-size: 12.5px; }
+
+    .article-detail-container { padding: 14px 10px; }
+    .article-nav { margin-bottom: 14px; }
+    .article-header { margin-bottom: 16px; }
+    .article-header h1 { font-size: 18px; margin-bottom: 8px; }
+    .article-description-lead { font-size: 12.5px; padding: 10px 0; }
+
+    .article-images { margin: 16px 0; gap: 12px; }
+
+    .article-content-body {
+        padding: 14px 12px;
+        font-size: 13px;
+        line-height: 1.6;
+        border-radius: 16px;
+    }
+    .article-content-body h2 { font-size: 16px; margin: 14px 0 8px; }
+    .article-content-body h3 { font-size: 13.5px; margin: 12px 0 6px; }
+    .article-content-body p  { margin-bottom: 10px; }
+    .article-content-body ul,
+    .article-content-body ol { margin: 8px 0 10px 18px; }
+    .article-content-body li { margin-bottom: 5px; }
+    .article-content-body blockquote { font-size: 12px; margin: 12px 0; padding-left: 12px; }
+
+    .article-footer-nav { margin-top: 20px; gap: 8px; }
+    .article-footer-nav .btn-secondary,
+    .article-footer-nav .btn-primary { padding: 9px 18px; font-size: 12.5px; }
 }

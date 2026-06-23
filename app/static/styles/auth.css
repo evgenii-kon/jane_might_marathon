@@ -114,3 +114,26 @@
     gap: 12px;
     margin-top: 24px;
 }
+
+/* Compact rebuild matching the exercises-page scale.
+   .auth-card padding/.auth-header h1 live in responsive.css (max-width:
+   768px) — only what isn't already covered there is added here. */
+@media (max-width: 600px) {
+    .auth-container { padding: 16px 10px; }
+
+    .auth-error,
+    .auth-success {
+        padding: 9px 12px;
+        margin-bottom: 14px;
+        font-size: 12.5px;
+    }
+
+    .auth-form .form-group { margin-bottom: 12px; }
+    .auth-form label { font-size: 12.5px; margin-bottom: 5px; }
+    .auth-form input { padding: 9px 12px; font-size: 14px; }
+    .auth-form small { font-size: 10.5px; margin-top: 4px; }
+
+    .auth-footer { margin-top: 14px; padding-top: 14px; font-size: 12.5px; }
+
+    .logout-actions { gap: 8px; margin-top: 14px; }
+}

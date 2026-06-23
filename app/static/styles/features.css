@@ -1461,6 +1461,9 @@
     .platform-features { grid-template-columns: repeat(2, 1fr); }
     .reviews-grid     { grid-template-columns: repeat(2, 1fr); }
     .landing-calm__cards { grid-template-columns: repeat(2, 1fr); }
+    /* outcomes-list / fears__quotes hold full sentences (60–160 chars) —
+       a checklist/quote feed reads better as one column than as illegible
+       half-width slivers, so these stay single-column down from here. */
     .outcomes-list    { grid-template-columns: 1fr; }
     .nav-landing      { display: none; }
     .landing-fears__quotes { grid-template-columns: 1fr; }
@@ -1533,10 +1536,30 @@ html[data-theme="light"] .lf-card--dark .mock-dash__kpi-card {
     .lf-grid           { grid-template-columns: 1fr; }
     .lf-card--wide     { grid-column: span 1; }
     .landing-topics    { grid-template-columns: 1fr; }
+    /* Pricing cards each carry a price + 5-6 line feature checklist + CTA —
+       unreadable at half width on a 360-390px phone, so this grid is the
+       documented exception to the 2-column rule (req. 4). */
     .pricing-grid      { grid-template-columns: 1fr; }
     .platform-features { grid-template-columns: repeat(2, 1fr); }
-    .reviews-grid      { grid-template-columns: 1fr; }
-    .landing-calm__cards { grid-template-columns: 1fr; }
+    /* Keep the 3→2+1 composition instead of stacking to one column */
+    .reviews-grid      { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .landing-calm__cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .review-card {
+        padding: 14px 12px;
+        gap: 8px;
+    }
+    .review-card__avatar,
+    .review-card__avatar-placeholder { width: 30px; height: 30px; font-size: 13px; }
+    .review-card__name   { font-size: 12px; }
+    .review-card__handle { font-size: 10px; }
+    .review-card__text   { font-size: 11.5px; line-height: 1.45; }
+    .review-card--cta .review-cta__char  { font-size: 34px; }
+    .review-card--cta .review-cta__title { font-size: 13px; }
+    .review-card--cta .review-cta__sub   { font-size: 11px; }
+    .calm-card { padding: 16px 10px; }
+    .calm-card__char        { font-size: 34px; }
+    .calm-card__label       { font-size: 10.5px; }
+    .calm-card__explanation { font-size: 11px; line-height: 1.4; }
     .landing-stats     { gap: 16px; padding: 18px; }
     .landing-stats__item { padding: 0 14px; }
     .landing-stats__divider { display: none; }

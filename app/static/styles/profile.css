@@ -84,7 +84,10 @@
     gap: 16px;
 }
 
-.stat-card {
+/* Scoped to .profile-stats: exercises.css defines an unrelated, unscoped
+   .stat-card/.stat-value/.stat-label (shared with .completed-stat) and
+   loads after this file, so it was silently winning the cascade here. */
+.profile-stats .stat-card {
     background: var(--bg-card);
     border-radius: 16px;
     padding: 24px;
@@ -93,14 +96,14 @@
     border: 1px solid var(--border-color);
 }
 
-.stat-value {
+.profile-stats .stat-value {
     font-size: 32px;
     font-weight: 800;
     color: #60a5fa;
     margin-bottom: 8px;
 }
 
-.stat-label {
+.profile-stats .stat-label {
     font-size: 14px;
     color: var(--text-secondary);
 }
@@ -173,4 +176,52 @@
     display: flex;
     gap: 16px;
     margin-top: 32px;
+}
+
+/* Compact rebuild matching the exercises-page scale */
+@media (max-width: 600px) {
+    .profile-card {
+        padding: 16px;
+        margin-bottom: 14px;
+        border-radius: 18px;
+    }
+
+    .profile-header {
+        gap: 12px;
+        margin-bottom: 14px;
+        padding-bottom: 14px;
+    }
+
+    .profile-avatar { width: 56px; height: 56px; }
+    .avatar-emoji   { font-size: 26px; }
+    .profile-title h1 { font-size: 18px; margin-bottom: 2px; }
+    .profile-role   { font-size: 12.5px; }
+
+    .profile-info   { margin-bottom: 14px; }
+    .info-group     { margin-bottom: 12px; }
+    .info-group label { font-size: 10px; margin-bottom: 2px; }
+    .info-group p   { font-size: 13px; }
+
+    .profile-actions { gap: 8px; }
+
+    .profile-stats  { gap: 8px; }
+    .profile-stats .stat-card  { padding: 12px 8px; border-radius: 12px; }
+    .profile-stats .stat-value { font-size: 20px; margin-bottom: 4px; }
+    .profile-stats .stat-label { font-size: 10.5px; }
+
+    .profile-edit-card {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .profile-edit-header { margin-bottom: 16px; }
+    .profile-edit-header h1 { font-size: 18px; margin-bottom: 4px; }
+    .profile-edit-header p  { font-size: 12.5px; }
+
+    .profile-edit-form .form-group { margin-bottom: 12px; }
+    .profile-edit-form label { font-size: 12.5px; margin-bottom: 5px; }
+    .profile-edit-form input { padding: 9px 12px; font-size: 14px; }
+    .profile-edit-form small { font-size: 10.5px; margin-top: 4px; }
+
+    .profile-edit-actions { gap: 8px; margin-top: 16px; }
 }

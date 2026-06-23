@@ -596,28 +596,71 @@
    RESPONSIVE
    ════════════════════════════════════════════════════════════ */
 @media (max-width: 680px) {
-    .hub-modes-grid { grid-template-columns: 1fr; }
+    /* Keep the 2-column composition on mobile — scale cards down, don't stack them */
+    .hub-modes-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .hub-header     { padding: 28px 24px; }
 }
 
 @media (max-width: 560px) {
-    .trainer-page { padding: 0 14px 40px; gap: 14px; }
-    .hub-page     { padding: 0 14px 40px; }
+    .trainer-page { padding: 0 7px 20px; gap: 10px; }
+    .hub-page     { padding: 0 7px 24px; gap: 14px; }
 
+    /* Header: smaller so the card + buttons fit on screen without scrolling */
+    .tr-title     { font-size: 17px !important; }
+    .tr-back      { padding: 5px 12px; font-size: 11px; }
+    .tr-due-badge { font-size: 11px; padding: 4px 10px; }
+
+    .trainer-stats { padding: 8px 12px; }
+    .tr-stat-pill  { padding: 6px 8px; gap: 5px; }
+    .tr-stat-icon  { font-size: 12px; }
     .tr-stat-lbl  { display: none; }
-    .tr-stat-val  { font-size: 18px; }
+    .tr-stat-val  { font-size: 16px; }
 
-    .trainer-card-container .flashcard { height: 300px; }
-    .trainer-question { font-size: 64px; }
+    #trainer-main { gap: 12px; }
 
-    .input-controls { flex-direction: column; gap: 10px; }
-    .trainer-input  { width: 100%; }
-    .trainer-btn    { width: 100%; justify-content: center; }
+    /* Flashcard: shrink so card + stats + controls fit one screen */
+    .trainer-card-container .flashcard { height: 210px; border-radius: 18px; }
+    .trainer-question      { font-size: 46px; }
+    .start-logo            { width: 110px; }
+    .trainer-translation   { font-size: 20px; margin-bottom: 4px; }
+    .trainer-transcription { font-size: 13px; margin-bottom: 8px; }
+    .trainer-example       { font-size: 11px; line-height: 1.4; }
+    .audio-play-btn        { padding: 6px 14px; font-size: 11px; margin-top: 10px; }
 
-    .results-stats { gap: 10px; }
-    .result-card   { padding: 16px 8px; }
-    .result-value  { font-size: 36px; }
+    .input-controls { flex-direction: row; gap: 8px; }
+    .trainer-input  { padding: 10px 16px; font-size: 14px; }
+    .trainer-btn    { padding: 10px 18px !important; font-size: 13px !important; justify-content: center; }
 
-    .hub-header { padding: 22px 18px; }
-    .hub-title  { font-size: 22px !important; }
+    .start-controls { gap: 8px; }
+    .start-controls .btn-primary,
+    .start-controls .btn-secondary { min-width: 0; padding: 10px 18px; font-size: 13px; }
+
+    .trainer-results { padding: 16px 14px; border-radius: 18px; }
+    .results-icon     { font-size: 32px; margin-bottom: 6px; }
+    .trainer-results h2 { font-size: 16px; margin-bottom: 12px; }
+    .results-stats { gap: 8px; margin-bottom: 16px; }
+    .result-card   { padding: 12px 8px; border-radius: 14px; }
+    .result-value  { font-size: 26px; margin-bottom: 4px; }
+    .result-label  { font-size: 11px; }
+    .results-buttons { gap: 8px; }
+    .results-buttons .btn-primary,
+    .results-buttons .btn-secondary { min-width: 0; padding: 9px 18px; font-size: 13px; }
+
+    .hub-header { padding: 16px 14px; border-radius: 18px; }
+    .hub-title  { font-size: 18px !important; }
+    .hub-subtitle { font-size: 12px; }
+    .hub-back   { font-size: 11px; padding: 5px 12px; }
+
+    /* Mode cards: shrink to fit two per row at ~165px each */
+    .hub-mode-card {
+        padding: 14px 14px 12px;
+        gap: 8px;
+        border-radius: 16px;
+    }
+    .hub-mode-top   { flex-wrap: wrap; gap: 6px; }
+    .hub-mode-icon  { width: 32px; height: 32px; font-size: 16px; border-radius: 10px; }
+    .hub-mode-badge { font-size: 9px; padding: 3px 7px; }
+    .hub-mode-title { font-size: 13.5px; }
+    .hub-mode-desc  { font-size: 11px; line-height: 1.45; }
+    .hub-mode-cta   { font-size: 11px; }
 }

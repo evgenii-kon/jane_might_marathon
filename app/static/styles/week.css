@@ -385,3 +385,48 @@
         font-size: 24px;
     }
 }
+
+/* Compact rebuild matching the exercises-page scale */
+@media (max-width: 600px) {
+    .week-header-card { margin-bottom: 14px; }
+    .week-badge-row   { margin-bottom: 8px; }
+    .week-title       { font-size: 16px; margin-bottom: 5px; }
+    .week-long-desc   { font-size: 12.5px; margin-bottom: 14px; }
+    .week-progress-block { padding-top: 12px; }
+
+    .week-lessons-card {
+        padding: 12px;
+        border-radius: 18px;
+    }
+    .week-lessons-heading { margin-bottom: 12px; }
+    .week-lessons-title   { font-size: 14px; }
+    .week-lessons-count   { font-size: 10.5px; padding: 3px 8px; }
+
+    .week-lesson-row {
+        gap: 8px;
+        padding: 10px;
+        border-radius: 14px;
+        margin-bottom: 8px;
+    }
+    .wl-info     { gap: 8px; }
+    .wl-number   { width: 24px; height: 24px; font-size: 10.5px; }
+    .wl-name     { font-size: 12.5px; margin-bottom: 2px; }
+    .wl-desc     { font-size: 10.5px; }
+    .wl-exercises-badge { font-size: 10px; margin-top: 4px; }
+    .wl-exercises-done   { font-size: 9.5px; padding: 1px 6px; }
+    .wl-btn      { padding: 6px 12px; font-size: 11px; }
+
+    .week-locked-info { padding: 24px 14px; margin-top: 16px; border-radius: 18px; }
+    .locked-icon-large { font-size: 44px; margin-bottom: 12px; }
+    .week-locked-info h2 { font-size: 17px; margin-bottom: 8px; }
+    .week-locked-info p  { font-size: 12.5px; margin-bottom: 14px; }
+
+    .countdown-timer { gap: 10px; margin: 16px 0; }
+    .countdown-block { padding: 8px 10px; min-width: 50px; border-radius: 12px; }
+    .countdown-number { font-size: 18px; }
+    .countdown-label  { font-size: 9.5px; }
+
+    .lock-days { font-size: 10.5px; }
+    .lock-icon { font-size: 24px; }
+    .lock-text { font-size: 10.5px; }
+}
