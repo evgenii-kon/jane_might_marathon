@@ -7,6 +7,9 @@
     <link rel="icon" type="image/png" href="/static/images/logo_orange_circle.png">
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles/main.css">
+    {% if user %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css">
+    {% endif %}
     {% block extra_css %}{% endblock %}
     <script>
         (function(){
@@ -32,15 +35,15 @@
                 <a href="#faq" class="nav-landing__link">Мне просто спросить</a>
             </nav>
             {% endif %}
-            <nav class="nav-links">
+            <nav class="nav-links" id="main-nav">
                 {% if user %}
                     <a href="/dashboard">Главная</a>
-                    <a href="/auth/me">Профиль</a>
+                    <a href="/auth/me" id="tour-profile">Профиль</a>
                     
                     <a href="/about">О проекте</a>
-                    <a href="/articles">Статьи</a>
-                    <a href="/idioms">Идиомы</a>
-                    <a href="/grammar">Грамматика</a>
+                    <a href="/articles" id="tour-articles">Статьи</a>
+                    <a href="/idioms" id="tour-idioms">Идиомы</a>
+                    <a href="/grammar" id="tour-grammar">Грамматика</a>
                     
                     {% if user.is_admin %}
                         <a href="/admin" class="admin-link">Админка</a>
@@ -98,6 +101,12 @@
     </footer>
 
     {% block extra_js %}{% endblock %}
+    {% if user %}
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+    {% if request.url.path in ["/dashboard", "/dashboard/"] %}
+    <script src="/static/js/tour.js"></script>
+    {% endif %}
+    {% endif %}
     <script>
     var THEME_ICONS = {
         sun: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>',

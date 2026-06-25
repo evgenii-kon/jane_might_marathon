@@ -32,6 +32,7 @@
 
         <div class="profile-actions">
             <a href="/auth/me/edit" class="btn-primary">Редактировать профиль</a>
+            <button class="btn-secondary" onclick="restartTour()" title="Повторить экскурсию по платформе">Обучение платформе</button>
             <a href="/auth/me/delete" class="btn-danger">Удалить аккаунт</a>
         </div>
     </div>
@@ -52,4 +53,13 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function restartTour() {
+    localStorage.removeItem('tour_completed');
+    window.location.href = '/dashboard';
+}
+</script>
 {% endblock %}

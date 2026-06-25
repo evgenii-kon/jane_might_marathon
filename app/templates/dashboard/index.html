@@ -38,7 +38,7 @@
     <!-- ===== БЫСТРЫЕ ДЕЙСТВИЯ ===== -->
     <div class="actions-grid">
 
-        <a href="/word-trainer" class="action-card action-card--orange">
+        <a href="/word-trainer" class="action-card action-card--orange" id="tour-trainer">
             <div class="action-accent"></div>
             <div class="action-icon action-icon--orange">📚</div>
             <div class="action-body">
@@ -48,7 +48,7 @@
             <div class="action-arrow">→</div>
         </a>
 
-        <a href="/dashboard/words/rating" class="action-card action-card--blue">
+        <a href="/dashboard/words/rating" class="action-card action-card--blue" id="tour-rating">
             <div class="action-accent"></div>
             <div class="action-icon action-icon--blue">🏆</div>
             <div class="action-body">
@@ -83,14 +83,14 @@
     </div>
 
     <!-- ===== АКТИВНОСТЬ + СЛОВО ДНЯ ===== -->
-    <div class="activity-row">
+    <div class="activity-row" id="tour-activity">
         {% include "components/activity_calendar.html" %}
         {% include "components/word_of_day.html" %}
     </div>
 
     <!-- ===== НЕДЕЛИ МАРАФОНА ===== -->
-    <div class="weeks-section">
-        <div class="section-header">
+    <div class="weeks-section" id="tour-weeks">
+        <div class="section-header" id="tour-weeks-header">
             <div>
                 <h2 class="section-title">Недели марафона</h2>
                 <p class="section-subtitle">Ваш учебный план</p>
