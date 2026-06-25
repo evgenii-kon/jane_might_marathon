@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, Request
 from typing import Optional
 from app.models.user import User
 from app.dependencies.auth import get_current_user_optional
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter(tags=["public"])
@@ -14,6 +14,9 @@ async def index(
     request: Request,
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
+    if current_user:
+        return RedirectResponse(url="/dashboard", status_code=302)
+    
     return templates.TemplateResponse(
         "index.html", {"request": request, "user": current_user}
     )

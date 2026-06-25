@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Грамматика HSK — Практикум по китайскому{% endblock %}
+
+{% block content %}
+<div class="articles-page">
+    <div class="articles-header">
+        <h1>Грамматика китайского языка</h1>
+        <p>Правила и конструкции для уровней HSK — с примерами и разбором</p>
+    </div>
+
+    <div class="grammar-tags">
+        <a href="/grammar"
+           class="grammar-tag-btn {% if not active_tag %}grammar-tag-btn--active{% endif %}">
+            Все правила
+        </a>
+        {% for t in tags %}
+        <a href="/grammar?tag={{ t.slug }}"
+           class="grammar-tag-btn {% if active_tag == t.slug %}grammar-tag-btn--active{% endif %}">
+            {{ t.name }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="articles-grid">
+        {% for rule in rules %}
+        <div class="article-card">
+            <div class="article-content">
+                {% if rule.hsk_level %}
+                <span class="grammar-hsk-badge">{{ rule.hsk_level }}</span>
+                {% endif %}
+                <h2 class="article-title">
+                    <a href="/grammar/{{ rule.slug }}">{{ rule.title }}</a>
+                </h2>
+                {% if rule.tags %}
+                <div class="grammar-tags-list">
+                    {% for tag in rule.tags %}
+                    <a href="/grammar?tag={{ tag.slug }}" class="grammar-tag-small">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if rule.description %}
+                <p class="article-description">{{ rule.description[:150] }}{% if rule.description|length > 150 %}...{% endif %}</p>
+                {% endif %}
+                <div class="article-meta">
+                    <span class="article-date">📅 {{ rule.created_at.strftime('%d.%m.%Y') if rule.created_at else '' }}</span>
+                </div>
+                <a href="/grammar/{{ rule.slug }}" class="read-more">Читать правило →</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>📭 Правила грамматики скоро появятся!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.grammar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+.grammar-tag-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border-color, #ddd);
+    color: var(--text-secondary, #666);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.18s;
+}
+.grammar-tag-btn:hover,
+.grammar-tag-btn--active {
+    background: var(--accent-color, #6c47ff);
+    color: #fff;
+    border-color: var(--accent-color, #6c47ff);
+}
+.grammar-hsk-badge {
+    display: inline-block;
+    background: var(--accent-color, #6c47ff);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+.grammar-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+}
+.grammar-tag-small {
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color, #ddd);
+    color: var(--text-secondary, #888);
+    text-decoration: none;
+    transition: all 0.15s;
+}
+.grammar-tag-small:hover {
+    background: var(--accent-color, #6c47ff);
+    color: #fff;
+    border-color: var(--accent-color, #6c47ff);
+}
+</style>
+{% endblock %}

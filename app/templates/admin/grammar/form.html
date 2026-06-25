@@ -1,0 +1,112 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if rule %}Редактировать правило{% else %}Добавить правило{% endif %} - Админка{% endblock %}
+
+{% block content %}
+<div class="admin-form-container">
+    <div class="admin-header">
+        <h1>{% if rule %}Редактировать правило{% else %}Добавить правило{% endif %}</h1>
+        <a href="/admin/grammar" class="btn-secondary">← Назад к списку</a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    {% set fd = form_data %}
+    {% set r = rule %}
+
+    <form method="post" class="admin-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-grid">
+
+            <div class="form-group full-width">
+                <label for="title">Название правила *</label>
+                <input type="text" id="title" name="title" required
+                       value="{{ fd.title if fd else (r.title if r else '') }}"
+                       placeholder="Например: Частица 的 — атрибутивная конструкция">
+            </div>
+
+            <div class="form-group">
+                <label for="slug">Slug (URL) *</label>
+                <input type="text" id="slug" name="slug" required
+                       value="{{ fd.slug if fd else (r.slug if r else '') }}"
+                       placeholder="naprimer-chastitza-de">
+                <small>Только латиница, цифры и дефис.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="hsk_level">Уровень HSK</label>
+                <select id="hsk_level" name="hsk_level">
+                    <option value="">— Не указан —</option>
+                    {% set cur_level = fd.hsk_level if fd else (r.hsk_level if r else '') %}
+                    {% for level in ['HSK-1', 'HSK-2', 'HSK-3', 'HSK-4', 'HSK-5', 'HSK-6'] %}
+                    <option value="{{ level }}" {% if cur_level == level %}selected{% endif %}>{{ level }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="description">Краткое описание</label>
+                <textarea id="description" name="description" rows="2"
+                          placeholder="Краткое описание правила для превью">{{ fd.description if fd else (r.description if r else '') }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="content">Содержание правила (HTML) *</label>
+                <textarea id="content" name="content" rows="20" required
+                          placeholder="Полное содержание правила с примерами...">{{ fd.content if fd else (r.content if r else '') }}</textarea>
+                <small>Поддерживается HTML-форматирование.</small>
+            </div>
+
+            {% if tags %}
+            <div class="form-group full-width">
+                <label>Теги</label>
+                <div class="grammar-checkbox-group">
+                    {% set selected_ids = fd.tag_ids if fd else (r.tags | map(attribute='id') | list if r else []) %}
+                    {% for tag in tags %}
+                    <label class="grammar-checkbox-label">
+                        <input type="checkbox" name="tag_ids" value="{{ tag.id }}"
+                               {% if tag.id in selected_ids %}checked{% endif %}>
+                        {{ tag.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Сохранить</button>
+            <a href="/admin/grammar" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.grammar-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+.grammar-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1.5px solid var(--border-color, #ddd);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s;
+}
+.grammar-checkbox-label:hover {
+    border-color: var(--accent-color, #6c47ff);
+}
+.grammar-checkbox-label input[type="checkbox"] {
+    accent-color: var(--accent-color, #6c47ff);
+}
+</style>
+{% endblock %}

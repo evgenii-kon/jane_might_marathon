@@ -32,6 +32,9 @@ dependencies = [
     "aiosmtplib>=5.1.1",
     "resend>=2.30.1",
     "locust>=2.44.1",
+    "boto3>=1.43.36",
+    "edge-tts>=7.2.8",
+    "pypinyin>=0.55.0",
 ]
 
 [dependency-groups]

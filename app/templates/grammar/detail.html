@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{{ rule.title }} — Грамматика HSK{% endblock %}
+
+{% block content %}
+<div class="article-detail-container">
+    <div class="article-nav">
+        <a href="/grammar" class="back-link">← Все правила</a>
+    </div>
+
+    <div class="article-header">
+        {% if rule.hsk_level %}
+        <span class="grammar-hsk-badge">{{ rule.hsk_level }}</span>
+        {% endif %}
+        <h1>{{ rule.title }}</h1>
+        <div class="article-meta">
+            <span class="article-date">📅 {{ rule.created_at.strftime('%d.%m.%Y') if rule.created_at else '' }}</span>
+        </div>
+        {% if rule.tags %}
+        <div class="grammar-tags-list" style="margin-top:10px;">
+            {% for tag in rule.tags %}
+            <a href="/grammar?tag={{ tag.slug }}" class="grammar-tag-small">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if rule.description %}
+        <div class="article-description-lead">{{ rule.description }}</div>
+        {% endif %}
+    </div>
+
+    <div class="article-content-body">
+        {{ rule.content | safe }}
+    </div>
+
+    <div class="article-footer-nav">
+        <a href="/grammar" class="btn-secondary">← Все правила</a>
+        <a href="/dashboard" class="btn-primary">🏠 На главную</a>
+    </div>
+</div>
+
+<style>
+.article-content-body table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 15px;
+}
+.article-content-body table th,
+.article-content-body table td {
+    border: 1px solid var(--border-color, #ccc);
+    padding: 8px 14px;
+    text-align: left;
+    vertical-align: top;
+}
+.article-content-body table th {
+    background: var(--bg-secondary, rgba(108,71,255,0.07));
+    font-weight: 600;
+}
+.article-content-body table tr:nth-child(even) td {
+    background: var(--bg-alt, rgba(0,0,0,0.02));
+}
+.grammar-hsk-badge {
+    display: inline-block;
+    background: var(--accent-color, #6c47ff);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 14px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+.grammar-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.grammar-tag-small {
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color, #ddd);
+    color: var(--text-secondary, #888);
+    text-decoration: none;
+    transition: all 0.15s;
+}
+.grammar-tag-small:hover {
+    background: var(--accent-color, #6c47ff);
+    color: #fff;
+    border-color: var(--accent-color, #6c47ff);
+}
+</style>
+{% endblock %}
