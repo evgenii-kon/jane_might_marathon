@@ -1,0 +1,173 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if text %}Редактировать текст{% else %}Добавить текст{% endif %} - Админка{% endblock %}
+
+{% block content %}
+<div class="admin-form-container">
+    <div class="admin-header">
+        <h1>{% if text %}Редактировать текст{% else %}Добавить текст для чтения{% endif %}</h1>
+        <a href="/admin/reading" class="btn-secondary">← Назад к списку</a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="admin-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-grid">
+
+            <div class="form-group full-width">
+                <label for="title">Название *</label>
+                <input type="text" id="title" name="title" required
+                       value="{{ form_data.title if form_data else (text.title if text else '') }}"
+                       placeholder="Например: Знакомство">
+            </div>
+
+            <div class="form-group">
+                <label for="slug">Slug (URL) *</label>
+                <input type="text" id="slug" name="slug" required
+                       value="{{ form_data.slug if form_data else (text.slug if text else '') }}"
+                       placeholder="znakomstvo">
+                <small>Только латиница, цифры и дефис.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="hsk_level">Уровень HSK</label>
+                <input type="text" id="hsk_level" name="hsk_level"
+                       value="{{ form_data.hsk_level if form_data else (text.hsk_level if text else '') }}"
+                       placeholder="HSK-1">
+            </div>
+
+            <div class="form-group">
+                <label for="week_id">Привязка к неделе (ID)</label>
+                <input type="number" id="week_id" name="week_id"
+                       value="{{ form_data.week_id if form_data else (text.week_id if text else '') }}"
+                       placeholder="Необязательно">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="description">Краткое описание</label>
+                <textarea id="description" name="description" rows="2"
+                          placeholder="Описание для списка текстов">{{ form_data.description if form_data else (text.description if text else '') }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="content_hanzi">Китайский текст (漢字) *</label>
+                <textarea id="content_hanzi" name="content_hanzi" rows="8" required
+                          placeholder="你好。我叫李明。">{{ form_data.content_hanzi if form_data else (text.content_hanzi if text else '') }}</textarea>
+                <small>Каждое предложение с новой строки.</small>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="content_pinyin">Пиньинь</label>
+                <textarea id="content_pinyin" name="content_pinyin" rows="8"
+                          placeholder="Nǐ hǎo. Wǒ jiào Lǐ Míng.">{{ form_data.content_pinyin if form_data else (text.content_pinyin if text else '') }}</textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="content_translation">Перевод</label>
+                <textarea id="content_translation" name="content_translation" rows="8"
+                          placeholder="Привет. Меня зовут Ли Мин.">{{ form_data.content_translation if form_data else (text.content_translation if text else '') }}</textarea>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Сохранить</button>
+            <a href="/admin/reading" class="btn-secondary">Отмена</a>
+        </div>
+    </form>
+
+    <!-- Управление вопросами (только при редактировании) -->
+    {% if text %}
+    <div class="admin-section" style="margin-top: 40px;">
+        <h2 style="font-size:18px; font-weight:700; margin-bottom:20px;">Вопросы теста</h2>
+
+        {% if questions %}
+        <div class="admin-table-container" style="margin-bottom:24px;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Вопрос</th>
+                        <th>Правильный ответ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for q in questions %}
+                    <tr>
+                        <td>{{ q.order_in_text }}</td>
+                        <td>{{ q.question }}</td>
+                        <td>{{ [q.option_1, q.option_2, q.option_3, q.option_4][q.correct_answer - 1] }}</td>
+                        <td>
+                            <form method="post" action="/admin/reading/{{ text.id }}/questions/{{ q.id }}/delete"
+                                  style="display:inline" onsubmit="return confirm('Удалить вопрос?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button type="submit" class="btn-delete">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="color:var(--text-muted); margin-bottom:20px;">Вопросы ещё не добавлены.</p>
+        {% endif %}
+
+        <!-- Форма добавления вопроса -->
+        <details style="background:var(--bg-card-alt); border:1px solid var(--border-color); border-radius:14px; padding:20px;">
+            <summary style="cursor:pointer; font-weight:600; color:var(--text-primary); font-size:15px;">+ Добавить вопрос</summary>
+            <form method="post" action="/admin/reading/{{ text.id }}/questions/add" class="admin-form" style="margin-top:16px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Вопрос *</label>
+                        <input type="text" name="question" required placeholder="О чём говорится в тексте?">
+                    </div>
+                    <div class="form-group">
+                        <label>Вариант 1 *</label>
+                        <input type="text" name="option_1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Вариант 2 *</label>
+                        <input type="text" name="option_2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Вариант 3 *</label>
+                        <input type="text" name="option_3" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Вариант 4 *</label>
+                        <input type="text" name="option_4" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Правильный ответ (1-4) *</label>
+                        <select name="correct_answer" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Порядок</label>
+                        <input type="number" name="order_in_text" value="{{ questions | length }}">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Объяснение (необязательно)</label>
+                        <input type="text" name="explanation" placeholder="Пояснение к правильному ответу">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Добавить вопрос</button>
+                </div>
+            </form>
+        </details>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

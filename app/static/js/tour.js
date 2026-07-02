@@ -100,7 +100,7 @@
   if (localStorage.getItem('tour_completed')) return;
 
   var { driver } = window.driver.js;
-  var TOTAL_STEPS = 13;
+  var TOTAL_STEPS = 14;
 
   function stopScroll(e) { e.preventDefault(); }
   function lockScroll()   {
@@ -149,7 +149,7 @@
     onHighlightStarted: function () {
       // Weeks step: position top of section at ~45% of viewport height
       // so the popover fits above and header+cards are visible below
-      if (tour.getActiveIndex() === 8) {
+      if (tour.getActiveIndex() === 9) {
         var el = document.getElementById('tour-weeks');
         if (el) {
           var targetTop = el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.42;
@@ -215,6 +215,17 @@
             'Проходить грамматику ты будешь и на уроках, однако чтобы при желании повторить определенное правило не нужно было искать в текстовых или видео уроках информацию, мы подготовили раздел где коротко описаны все грамматические конструкции с примерами.<br><br>' +
             'А быстро найти нужное правило ты можешь применив фильтрацию по тегам.<br><br>' +
             'Заходи в этот блок для того чтобы закреплять грамматику, уже пройденную на уроках.',
+          side: 'bottom',
+          align: 'start',
+        },
+      },
+      {
+        element: '#tour-reading',
+        popover: {
+          title: 'Тексты для чтения',
+          description:
+            'Короткие тексты на китайском языке с пиньинем и переводом, а после каждого — тест на понимание прочитанного.<br><br>' +
+            'Это отличный способ закрепить лексику из уроков в живом контексте. Читай тексты по мере прохождения курса — они подобраны специально из слов HSK-1.',
           side: 'bottom',
           align: 'start',
         },

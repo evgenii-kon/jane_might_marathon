@@ -37,3 +37,6 @@ class User(Base):
     activities = relationship(
         "UserActivity", back_populates="user", cascade="all, delete-orphan"
     )
+    reading_progress = relationship(
+        "UserReadingProgress", back_populates="user", cascade="all, delete-orphan"
+    )

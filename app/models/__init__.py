@@ -15,3 +15,6 @@ from .user_activity import UserActivity
 from .grammar_rule_tag import grammar_rule_tags  # noqa: F401 — association table, must be imported before models
 from .grammar_tag import GrammarTag
 from .grammar_rule import GrammarRule
+from .reading_text import ReadingText
+from .reading_question import ReadingQuestion
+from .user_reading_progress import UserReadingProgress
