@@ -35,6 +35,7 @@ dependencies = [
     "boto3>=1.43.36",
     "edge-tts>=7.2.8",
     "pypinyin>=0.55.0",
+    "python-dotenv>=1.2.2",
 ]
 
 [dependency-groups]

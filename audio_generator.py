@@ -4,16 +4,20 @@ import boto3
 import os
 import re
 from pypinyin import lazy_pinyin
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 VOICE = "zh-CN-XiaoxiaoNeural"
-INPUT_FILE = "seed_content.py"
-OUTPUT_FILE = "seed_content_with_audio.py"
+INPUT_FILE = "seed_content_new.py"
+OUTPUT_FILE = "seed_content_new_with_audio.py"
 
-S3_ENDPOINT = "https://s3.selcdn.ru"
-S3_ACCESS_KEY = "твой_ключ"
-S3_SECRET_KEY = "твой_секрет"
-S3_BUCKET = "твой_бакет"
-S3_PUBLIC_URL = "https://твой_бакет.selstorage.ru"
+S3_ENDPOINT = os.getenv('S3_ENDPOINT')
+S3_ACCESS_KEY = os.getenv('S3_ACCESS_KEY')
+S3_SECRET_KEY = os.getenv('S3_SECRET_KEY')
+S3_BUCKET = os.getenv('S3_BUCKET')
+S3_PUBLIC_URL = os.getenv('S3_PUBLIC_URL')
 
 s3 = boto3.client(
     "s3",
@@ -21,6 +25,32 @@ s3 = boto3.client(
     aws_access_key_id=S3_ACCESS_KEY,
     aws_secret_access_key=S3_SECRET_KEY,
 )
+
+# Значение audio_url — строка из китайских иероглифов (плейсхолдер), встречающаяся
+# в любом из следующих видов, независимо от контекста (словарь, присвоение и т.д.):
+#   audio_url = "一石二鸟"          — обычное присвоение переменной
+#   audio_url="一石二鸟"            — то же самое, без пробелов
+#   "audio_url": "一石二鸟"         — значение в литерале словаря
+#   idiom["audio_url"] = "一石二鸟"  — присвоение по ключу словаря (в т.ч. с одинарными кавычками)
+_KEY_AND_SEPARATOR = r'''(?:
+    ["']audio_url["']\s*:\s*        # "audio_url": ...      (словарь)
+  | ["']audio_url["']\s*\]\s*=\s*   # x["audio_url"] = ...  (присвоение по ключу)
+  | \baudio_url\s*=\s*              # audio_url = ...       (обычное присвоение)
+)'''
+
+FIND_PATTERN = re.compile(
+    _KEY_AND_SEPARATOR + r'''["']([一-鿿]+)["']''',
+    re.VERBOSE,
+)
+
+
+def build_replace_pattern(hanzi: str) -> re.Pattern:
+    """Паттерн для точечной замены конкретного иероглифа-плейсхолдера на URL,
+    с сохранением исходного текста ключа/оператора и стиля кавычек."""
+    return re.compile(
+        r'(' + _KEY_AND_SEPARATOR + r')(["\'])' + re.escape(hanzi) + r'\2',
+        re.VERBOSE,
+    )
 
 
 def hanzi_to_filename(hanzi: str) -> str:
@@ -40,7 +70,7 @@ async def generate_and_upload(hanzi: str) -> str:
         s3.head_object(Bucket=S3_BUCKET, Key=filename)
         print(f"   ⏭ {hanzi} ({filename}) — уже есть в S3")
         return public_url
-    except:
+    except Exception:
         pass
 
     # генерируем аудио
@@ -62,8 +92,8 @@ async def main():
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # находим все иероглифы в audio_url
-    hanzi_list = re.findall(r'audio_url\s*=\s*["\']+([\u4e00-\u9fff]+)["\']', content)
+    # находим все иероглифы-плейсхолдеры в audio_url, независимо от контекста
+    hanzi_list = FIND_PATTERN.findall(content)
     hanzi_list = list(set(hanzi_list))
 
     print(f"Найдено {len(hanzi_list)} уникальных иероглифов для генерации аудио")
@@ -74,13 +104,13 @@ async def main():
         url = await generate_and_upload(hanzi)
         replacements[hanzi] = url
 
-    # заменяем иероглифы на ссылки
+    # заменяем иероглифы на ссылки везде, где они встречаются как значение audio_url
     new_content = content
     for hanzi, url in replacements.items():
-        new_content = re.sub(
-            rf'(audio_url\s*=\s*["\']){re.escape(hanzi)}(["\'])',
-            rf'\g<1>{url}\2',
-            new_content
+        pattern = build_replace_pattern(hanzi)
+        new_content = pattern.sub(
+            lambda m: m.group(1) + m.group(2) + url + m.group(2),
+            new_content,
         )
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
