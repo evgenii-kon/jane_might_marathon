@@ -11,6 +11,7 @@ class ReadingQuestionRepository:
         self.db = db
 
     async def get_by_text_id(self, text_id: int) -> List[ReadingQuestion]:
+        """Получить вопрос по id текста"""
         result = await self.db.execute(
             select(ReadingQuestion)
             .where(ReadingQuestion.text_id == text_id)
@@ -19,12 +20,14 @@ class ReadingQuestionRepository:
         return result.scalars().all()
 
     async def get_by_id(self, question_id: int) -> Optional[ReadingQuestion]:
+        """Получить вопрос по id"""
         result = await self.db.execute(
             select(ReadingQuestion).where(ReadingQuestion.id == question_id)
         )
         return result.scalar_one_or_none()
 
     async def create(self, text_id: int, data: ReadingQuestionCreate) -> ReadingQuestion:
+        """Создать вопрос к тексту"""
         obj = ReadingQuestion(text_id=text_id, **data.model_dump())
         self.db.add(obj)
         await self.db.commit()
@@ -32,6 +35,7 @@ class ReadingQuestionRepository:
         return obj
 
     async def update(self, question_id: int, update_data: dict) -> Optional[ReadingQuestion]:
+        """Обновить вопрос к тексту"""
         obj = await self.get_by_id(question_id)
         if not obj:
             return None
@@ -42,6 +46,7 @@ class ReadingQuestionRepository:
         return obj
 
     async def delete(self, question_id: int) -> bool:
+        """Удалить вопрос к тексту"""
         obj = await self.get_by_id(question_id)
         if not obj:
             return False

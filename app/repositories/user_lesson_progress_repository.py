@@ -13,6 +13,7 @@ class UserLessonProgressRepository:
     async def get_by_user_and_lesson(
         self, user_id: int, lesson_id: int
     ) -> Optional[UserLessonProgress]:
+        """Получить прогресс пользователя по уроку"""
         result = await self.db.execute(
             select(UserLessonProgress).where(
                 UserLessonProgress.user_id == user_id,

@@ -9,10 +9,12 @@ class ExerciseRepository:
         self.db = db
 
     async def get_all(self) -> List[Exercise]:
+        """Получить все упражнения"""
         result = await self.db.execute(select(Exercise))
         return result.scalars().all()
 
     async def get_by_lesson(self, lesson_id: int) -> List[Exercise]:
+        """Получить упражнение по уроку"""
         result = await self.db.execute(
             select(Exercise)
             .where(Exercise.lesson_id == lesson_id)
@@ -21,6 +23,7 @@ class ExerciseRepository:
         return result.scalars().all()
 
     async def get_by_id(self, exercise_id: int) -> Optional[Exercise]:
+        """Получить упражнение по id"""
         result = await self.db.execute(
             select(Exercise).where(Exercise.id == exercise_id)
         )
@@ -34,6 +37,7 @@ class ExerciseRepository:
         return result.scalar_one()
 
     async def create(self, data: ExerciseCreate) -> Exercise:
+        """Создать упражнение"""
         exercise = Exercise(**data.model_dump())
         self.db.add(exercise)
         await self.db.commit()
@@ -41,6 +45,7 @@ class ExerciseRepository:
         return exercise
 
     async def update(self, exercise_id: int, data: dict) -> Optional[Exercise]:
+        """Обновить упражнение"""
         exercise = await self.get_by_id(exercise_id)
         if exercise:
             for key, value in data.items():
@@ -50,6 +55,7 @@ class ExerciseRepository:
         return exercise
 
     async def delete(self, exercise_id: int) -> bool:
+        """Удалить упражнение"""
         exercise = await self.get_by_id(exercise_id)
         if exercise:
             await self.db.delete(exercise)

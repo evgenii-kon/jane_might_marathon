@@ -14,18 +14,21 @@ class GrammarRuleRepository:
         return select(GrammarRule).options(selectinload(GrammarRule.tags))
 
     async def get_all(self) -> List[GrammarRule]:
+        """Получить все правила (отсортированные по тегу в порядке убывания)"""
         result = await self.db.execute(
             self._base_query().order_by(GrammarRule.created_at.desc())
         )
         return result.scalars().all()
 
     async def get_by_id(self, rule_id: int) -> Optional[GrammarRule]:
+        """Получить правило по id правила"""
         result = await self.db.execute(
             self._base_query().where(GrammarRule.id == rule_id)
         )
         return result.scalar_one_or_none()
 
     async def get_by_slug(self, slug: str) -> Optional[GrammarRule]:
+        """Получить правило по slug"""
         result = await self.db.execute(
             self._base_query().where(GrammarRule.slug == slug)
         )
@@ -49,6 +52,7 @@ class GrammarRuleRepository:
         hsk_level: Optional[str],
         tags: List[GrammarTag],
     ) -> GrammarRule:
+        """Создать правило"""
         rule = GrammarRule(
             title=title,
             slug=slug,
@@ -67,6 +71,7 @@ class GrammarRuleRepository:
         update_data: dict,
         tags: Optional[List[GrammarTag]] = None,
     ) -> Optional[GrammarRule]:
+        """Обновить правило"""
         rule = await self.get_by_id(rule_id)
         if not rule:
             return None
@@ -78,6 +83,7 @@ class GrammarRuleRepository:
         return await self.get_by_id(rule_id)
 
     async def delete(self, rule_id: int) -> bool:
+        """Удалить правило"""
         rule = await self.get_by_id(rule_id)
         if not rule:
             return False

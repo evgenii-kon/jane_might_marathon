@@ -11,18 +11,21 @@ class IdiomRepository:
         self.db = db
 
     async def get_all(self) -> List[Idiom]:
+        """Получить все идиомы"""
         result = await self.db.execute(
             select(Idiom).order_by(Idiom.created_at.desc())
         )
         return result.scalars().all()
 
     async def get_by_id(self, idiom_id: int) -> Optional[Idiom]:
+        """Получить идиому по id"""
         result = await self.db.execute(
             select(Idiom).where(Idiom.id == idiom_id)
         )
         return result.scalar_one_or_none()
 
     async def create(self, idiom_data: IdiomCreate) -> Idiom:
+        """Создать идиому"""
         new_idiom = Idiom(**idiom_data.model_dump())
         self.db.add(new_idiom)
         await self.db.commit()
@@ -30,6 +33,7 @@ class IdiomRepository:
         return new_idiom
 
     async def update(self, idiom_id: int, update_data: dict) -> Optional[Idiom]:
+        """Обновить идиому"""
         idiom = await self.get_by_id(idiom_id)
         if not idiom:
             return None
@@ -40,6 +44,7 @@ class IdiomRepository:
         return idiom
 
     async def delete(self, idiom_id: int) -> bool:
+        """Удалить идиому"""
         idiom = await self.get_by_id(idiom_id)
         if not idiom:
             return False
@@ -48,5 +53,6 @@ class IdiomRepository:
         return True
 
     async def count(self) -> int:
+        """Получить общее количество идиом"""
         result = await self.db.execute(select(func.count()).select_from(Idiom))
         return result.scalar_one()

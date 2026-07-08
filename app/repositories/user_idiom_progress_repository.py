@@ -10,6 +10,7 @@ class UserIdiomProgressRepository:
         self.db = db
 
     async def get(self, user_id: int, idiom_id: int) -> Optional[UserIdiomProgress]:
+        """Получить прогресс пользователя по идиоме"""
         result = await self.db.execute(
             select(UserIdiomProgress).where(
                 UserIdiomProgress.user_id == user_id,
@@ -19,6 +20,7 @@ class UserIdiomProgressRepository:
         return result.scalar_one_or_none()
 
     async def set_status(self, user_id: int, idiom_id: int, status: str) -> UserIdiomProgress:
+        """Установить статус прогресса идиомы для пользвателя"""
         progress = await self.get(user_id, idiom_id)
         if progress:
             progress.status = status
@@ -30,6 +32,7 @@ class UserIdiomProgressRepository:
         return progress
 
     async def get_all_by_user(self, user_id: int) -> List[UserIdiomProgress]:
+        """Получить прогресс по всем идиомам для пользователя"""
         result = await self.db.execute(
             select(UserIdiomProgress).where(UserIdiomProgress.user_id == user_id)
         )

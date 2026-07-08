@@ -10,6 +10,7 @@ class FeedbackRepository:
         self.db = db
 
     async def create(self, user_id: int, data: FeedbackCreate) -> FeedBack:
+        """Создать отзыв"""
         feedback = FeedBack(user_id=user_id, text=data.text)
         self.db.add(feedback)
         await self.db.commit()
@@ -17,6 +18,7 @@ class FeedbackRepository:
         return feedback
 
     async def get_by_user(self, user_id: int) -> List[FeedBack]:
+        """Получить отзыв по id пользователя"""
         result = await self.db.execute(
             select(FeedBack)
             .where(FeedBack.user_id == user_id)
@@ -25,16 +27,19 @@ class FeedbackRepository:
         return result.scalars().all()
 
     async def get_all(self) -> List[FeedBack]:
+        """Получть все отзывы"""
         result = await self.db.execute(select(FeedBack))
         return result.scalars().all()
 
     async def get_by_id(self, id: int) -> Optional[FeedBack]:
+        """Получить отзыв по id отзыва"""
         result = await self.db.execute(
             select(FeedBack).where(FeedBack.id == id)
         )
         return result.scalar_one_or_none()
 
     async def delete(self, feedback_id: int) -> bool:
+        """Удалить отзыв"""
         feedback = await self.get_by_id(feedback_id)
         if feedback:
             await self.db.delete(feedback)

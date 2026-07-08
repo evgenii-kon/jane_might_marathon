@@ -9,18 +9,22 @@ class LessonRepository:
         self.db = db
 
     async def get_all(self) -> List[Lesson]:
+        """Получить все уроки"""
         result = await self.db.execute(select(Lesson))
         return result.scalars().all()
 
     async def get_by_id(self, lesson_id: int) -> Optional[Lesson]:
+        """ПОлучить урок по id"""
         result = await self.db.execute(select(Lesson).where(Lesson.id == lesson_id))
         return result.scalar_one_or_none()
 
     async def get_by_name(self, lesson_name: str) -> Optional[Lesson]:
+        """Получить урок по названию"""
         result = await self.db.execute(select(Lesson).where(Lesson.name == lesson_name))
         return result.scalar_one_or_none()
 
     async def create(self, lesson_data: LessonCreate) -> Lesson:
+        """Создать урок"""
         new_lesson = Lesson(**lesson_data.model_dump())
         self.db.add(new_lesson)
         await self.db.commit()
@@ -28,6 +32,7 @@ class LessonRepository:
         return new_lesson
 
     async def update(self, lesson_id: int, update_data: dict) -> Optional[Lesson]:
+        """Обновить урок"""
         lesson = await self.get_by_id(lesson_id)
         if not lesson:
             return None
@@ -38,6 +43,7 @@ class LessonRepository:
         return lesson
 
     async def delete(self, lesson_id: int) -> bool:
+        """Удалить урок"""
         lesson = await self.get_by_id(lesson_id)
         if lesson:
             await self.db.delete(lesson)

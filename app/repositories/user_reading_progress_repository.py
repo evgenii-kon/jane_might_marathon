@@ -10,6 +10,7 @@ class UserReadingProgressRepository:
         self.db = db
 
     async def get(self, user_id: int, text_id: int) -> Optional[UserReadingProgress]:
+        """Получить прогресс пользователя по тексту"""
         result = await self.db.execute(
             select(UserReadingProgress).where(
                 UserReadingProgress.user_id == user_id,
@@ -19,6 +20,7 @@ class UserReadingProgressRepository:
         return result.scalar_one_or_none()
 
     async def get_completed_ids(self, user_id: int) -> Set[int]:
+        """Получить id текстов, которые пользователь прошел"""
         result = await self.db.execute(
             select(UserReadingProgress.text_id).where(
                 UserReadingProgress.user_id == user_id,
@@ -28,6 +30,7 @@ class UserReadingProgressRepository:
         return set(result.scalars().all())
 
     async def mark_completed(self, user_id: int, text_id: int) -> UserReadingProgress:
+        """Отметить текст пройденным"""
         existing = await self.get(user_id, text_id)
         if existing:
             existing.is_completed = True

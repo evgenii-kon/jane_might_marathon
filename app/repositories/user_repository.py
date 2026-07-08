@@ -9,18 +9,22 @@ class UserRepository:
         self.db = db
 
     async def get_all(self) -> List[User]:
+        """Получить всех пользовтелей"""
         result = await self.db.execute(select(User))
         return result.scalars().all()
 
     async def get_by_id(self, id: int) -> Optional[User]:
+        """Получить пользователя по id"""
         result = await self.db.execute(select(User).where(User.id == id))
         return result.scalar_one_or_none()
 
     async def get_by_name(self, name: str) -> Optional[User]:
+        """Получить пользователя по имени"""
         result = await self.db.execute(select(User).where(User.name == name))
         return result.scalar_one_or_none()
 
     async def get_by_email(self, email: str) -> Optional[User]:
+        """Получить пользователя по email"""
         result = await self.db.execute(select(User).where(User.email == email))
         return result.scalar_one_or_none()
 
@@ -33,6 +37,7 @@ class UserRepository:
         return new_user
 
     async def delete(self, id: int) -> bool:
+        """Удалить пользователя"""
         user = await self.get_by_id(id)
         if user:
             await self.db.delete(user)
@@ -42,6 +47,7 @@ class UserRepository:
             return False
 
     async def update(self, id: int, update_data: dict) -> Optional[User]:
+        """Обновить данные пользователя"""
         user = await self.get_by_id(id)
         if not user:
             return None

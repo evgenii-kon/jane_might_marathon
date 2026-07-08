@@ -13,6 +13,7 @@ class UserActivityRepository:
         self.db = db
 
     async def upsert_activity(self, user_id: int, activity_date: date) -> None:
+        """Увеличить активность пользователя за день на 1"""
         stmt = insert(UserActivity).values(
             user_id=user_id,
             date=activity_date,
@@ -25,6 +26,7 @@ class UserActivityRepository:
         await self.db.commit()
 
     async def get_activity_for_year(self, user_id: int, year: int) -> List[UserActivity]:
+        """Получить активность пользователя за год"""
         start = date(year, 1, 1)
         end = date(year, 12, 31)
         result = await self.db.execute(
@@ -39,6 +41,7 @@ class UserActivityRepository:
         return result.scalars().all()
 
     async def get_streak(self, user_id: int) -> int:
+        """Получить количество серии активных дней пользователя"""
         today = date.today()
         result = await self.db.execute(
             select(UserActivity.date)

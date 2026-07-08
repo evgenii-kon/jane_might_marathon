@@ -9,24 +9,29 @@ class GrammarTagRepository:
         self.db = db
 
     async def get_all(self) -> List[GrammarTag]:
+        """Получить все теги правил"""
         result = await self.db.execute(select(GrammarTag).order_by(GrammarTag.name))
         return result.scalars().all()
 
     async def get_by_id(self, tag_id: int) -> Optional[GrammarTag]:
+        """Получить тег по id тега"""
         result = await self.db.execute(select(GrammarTag).where(GrammarTag.id == tag_id))
         return result.scalar_one_or_none()
 
     async def get_by_ids(self, tag_ids: List[int]) -> List[GrammarTag]:
+        """Получить тег по списку id тегов"""
         if not tag_ids:
             return []
         result = await self.db.execute(select(GrammarTag).where(GrammarTag.id.in_(tag_ids)))
         return result.scalars().all()
 
     async def get_by_slug(self, slug: str) -> Optional[GrammarTag]:
+        """Получить тег по slug"""
         result = await self.db.execute(select(GrammarTag).where(GrammarTag.slug == slug))
         return result.scalar_one_or_none()
 
     async def create(self, name: str, slug: str) -> GrammarTag:
+        """Создать тег"""
         tag = GrammarTag(name=name, slug=slug)
         self.db.add(tag)
         await self.db.commit()
@@ -34,6 +39,7 @@ class GrammarTagRepository:
         return tag
 
     async def delete(self, tag_id: int) -> bool:
+        """Удалить тег"""
         tag = await self.get_by_id(tag_id)
         if not tag:
             return False
