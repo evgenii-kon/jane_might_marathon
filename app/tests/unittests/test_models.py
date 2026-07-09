@@ -168,20 +168,20 @@ class TestExerciseModel:
         lesson = await _make_lesson(db_session, week.id, name="Ex Lesson")
         exercise = Exercise(
             lesson_id=lesson.id,
-            question_description="Pick the right one",
+            type="quiz",
             question_text="apple",
-            option_1="яблоко",
-            option_2="апельсин",
-            option_3="банан",
-            option_4="груша",
-            correct_answer=1,
+            config={
+                "word_id": None,
+                "options": ["яблоко", "апельсин", "банан", "груша"],
+                "correct": 0,
+            },
             explanation="apple = яблоко",
             order_in_lesson=1,
         )
         db_session.add(exercise)
         await db_session.flush()
         assert exercise.id is not None
-        assert exercise.correct_answer == 1
+        assert exercise.config["correct"] == 0
         assert exercise.lesson_id == lesson.id
 
 
@@ -223,10 +223,9 @@ class TestUserExerciseProgressModel:
         user = await _make_user(db_session, email="uep@test.com")
         exercise = Exercise(
             lesson_id=lesson.id,
-            question_description="q",
+            type="quiz",
             question_text="t",
-            option_1="a", option_2="b", option_3="c", option_4="d",
-            correct_answer=1,
+            config={"word_id": None, "options": ["a", "b", "c", "d"], "correct": 0},
         )
         db_session.add(exercise)
         await db_session.flush()

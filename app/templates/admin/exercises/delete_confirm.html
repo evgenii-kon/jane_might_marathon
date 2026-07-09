@@ -19,23 +19,15 @@
                 <span class="info-value">{{ exercise.lesson_id }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Описание:</span>
-                <span class="info-value">{{ exercise.question_description }}</span>
+                <span class="info-label">Тип:</span>
+                <span class="info-value">{{ exercise.type }}</span>
             </div>
+            {% if exercise.question_text %}
             <div class="info-row">
                 <span class="info-label">Вопрос:</span>
                 <span class="info-value">{{ exercise.question_text }}</span>
             </div>
-            <div class="info-row">
-                <span class="info-label">Правильный ответ:</span>
-                <span class="info-value">{{ exercise.correct_answer }}. 
-                    {% if exercise.correct_answer == 1 %}{{ exercise.option_1 }}
-                    {% elif exercise.correct_answer == 2 %}{{ exercise.option_2 }}
-                    {% elif exercise.correct_answer == 3 %}{{ exercise.option_3 }}
-                    {% else %}{{ exercise.option_4 }}
-                    {% endif %}
-                </span>
-            </div>
+            {% endif %}
         </div>
         
         <p class="confirm-warning">⚠️ Это действие нельзя отменить. Упражнение будет удалено из урока.</p>

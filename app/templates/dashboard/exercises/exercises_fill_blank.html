@@ -2,6 +2,34 @@
 
 {% block title %}Упражнения - {{ lesson.name }}{% endblock %}
 
+{% block extra_css %}
+<style>
+    .fb-sentence {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+        font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        color: var(--text-heading);
+        line-height: 1.6;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .fb-blank {
+        display: inline-block;
+        min-width: 56px;
+        border-bottom: 3px solid #60a5fa;
+        color: #60a5fa;
+    }
+
+    @media (max-width: 640px) {
+        .fb-sentence { font-size: 22px; }
+        .fb-blank { min-width: 36px; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="quiz-container">
     <!-- Навигация -->
@@ -21,29 +49,29 @@
         </div>
     </div>
 
-    <!-- Вопрос -->
+    <!-- Упражнение -->
     <div class="quiz-card">
         <div class="quiz-header">
             <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
-            <span class="quiz-description">{% if is_choose_hanzi %}Выберите иероглиф{% else %}Выберите правильный перевод{% endif %}</span>
+            <span class="quiz-description">Заполните пропуск</span>
         </div>
 
-        <div class="quiz-question {% if is_choose_hanzi %}quiz-question--translation{% else %}quiz-question--hanzi{% endif %}">
-            {{ exercise.question_text }}
+        <div class="fb-sentence">
+            {{ exercise.config.sentence.replace('___', '<span class="fb-blank">___</span>') | safe }}
         </div>
 
         <div class="quiz-options" id="quizOptions">
             {% set letters = ['А', 'Б', 'В', 'Г'] %}
-            {% for orig_num, text in shuffled_options %}
-            <button class="quiz-option" data-option="{{ orig_num }}">
+            {% for text in exercise.config.options %}
+            <button class="quiz-option" data-option="{{ loop.index0 }}">
                 <span class="option-letter">{{ letters[loop.index0] }}</span>
-                <span class="option-text {% if is_choose_hanzi %}option-text--hanzi{% endif %}">{{ text }}</span>
+                <span class="option-text">{{ text }}</span>
             </button>
             {% endfor %}
         </div>
-        
+
         <div class="quiz-feedback" id="quizFeedback"></div>
-        
+
         <div class="quiz-next" id="quizNext" style="display: none;">
             <button class="btn-next" id="nextBtn">Следующий вопрос →</button>
         </div>
@@ -58,7 +86,6 @@
     let isAnswered = false;
     let isLastQuestion = false;
 
-    const optionsContainer = document.getElementById('quizOptions');
     const feedbackDiv = document.getElementById('quizFeedback');
     const nextContainer = document.getElementById('quizNext');
     const nextBtn = document.getElementById('nextBtn');
@@ -91,8 +118,7 @@
     }
 
     function highlightCorrectOption(correctOption) {
-        const btns = document.querySelectorAll('.quiz-option');
-        btns.forEach(btn => {
+        document.querySelectorAll('.quiz-option').forEach(btn => {
             if (parseInt(btn.dataset.option) === correctOption) {
                 btn.classList.add('correct');
             }
@@ -100,22 +126,7 @@
     }
 
     function disableOptions() {
-        const btns = document.querySelectorAll('.quiz-option');
-        btns.forEach(btn => {
-            btn.disabled = true;
-        });
-    }
-
-    function showNextButton() {
-        nextContainer.style.display = 'block';
-    }
-
-    function loadNextQuestion() {
-        if (isLastQuestion) {
-            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
-        } else {
-            window.location.reload();
-        }
+        document.querySelectorAll('.quiz-option').forEach(btn => { btn.disabled = true; });
     }
 
     async function handleAnswer(selectedBtn, selectedOption) {
@@ -150,17 +161,15 @@
 
             if (result.is_correct) {
                 if (result.has_next) {
-                    showNextButton();
+                    nextBtn.textContent = 'Следующий вопрос →';
                 } else {
                     isLastQuestion = true;
                     nextBtn.textContent = 'Завершить →';
-                    showNextButton();
                 }
             } else {
-                // Неправильный ответ — варианты перемешаются при перезагрузке
                 nextBtn.textContent = 'Попробовать снова 🔄';
-                showNextButton();
             }
+            nextContainer.style.display = 'block';
 
         } catch (error) {
             console.error('Ошибка:', error);
@@ -174,7 +183,6 @@
         }
     }
 
-    // Обработчики
     document.querySelectorAll('.quiz-option').forEach(btn => {
         btn.addEventListener('click', () => {
             const selectedOption = parseInt(btn.dataset.option);
@@ -182,6 +190,12 @@
         });
     });
 
-    nextBtn.addEventListener('click', loadNextQuestion);
+    nextBtn.addEventListener('click', () => {
+        if (isLastQuestion) {
+            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
+        } else {
+            window.location.reload();
+        }
+    });
 </script>
 {% endblock %}

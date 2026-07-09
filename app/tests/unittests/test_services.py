@@ -73,10 +73,9 @@ async def _mk_word(s, hanzi="字", transcription="zì", translation="char") -> W
 async def _mk_exercise(s, lesson_id, order=1) -> Exercise:
     e = Exercise(
         lesson_id=lesson_id,
-        question_description="desc",
+        type="quiz",
         question_text="q",
-        option_1="a", option_2="b", option_3="c", option_4="d",
-        correct_answer=1,
+        config={"word_id": None, "options": ["a", "b", "c", "d"], "correct": 0},
         explanation="Because a",
         order_in_lesson=order,
     )
@@ -453,28 +452,27 @@ class TestExerciseService:
         ls = await _mk_lesson(db_session, wk.id, name="ES Create")
         data = ExerciseCreate(
             lesson_id=ls.id,
-            question_description="d",
+            type="quiz",
             question_text="t",
-            option_1="a", option_2="b", option_3="c", option_4="d",
-            correct_answer=2,
+            config={"word_id": None, "options": ["a", "b", "c", "d"], "correct": 1},
             order_in_lesson=1,
         )
         resp = await svc.create_exercise(data)
-        assert resp.correct_answer == 2
+        assert resp.config["correct"] == 1
 
     async def test_update_exercise_success(self, db_session):
         svc = ExerciseService(db_session)
         wk = await _mk_week(db_session, slug="es-u-wk", number=323)
         ls = await _mk_lesson(db_session, wk.id, name="ES Update")
         e = await _mk_exercise(db_session, ls.id)
-        data = ExerciseUpdate(correct_answer=3)
+        data = ExerciseUpdate(config={"word_id": None, "options": ["a", "b", "c", "d"], "correct": 3})
         resp = await svc.update_exercise(e.id, data)
-        assert resp.correct_answer == 3
+        assert resp.config["correct"] == 3
 
     async def test_update_exercise_not_found(self, db_session):
         svc = ExerciseService(db_session)
         with pytest.raises(HTTPException) as exc_info:
-            await svc.update_exercise(999_999, ExerciseUpdate(correct_answer=1))
+            await svc.update_exercise(999_999, ExerciseUpdate(config={"correct": 1}))
         assert exc_info.value.status_code == 404
 
     async def test_delete_exercise_success(self, db_session):
@@ -495,8 +493,8 @@ class TestExerciseService:
         svc = ExerciseService(db_session)
         wk = await _mk_week(db_session, slug="es-ca-wk", number=325)
         ls = await _mk_lesson(db_session, wk.id, name="ES CheckAnswer")
-        e = await _mk_exercise(db_session, ls.id)  # correct_answer=1
-        resp = await svc.check_answer(e.id, 1)
+        e = await _mk_exercise(db_session, ls.id)  # config["correct"]=0
+        resp = await svc.check_answer(e.id, 0)
         assert resp.is_correct is True
         assert resp.explanation is None
 
@@ -504,8 +502,8 @@ class TestExerciseService:
         svc = ExerciseService(db_session)
         wk = await _mk_week(db_session, slug="es-caw-wk", number=326)
         ls = await _mk_lesson(db_session, wk.id, name="ES CheckAnswer Wrong")
-        e = await _mk_exercise(db_session, ls.id)  # correct_answer=1
-        resp = await svc.check_answer(e.id, 2)
+        e = await _mk_exercise(db_session, ls.id)  # config["correct"]=0
+        resp = await svc.check_answer(e.id, 1)
         assert resp.is_correct is False
         assert resp.explanation == "Because a"
 

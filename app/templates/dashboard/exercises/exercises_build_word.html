@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block title %}Упражнения - {{ lesson.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bw-translation {
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+    }
+
+    .bw-translation strong {
+        display: block;
+        font-size: 28px;
+        color: var(--text-heading);
+        margin-top: 4px;
+    }
+
+    .bw-answer-zone {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        min-height: 76px;
+        padding: 14px;
+        margin-bottom: 20px;
+        background: var(--bg-card-alt);
+        border: 2px dashed var(--border-color);
+        border-radius: 16px;
+        transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .bw-answer-zone--correct {
+        border-style: solid;
+        border-color: #10b981;
+        background: rgba(16, 185, 129, .06);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .18);
+        animation: bw-pop .35s ease;
+    }
+
+    .bw-answer-zone--wrong {
+        border-style: solid;
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, .05);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, .18);
+        animation: bw-shake .4s ease;
+    }
+
+    @keyframes bw-pop {
+        0%   { transform: scale(1); }
+        45%  { transform: scale(1.03); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes bw-shake {
+        0%, 100% { transform: translateX(0); }
+        25%      { transform: translateX(-6px); }
+        75%      { transform: translateX(6px); }
+    }
+
+    .bw-slot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 56px;
+        height: 56px;
+        padding: 0 10px;
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--text-heading);
+        cursor: pointer;
+    }
+
+    .bw-parts {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 28px;
+    }
+
+    .bw-part {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 56px;
+        height: 56px;
+        padding: 0 10px;
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--text-heading);
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+    .bw-part:hover:not(:disabled) {
+        background: var(--bg-hover);
+        border-color: #60a5fa;
+        transform: translateY(-3px);
+    }
+
+    .bw-part:disabled {
+        opacity: .3;
+        cursor: not-allowed;
+    }
+
+    .bw-controls {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    @media (max-width: 640px) {
+        .bw-translation { font-size: 16px; }
+        .bw-translation strong { font-size: 22px; }
+        .bw-slot, .bw-part { min-width: 46px; height: 46px; font-size: 20px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <!-- Навигация -->
+    <div class="quiz-nav">
+        <a href="/dashboard/weeks/{{ lesson.week_id }}" class="back-link">← Назад к неделе</a>
+        <a href="/dashboard/lessons/{{ lesson.id }}" class="back-link">← Назад к уроку</a>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="quiz-progress">
+        <div class="progress-header">
+            <span class="progress-label">📊 Прогресс упражнений</span>
+            <span class="progress-count">{{ completed_count }} из {{ total_count }} выполнено</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
+        </div>
+    </div>
+
+    <!-- Упражнение -->
+    <div class="quiz-card">
+        <div class="quiz-header">
+            <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
+            <span class="quiz-description">Соберите слово по переводу</span>
+        </div>
+
+        <div class="bw-translation">
+            Переведите на китайский:
+            <strong>{{ exercise.config.translation }}</strong>
+        </div>
+
+        <div class="bw-answer-zone" id="bwAnswerZone"></div>
+
+        <div class="bw-parts" id="bwParts"></div>
+
+        <div class="bw-controls">
+            <button class="btn-secondary" id="bwResetBtn">↺ Сбросить</button>
+            <button class="btn-next" id="bwCheckBtn">Проверить</button>
+        </div>
+
+        <div class="quiz-feedback" id="quizFeedback"></div>
+
+        <div class="quiz-next" id="quizNext" style="display: none;">
+            <button class="btn-next" id="nextBtn">Следующий вопрос →</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const lessonId = {{ lesson.id }};
+    const exerciseId = {{ exercise.id }};
+    const parts = {{ exercise.config.parts | tojson }};
+    let isAnswered = false;
+    let isLastQuestion = false;
+    let selection = []; // индексы использованных частей, в порядке выбора
+
+    const answerZone = document.getElementById('bwAnswerZone');
+    const partsContainer = document.getElementById('bwParts');
+    const resetBtn = document.getElementById('bwResetBtn');
+    const checkBtn = document.getElementById('bwCheckBtn');
+    const feedbackDiv = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNext');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function shuffleIndices(n) {
+        const arr = Array.from({ length: n }, (_, i) => i);
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    const order = shuffleIndices(parts.length);
+
+    function render() {
+        answerZone.innerHTML = '';
+        selection.forEach(idx => {
+            const slot = document.createElement('div');
+            slot.className = 'bw-slot';
+            slot.textContent = parts[idx];
+            slot.addEventListener('click', () => {
+                if (isAnswered) return;
+                selection = selection.filter(i => i !== idx);
+                render();
+            });
+            answerZone.appendChild(slot);
+        });
+
+        partsContainer.innerHTML = '';
+        order.forEach(idx => {
+            const btn = document.createElement('button');
+            btn.className = 'bw-part';
+            btn.type = 'button';
+            btn.textContent = parts[idx];
+            btn.disabled = selection.includes(idx) || isAnswered;
+            btn.addEventListener('click', () => {
+                if (isAnswered) return;
+                selection.push(idx);
+                render();
+            });
+            partsContainer.appendChild(btn);
+        });
+
+        checkBtn.disabled = selection.length !== parts.length;
+    }
+
+    function resetSelection() {
+        selection = [];
+        isAnswered = false;
+        answerZone.classList.remove('bw-answer-zone--correct', 'bw-answer-zone--wrong');
+        feedbackDiv.innerHTML = '';
+        feedbackDiv.style.display = 'none';
+        nextContainer.style.display = 'none';
+        checkBtn.style.display = '';
+        resetBtn.style.display = '';
+        render();
+    }
+
+    async function checkAnswer() {
+        if (isAnswered || selection.length !== parts.length) return;
+        isAnswered = true;
+
+        const userAnswer = selection.map(idx => parts[idx]).join('');
+        const formData = new URLSearchParams();
+        formData.append('exercise_id', exerciseId);
+        formData.append('user_answer', userAnswer);
+
+        try {
+            const response = await fetch(`/dashboard/exercises/lesson/${lessonId}/check`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: formData
+            });
+            const result = await response.json();
+
+            render();
+            checkBtn.style.display = 'none';
+
+            if (result.is_correct) {
+                answerZone.classList.add('bw-answer-zone--correct');
+                let bodyHtml = 'Правильно! Отличная работа!';
+                if (result.explanation) {
+                    bodyHtml += `<br><span class="feedback-explanation">💡 ${result.explanation}</span>`;
+                }
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-correct">
+                        <span class="feedback-icon">✅</span>
+                        <span class="feedback-text">${bodyHtml}</span>
+                    </div>
+                `;
+                resetBtn.style.display = 'none';
+
+                if (result.has_next) {
+                    nextBtn.textContent = 'Следующий вопрос →';
+                } else {
+                    isLastQuestion = true;
+                    nextBtn.textContent = 'Завершить →';
+                }
+                nextContainer.style.display = 'block';
+            } else {
+                answerZone.classList.add('bw-answer-zone--wrong');
+                let bodyHtml = `Неправильно! Правильный ответ: ${result.correct_answer_text}`;
+                if (result.explanation) {
+                    bodyHtml += `<br><span class="feedback-explanation">💡 ${result.explanation}</span>`;
+                }
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-wrong">
+                        <span class="feedback-icon">❌</span>
+                        <span class="feedback-text">${bodyHtml}</span>
+                    </div>
+                `;
+                nextBtn.textContent = 'Попробовать снова 🔄';
+                nextContainer.style.display = 'block';
+            }
+            feedbackDiv.style.display = 'block';
+
+        } catch (error) {
+            console.error('Ошибка:', error);
+            feedbackDiv.innerHTML = `
+                <div class="feedback-error">
+                    ❌ Ошибка при проверке ответа. Попробуйте еще раз.
+                </div>
+            `;
+            feedbackDiv.style.display = 'block';
+            isAnswered = false;
+        }
+    }
+
+    resetBtn.addEventListener('click', resetSelection);
+    checkBtn.addEventListener('click', checkAnswer);
+    nextBtn.addEventListener('click', () => {
+        if (isLastQuestion) {
+            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
+        } else if (nextBtn.textContent.includes('Попробовать')) {
+            resetSelection();
+        } else {
+            window.location.reload();
+        }
+    });
+
+    render();
+</script>
+{% endblock %}

@@ -10,7 +10,7 @@
 .hub-page {
     max-width: 960px;
     margin: 0 auto;
-    padding: 40px 24px 56px;
+    padding: 56px 24px 56px;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -122,6 +122,7 @@
 }
 .hub-mode-card--orange .hub-mode-accent { background: linear-gradient(90deg, #60a5fa, #2563eb); }
 .hub-mode-card--blue   .hub-mode-accent { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.hub-mode-card--green  .hub-mode-accent { background: linear-gradient(90deg, #34d399, #059669); }
 
 /* Hover */
 .hub-mode-card:not(.hub-mode-card--locked):hover { transform: translateY(-4px); }
@@ -132,6 +133,10 @@
 .hub-mode-card--blue:hover {
     box-shadow: 0 10px 36px rgba(37,99,235,.11), 0 2px 8px rgba(37,99,235,.07);
     border-color: rgba(37,99,235,.16);
+}
+.hub-mode-card--green:hover {
+    box-shadow: 0 10px 36px rgba(16,185,129,.14), 0 2px 8px rgba(16,185,129,.09);
+    border-color: rgba(16,185,129,.22);
 }
 
 /* Locked */
@@ -171,6 +176,10 @@
     background: #e8edf3;
     border: 1px solid #d1d9e3;
 }
+.hub-mode-icon--green {
+    background: linear-gradient(135deg, rgba(52,211,153,.14), rgba(5,150,105,.07));
+    border: 1px solid rgba(52,211,153,.18);
+}
 
 .hub-mode-badge {
     font-size: 11px;
@@ -187,6 +196,11 @@
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
     color: #94a3b8;
+}
+.hub-mode-badge--new {
+    background: rgba(94,234,212,.14);
+    border: 1px solid rgba(94,234,212,.28);
+    color: #0d9488;
 }
 
 .hub-mode-title {
@@ -211,7 +225,8 @@
     margin-top: 4px;
     transition: letter-spacing .2s;
 }
-.hub-mode-cta--blue { color: #3b82f6; }
+.hub-mode-cta--blue  { color: #3b82f6; }
+.hub-mode-cta--green { color: #34d399; }
 .hub-mode-card:not(.hub-mode-card--locked):hover .hub-mode-cta { letter-spacing: .4px; }
 
 
@@ -222,7 +237,7 @@
 .trainer-page {
     max-width: 680px;
     margin: 0 auto;
-    padding: 0 24px 56px;
+    padding: 56px 24px 56px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -602,8 +617,8 @@
 }
 
 @media (max-width: 560px) {
-    .trainer-page { padding: 0 7px 20px; gap: 10px; }
-    .hub-page     { padding: 0 7px 24px; gap: 14px; }
+    .trainer-page { padding: 20px 7px 20px; gap: 10px; }
+    .hub-page     { padding: 20px 7px 24px; gap: 14px; }
 
     /* Header: smaller so the card + buttons fit on screen without scrolling */
     .tr-title     { font-size: 17px !important; }

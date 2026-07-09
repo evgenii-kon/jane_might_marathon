@@ -92,6 +92,25 @@ async def all_words_trainer(
     )
 
 
+@router.get("/matching", response_class=HTMLResponse)
+async def matching_trainer(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Режим сопоставления пар"""
+    service = WordTrainerService(db)
+    raw_words = await service.get_all_words_session(current_user.id)
+    words = [
+        {"id": w.id, "word": w.hanzi, "translation": w.translation}
+        for w in raw_words
+    ]
+    return templates.TemplateResponse(
+        "word_trainer/matching.html",
+        {"request": request, "words": words, "user": current_user, "mode_name": "Сопоставление пар"},
+    )
+
+
 @router.post("/check")
 async def check_answer(
     word_id: int = Form(...),

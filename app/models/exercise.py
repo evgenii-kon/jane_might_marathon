@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON
 from sqlalchemy.orm import relationship
 from ..database import Base
 
@@ -7,14 +7,10 @@ class Exercise(Base):
     __tablename__ = "exercises"
 
     id = Column(Integer, primary_key=True)
-    lesson_id = Column(Integer, ForeignKey("lessons.id"), nullable=False)
-    question_description = Column(String(255), nullable=False)
-    question_text = Column(Text, nullable=False)
-    option_1 = Column(String(255), nullable=False)
-    option_2 = Column(String(255), nullable=False)
-    option_3 = Column(String(255), nullable=False)
-    option_4 = Column(String(255), nullable=False)
-    correct_answer = Column(Integer, nullable=False)
+    lesson_id = Column(Integer, ForeignKey("lessons.id"), nullable=True)
+    type = Column(String(50), nullable=False)
+    question_text = Column(Text, nullable=True)
+    config = Column(JSON, nullable=False, default=dict)
     explanation = Column(Text, nullable=True)
     order_in_lesson = Column(Integer, default=0)
 

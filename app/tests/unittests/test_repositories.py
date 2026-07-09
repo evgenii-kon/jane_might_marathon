@@ -75,10 +75,9 @@ async def _mk_word(s, hanzi="字", transcription="zì", translation="char") -> W
 async def _mk_exercise(s, lesson_id, order=1) -> Exercise:
     e = Exercise(
         lesson_id=lesson_id,
-        question_description="desc",
+        type="quiz",
         question_text="q",
-        option_1="a", option_2="b", option_3="c", option_4="d",
-        correct_answer=1,
+        config={"word_id": None, "options": ["a", "b", "c", "d"], "correct": 0},
         order_in_lesson=order,
     )
     s.add(e)
@@ -466,24 +465,23 @@ class TestExerciseRepository:
         ls = await _mk_lesson(db_session, wk.id, name="ER Create Lesson")
         data = ExerciseCreate(
             lesson_id=ls.id,
-            question_description="d",
+            type="quiz",
             question_text="t",
-            option_1="a", option_2="b", option_3="c", option_4="d",
-            correct_answer=2,
+            config={"word_id": None, "options": ["a", "b", "c", "d"], "correct": 1},
             order_in_lesson=1,
         )
         e = await repo.create(data)
         assert e.id is not None
-        assert e.correct_answer == 2
+        assert e.config["correct"] == 1
 
     async def test_update(self, db_session):
         repo = ExerciseRepository(db_session)
         wk = await _mk_week(db_session, slug="eru-wk", number=226)
         ls = await _mk_lesson(db_session, wk.id, name="ER Update Lesson")
         e = await _mk_exercise(db_session, ls.id)
-        updated = await repo.update(e.id, {"correct_answer": 3})
+        updated = await repo.update(e.id, {"config": {"word_id": None, "options": ["a", "b", "c", "d"], "correct": 2}})
         assert updated is not None
-        assert updated.correct_answer == 3
+        assert updated.config["correct"] == 2
 
     async def test_delete(self, db_session):
         repo = ExerciseRepository(db_session)

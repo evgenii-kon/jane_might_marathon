@@ -1,0 +1,10 @@
+{% if lesson_words %}
+    {% for w in lesson_words %}
+    <label class="mp-word-checkbox">
+        <input type="checkbox" name="mp_word_ids" value="{{ w.id }}" {% if w.id in (fd.mp_word_ids or []) %}checked{% endif %}>
+        {{ w.hanzi }} — {{ w.translation }}
+    </label>
+    {% endfor %}
+{% else %}
+    <p class="mp-hint">Сначала выберите урок — слова подгрузятся автоматически</p>
+{% endif %}

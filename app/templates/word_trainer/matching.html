@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mode_name }} — Тренажёр слов{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mp-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .mp-card {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        box-shadow: var(--shadow-card);
+        cursor: pointer;
+        user-select: none;
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease, opacity .3s ease;
+    }
+
+    .mp-card:hover:not(.mp-card--matched) {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .mp-card--hanzi .mp-card-text {
+        font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-heading);
+    }
+
+    .mp-card--translation .mp-card-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: 1.3;
+    }
+
+    .mp-card--selected {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, .15);
+    }
+
+    .mp-card--correct {
+        background: rgba(16, 185, 129, .06);
+        border-color: rgba(16, 185, 129, .2);
+        box-shadow: 0 0 0 3px #10b981;
+    }
+
+    .mp-card--correct .mp-card-text { color: #059669; }
+
+    .mp-card--matched {
+        opacity: .4;
+        box-shadow: none;
+        pointer-events: none;
+    }
+
+    .mp-card--wrong {
+        background: rgba(239, 68, 68, .05);
+        border-color: rgba(239, 68, 68, .14);
+        box-shadow: 0 0 0 3px #ef4444;
+        animation: mp-shake .4s ease;
+    }
+
+    .mp-card--wrong .mp-card-text { color: #dc2626; }
+
+    @keyframes mp-shake {
+        0%, 100% { transform: translateX(0); }
+        25%      { transform: translateX(-5px); }
+        75%      { transform: translateX(5px); }
+    }
+
+    .mp-empty {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 14px;
+        padding: 40px 20px;
+    }
+
+    .mp-success {
+        padding: 22px 28px 24px;
+    }
+
+    .mp-success .results-icon {
+        font-size: 32px;
+        margin-bottom: 2px;
+    }
+
+    .mp-success h2 {
+        margin: 0 0 6px;
+        font-size: 19px;
+    }
+
+    .mp-success-sub {
+        margin: 0 0 18px;
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    @media (max-width: 640px) {
+        .mp-success {
+            padding: 18px 20px 20px;
+        }
+        .mp-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .mp-card { border-radius: 14px; padding: 8px; }
+        .mp-card--hanzi .mp-card-text { font-size: 22px; }
+        .mp-card--translation .mp-card-text { font-size: 12.5px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="trainer-page">
+
+    <div class="tr-header">
+        <a href="/word-trainer" class="tr-back">← К режимам</a>
+        <div class="tr-mode-info">
+            <h1 class="tr-title">{{ mode_name }}</h1>
+        </div>
+    </div>
+
+    <div class="trainer-stats">
+        <div style="display:flex; gap:8px; justify-content:center; width:100%;">
+            <div class="tr-stat-pill tr-stat-remain">
+                <span class="tr-stat-icon">🃏</span>
+                <span class="tr-stat-val" id="mp-found-count">0</span>
+                <span class="tr-stat-lbl">из 4 пар найдено</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mp-grid" id="mp-grid"></div>
+
+    <div class="mp-empty" id="mp-empty" style="display:none;">
+        Недостаточно слов для этого режима. Изучите больше слов и возвращайтесь!
+    </div>
+
+    <div class="trainer-results mp-success" id="mp-success" style="display:none;">
+        <span class="results-icon">🎉</span>
+        <h2>Все пары найдены!</h2>
+        <p class="mp-success-sub">Отличная работа, продолжаем закреплять слова</p>
+        <div class="results-buttons">
+            <button id="mp-next-round" class="btn-primary">🔄 Следующий раунд</button>
+            <a href="/word-trainer" class="btn-secondary">← К режимам</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const wordsPool = {{ words | tojson }};
+
+    const gridEl = document.getElementById('mp-grid');
+    const emptyEl = document.getElementById('mp-empty');
+    const successEl = document.getElementById('mp-success');
+    const foundCountEl = document.getElementById('mp-found-count');
+    const nextRoundBtn = document.getElementById('mp-next-round');
+
+    let selectedCard = null;
+    let matchedCount = 0;
+    let isChecking = false;
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function pickRoundWords() {
+        return shuffle(wordsPool).slice(0, 4);
+    }
+
+    function buildCard(word, type) {
+        const card = document.createElement('div');
+        card.className = `mp-card mp-card--${type}`;
+        card.dataset.pairId = word.id;
+        card.dataset.type = type;
+
+        const text = document.createElement('div');
+        text.className = 'mp-card-text';
+        text.textContent = type === 'hanzi' ? word.word : word.translation;
+        card.appendChild(text);
+
+        card.addEventListener('click', () => onCardClick(card));
+        return card;
+    }
+
+    function startRound() {
+        selectedCard = null;
+        matchedCount = 0;
+        isChecking = false;
+        foundCountEl.textContent = '0';
+        successEl.style.display = 'none';
+        gridEl.style.display = 'grid';
+
+        const roundWords = pickRoundWords();
+        const cards = [
+            ...roundWords.map(w => buildCard(w, 'hanzi')),
+            ...roundWords.map(w => buildCard(w, 'translation')),
+        ];
+        const shuffledCards = shuffle(cards);
+
+        gridEl.innerHTML = '';
+        shuffledCards.forEach(c => gridEl.appendChild(c));
+    }
+
+    function onCardClick(card) {
+        if (isChecking) return;
+        if (card.classList.contains('mp-card--matched')) return;
+
+        if (!selectedCard) {
+            selectedCard = card;
+            card.classList.add('mp-card--selected');
+            return;
+        }
+
+        if (selectedCard === card) {
+            selectedCard.classList.remove('mp-card--selected');
+            selectedCard = null;
+            return;
+        }
+
+        if (selectedCard.dataset.type === card.dataset.type) {
+            selectedCard.classList.remove('mp-card--selected');
+            selectedCard = card;
+            card.classList.add('mp-card--selected');
+            return;
+        }
+
+        const isMatch = selectedCard.dataset.pairId === card.dataset.pairId;
+        const first = selectedCard;
+        const second = card;
+        selectedCard = null;
+
+        if (isMatch) {
+            first.classList.remove('mp-card--selected');
+            first.classList.add('mp-card--correct');
+            second.classList.add('mp-card--correct');
+            isChecking = true;
+            setTimeout(() => {
+                first.classList.add('mp-card--matched');
+                second.classList.add('mp-card--matched');
+                isChecking = false;
+                matchedCount++;
+                foundCountEl.textContent = String(matchedCount);
+                if (matchedCount === 4) {
+                    setTimeout(() => {
+                        successEl.style.display = 'block';
+                    }, 300);
+                }
+            }, 350);
+        } else {
+            first.classList.remove('mp-card--selected');
+            first.classList.add('mp-card--wrong');
+            second.classList.add('mp-card--wrong');
+            isChecking = true;
+            setTimeout(() => {
+                first.classList.remove('mp-card--wrong');
+                second.classList.remove('mp-card--wrong');
+                isChecking = false;
+            }, 500);
+        }
+    }
+
+    nextRoundBtn.addEventListener('click', startRound);
+
+    if (wordsPool.length < 4) {
+        gridEl.style.display = 'none';
+        document.querySelector('.trainer-stats').style.display = 'none';
+        emptyEl.style.display = 'block';
+    } else {
+        startRound();
+    }
+</script>
+{% endblock %}

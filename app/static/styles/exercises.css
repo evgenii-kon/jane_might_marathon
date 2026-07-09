@@ -94,6 +94,18 @@
     line-height: 1.4;
 }
 
+.quiz-question--hanzi {
+    font-size: 42px;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    text-align: center;
+}
+
+.option-text--hanzi {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+}
+
 /* Варианты ответов */
 .quiz-options {
     display: flex;

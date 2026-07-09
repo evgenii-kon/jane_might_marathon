@@ -13,10 +13,19 @@ from app.services.lesson_service import LessonService
 from app.services.user_exercise_progress_service import UserExerciseProgressService
 from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.user_activity_service import UserActivityService
+from app.repositories.word_repository import WordRepository
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/dashboard/exercises", tags=["dashboard_exercises"])
 templates = Jinja2Templates(directory="app/templates")
+
+TEMPLATE_BY_TYPE = {
+    "quiz": "dashboard/exercises/exercises_quiz.html",
+    "choose_hanzi": "dashboard/exercises/exercises_quiz.html",
+    "matching_pairs": "dashboard/exercises/exercises_matching.html",
+    "build_word": "dashboard/exercises/exercises_build_word.html",
+    "fill_blank": "dashboard/exercises/exercises_fill_blank.html",
+}
 
 
 # ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (асинхронные) ==========
@@ -57,14 +66,10 @@ def _get_progress_stats(completed_ids, exercises):
     }
 
 
-def _get_option_map(exercise):
-    """Получить словарь вариантов ответов (синхронная)"""
-    return {
-        1: exercise.option_1,
-        2: exercise.option_2,
-        3: exercise.option_3,
-        4: exercise.option_4,
-    }
+def _option_text(options, index):
+    if index is None or index < 0 or index >= len(options):
+        return ""
+    return options[index]
 
 
 # ========== ОСНОВНЫЕ РОУТЫ ==========
@@ -111,37 +116,51 @@ async def exercises_quiz(
     # 6. Статистика для отображения
     stats = _get_progress_stats(completed_ids, exercises)
 
-    # 7. Перемешиваем варианты ответов (data-option хранит оригинальный номер)
-    options = [
-        (1, current_exercise.option_1),
-        (2, current_exercise.option_2),
-        (3, current_exercise.option_3),
-        (4, current_exercise.option_4),
-    ]
-    random.shuffle(options)
+    template_name = TEMPLATE_BY_TYPE.get(current_exercise.type)
+    if not template_name:
+        raise HTTPException(500, f"Unknown exercise type: {current_exercise.type}")
 
-    return templates.TemplateResponse(
-        "dashboard/exercises/exercises_quiz.html",
-        {
-            "request": request,
-            "lesson": lesson,
-            "exercise": current_exercise,
-            "shuffled_options": options,
-            "current_index": stats["current_index"],
-            "total_count": stats["total_count"],
-            "progress_percent": stats["percent"],
-            "completed_count": stats["completed_count"],
-            "user": current_user,
-            "csrf_token": get_csrf_token(request),
-        },
-    )
+    context = {
+        "request": request,
+        "lesson": lesson,
+        "exercise": current_exercise,
+        "current_index": stats["current_index"],
+        "total_count": stats["total_count"],
+        "progress_percent": stats["percent"],
+        "completed_count": stats["completed_count"],
+        "user": current_user,
+        "csrf_token": get_csrf_token(request),
+    }
+
+    if current_exercise.type in ("quiz", "choose_hanzi"):
+        # Перемешиваем варианты ответов (data-option хранит оригинальный 0-based индекс)
+        options = current_exercise.config.get("options", [])
+        shuffled_options = list(enumerate(options))
+        random.shuffle(shuffled_options)
+        context["shuffled_options"] = shuffled_options
+        context["is_choose_hanzi"] = current_exercise.type == "choose_hanzi"
+
+    elif current_exercise.type == "matching_pairs":
+        word_ids = current_exercise.config.get("word_ids", [])
+        word_repo = WordRepository(db)
+        words = await word_repo.get_by_ids(word_ids)
+        words_by_id = {w.id: w for w in words}
+        ordered_words = [words_by_id[wid] for wid in word_ids if wid in words_by_id]
+        context["words"] = [
+            {"id": w.id, "word": w.hanzi, "translation": w.translation}
+            for w in ordered_words
+        ]
+        context["pair_count"] = current_exercise.config.get("pair_count", 4)
+
+    return templates.TemplateResponse(template_name, context)
 
 
 @router.post("/lesson/{lesson_id}/check")
 async def check_exercise_answer(
     lesson_id: int,
     exercise_id: int = Form(...),
-    selected_option: int = Form(...),
+    selected_option: int = Form(None),
+    user_answer: str = Form(None),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -153,12 +172,29 @@ async def check_exercise_answer(
     exercise = await exercise_service.get_exercise_by_id(exercise_id)
     if not exercise:
         return {"error": "Exercise not found", "is_correct": False}
-    
+
     if exercise.lesson_id != lesson_id:
         raise HTTPException(403, "Exercise does not belong to this lesson")
 
-    # 2. Проверяем ответ
-    is_correct = selected_option == exercise.correct_answer
+    config = exercise.config or {}
+    options = config.get("options", [])
+    correct_answer = None
+    correct_answer_text = ""
+
+    # 2. Проверяем ответ (логика зависит от типа упражнения)
+    if exercise.type in ("quiz", "choose_hanzi", "fill_blank"):
+        correct_answer = config.get("correct")
+        is_correct = selected_option == correct_answer
+        correct_answer_text = _option_text(options, correct_answer)
+    elif exercise.type == "matching_pairs":
+        # Все пары уже проверены на клиенте — здесь просто фиксируем завершение
+        is_correct = True
+    elif exercise.type == "build_word":
+        correct_answer = config.get("answer", "")
+        correct_answer_text = correct_answer
+        is_correct = user_answer == correct_answer
+    else:
+        is_correct = False
 
     # 3. Сохраняем прогресс если правильно
     if is_correct and not await progress_service.is_exercise_completed(
@@ -168,17 +204,14 @@ async def check_exercise_answer(
         activity_service = UserActivityService(db)
         await activity_service.record_activity(current_user.id)
 
-    # 4. Получаем тексты вариантов
-    option_map = _get_option_map(exercise)
-
-    # 5. Проверяем, есть ли ещё упражнения
+    # 4. Проверяем, есть ли ещё упражнения
     exercises = await exercise_service.get_exercises_by_lesson(lesson_id)
     completed_ids = await progress_service.get_completed_exercise_ids(
         current_user.id, lesson_id
     )
     has_next = len(completed_ids) < len(exercises)
 
-    # 6. Если все упражнения впервые пройдены — ставим постоянный флаг
+    # 5. Если все упражнения впервые пройдены — ставим постоянный флаг
     if not has_next:
         lesson_progress_service = UserLessonProgressService(db)
         await lesson_progress_service.mark_exercises_ever_completed(
@@ -187,8 +220,8 @@ async def check_exercise_answer(
 
     return {
         "is_correct": is_correct,
-        "correct_answer": exercise.correct_answer,
-        "correct_answer_text": option_map.get(exercise.correct_answer, ""),
+        "correct_answer": correct_answer,
+        "correct_answer_text": correct_answer_text,
         "explanation": exercise.explanation,
         "has_next": has_next,
         "completed_count": len(completed_ids),

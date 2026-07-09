@@ -107,9 +107,13 @@ class ExerciseService:
         return result
 
     async def check_answer(
-        self, exercise_id: int, selected_option: int
+        self,
+        exercise_id: int,
+        selected_option: int | None = None,
+        user_answer: str | None = None,
+        pairs: list[dict] | None = None,
     ) -> ExerciseCheckResponse:
-        """Проверить ответ пользователя"""
+        """Проверить ответ пользователя (логика зависит от exercise.type)"""
         exercise = await self.repository.get_by_id(exercise_id)
         if not exercise:
             raise HTTPException(
@@ -117,27 +121,43 @@ class ExerciseService:
                 detail=f"Exercise with id={exercise_id} not found",
             )
 
-        is_correct = selected_option == exercise.correct_answer
+        config = exercise.config or {}
 
-        # Получаем текст выбранного варианта
-        option_map = {
-            1: exercise.option_1,
-            2: exercise.option_2,
-            3: exercise.option_3,
-            4: exercise.option_4,
-        }
+        if exercise.type in ("quiz", "choose_hanzi", "fill_blank"):
+            options = config.get("options", [])
+            correct = config.get("correct")
+            is_correct = selected_option == correct
 
-        correct_option_map = {
-            1: exercise.option_1,
-            2: exercise.option_2,
-            3: exercise.option_3,
-            4: exercise.option_4,
-        }
+            def option_text(index):
+                if index is None or index < 0 or index >= len(options):
+                    return ""
+                return options[index]
 
-        return ExerciseCheckResponse(
-            is_correct=is_correct,
-            correct_answer=exercise.correct_answer,
-            explanation=exercise.explanation if not is_correct else None,
-            user_answer=option_map.get(selected_option, ""),
-            correct_answer_text=correct_option_map.get(exercise.correct_answer, ""),
+            return ExerciseCheckResponse(
+                is_correct=is_correct,
+                correct_answer=correct,
+                explanation=exercise.explanation if not is_correct else None,
+                user_answer=option_text(selected_option),
+                correct_answer_text=option_text(correct),
+            )
+
+        if exercise.type == "matching_pairs":
+            # Пары проверяются на клиенте по мере кликов; здесь просто
+            # отмечаем факт завершения раунда.
+            return ExerciseCheckResponse(is_correct=True)
+
+        if exercise.type == "build_word":
+            answer = config.get("answer", "")
+            is_correct = user_answer == answer
+            return ExerciseCheckResponse(
+                is_correct=is_correct,
+                correct_answer=answer,
+                explanation=exercise.explanation if not is_correct else None,
+                user_answer=user_answer,
+                correct_answer_text=answer,
+            )
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unknown exercise type: {exercise.type}",
         )

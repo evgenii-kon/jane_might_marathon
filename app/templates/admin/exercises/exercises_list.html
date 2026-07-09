@@ -31,9 +31,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Урок</th>
-                    <th>Описание</th>
-                    <th>Вопрос</th>
-                    <th>Варианты</th>
+                    <th>Тип</th>
+                    <th>Содержание</th>
                     <th>Порядок</th>
                     <th>Действия</th>
                 </tr>
@@ -42,22 +41,25 @@
                 {% for exercise in exercises %}
                 <tr>
                     <td>{{ exercise.id }}</td>
-                    <td>{{ exercise.lesson_id }}</td>
-                    <td>{{ exercise.question_description[:40] }}{% if exercise.question_description|length > 40 %}...{% endif %}</td>
-                    <td>{{ exercise.question_text[:40] }}{% if exercise.question_text|length > 40 %}...{% endif %}</td>
+                    <td>{{ exercise.lesson_id if exercise.lesson_id else '—' }}</td>
+                    <td>
+                        <span class="exercise-type-badge">{{ type_labels.get(exercise.type, exercise.type) }}</span>
+                    </td>
                     <td class="options-cell">
-                        <span class="option-badge {% if exercise.correct_answer == 1 %}correct{% endif %}">
-                            1. {{ exercise.option_1[:15] }}
-                        </span>
-                        <span class="option-badge {% if exercise.correct_answer == 2 %}correct{% endif %}">
-                            2. {{ exercise.option_2[:15] }}
-                        </span>
-                        <span class="option-badge {% if exercise.correct_answer == 3 %}correct{% endif %}">
-                            3. {{ exercise.option_3[:15] }}
-                        </span>
-                        <span class="option-badge {% if exercise.correct_answer == 4 %}correct{% endif %}">
-                            4. {{ exercise.option_4[:15] }}
-                        </span>
+                        {% if exercise.type in ('quiz', 'choose_hanzi', 'fill_blank') %}
+                            {% set preview = exercise.question_text or exercise.config.get('sentence', '') %}
+                            <span class="option-badge">{{ preview[:40] }}{% if preview|length > 40 %}...{% endif %}</span>
+                            {% for opt in exercise.config.get('options', []) %}
+                                <span class="option-badge {% if loop.index0 == exercise.config.get('correct') %}correct{% endif %}">
+                                    {{ loop.index }}. {{ opt[:15] }}
+                                </span>
+                            {% endfor %}
+                        {% elif exercise.type == 'build_word' %}
+                            <span class="option-badge correct">{{ exercise.config.get('answer', '') }}</span>
+                            <span class="option-badge">{{ exercise.config.get('translation', '') }}</span>
+                        {% elif exercise.type == 'matching_pairs' %}
+                            <span class="option-badge">{{ exercise.config.get('word_ids', []) | length }} слов, {{ exercise.config.get('pair_count', 4) }} пар</span>
+                        {% endif %}
                     </td>
                     <td>{{ exercise.order_in_lesson }}</td>
                     <td class="actions">
@@ -67,11 +69,25 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="7" class="empty-state">Нет упражнений. Добавьте первое упражнение!</td>
+                    <td colspan="6" class="empty-state">Нет упражнений. Добавьте первое упражнение!</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
 </div>
+
+<style>
+.exercise-type-badge {
+    display: inline-block;
+    white-space: nowrap;
+    background: #eef2ff;
+    color: #4338ca;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+</style>
 {% endblock %}

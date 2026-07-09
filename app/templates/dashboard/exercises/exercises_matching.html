@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Упражнения - {{ lesson.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mp-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .mp-card {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+        background: var(--bg-card-alt);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        cursor: pointer;
+        user-select: none;
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease, opacity .3s ease;
+    }
+
+    .mp-card:hover:not(.mp-card--matched) {
+        background: var(--bg-hover);
+        transform: translateY(-4px);
+    }
+
+    .mp-card--hanzi .mp-card-text {
+        font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-heading);
+    }
+
+    .mp-card--translation .mp-card-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: 1.3;
+    }
+
+    .mp-card--selected {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, .15);
+    }
+
+    .mp-card--correct {
+        background: rgba(16, 185, 129, .06);
+        border-color: rgba(16, 185, 129, .2);
+        box-shadow: 0 0 0 3px #10b981;
+    }
+
+    .mp-card--correct .mp-card-text { color: #059669; }
+
+    .mp-card--matched {
+        opacity: .4;
+        box-shadow: none;
+        pointer-events: none;
+    }
+
+    .mp-card--wrong {
+        background: rgba(239, 68, 68, .05);
+        border-color: rgba(239, 68, 68, .14);
+        box-shadow: 0 0 0 3px #ef4444;
+        animation: mp-shake .4s ease;
+    }
+
+    .mp-card--wrong .mp-card-text { color: #dc2626; }
+
+    @keyframes mp-shake {
+        0%, 100% { transform: translateX(0); }
+        25%      { transform: translateX(-5px); }
+        75%      { transform: translateX(5px); }
+    }
+
+    @media (max-width: 640px) {
+        .mp-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .mp-card { border-radius: 12px; padding: 8px; }
+        .mp-card--hanzi .mp-card-text { font-size: 22px; }
+        .mp-card--translation .mp-card-text { font-size: 12.5px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <!-- Навигация -->
+    <div class="quiz-nav">
+        <a href="/dashboard/weeks/{{ lesson.week_id }}" class="back-link">← Назад к неделе</a>
+        <a href="/dashboard/lessons/{{ lesson.id }}" class="back-link">← Назад к уроку</a>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="quiz-progress">
+        <div class="progress-header">
+            <span class="progress-label">📊 Прогресс упражнений</span>
+            <span class="progress-count">{{ completed_count }} из {{ total_count }} выполнено</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
+        </div>
+    </div>
+
+    <!-- Упражнение -->
+    <div class="quiz-card">
+        <div class="quiz-header">
+            <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
+            <span class="quiz-description">Сопоставьте иероглифы с переводом</span>
+        </div>
+
+        <div class="mp-grid" id="mpGrid"></div>
+
+        <div class="quiz-feedback" id="quizFeedback"></div>
+
+        <div class="quiz-next" id="quizNext" style="display: none;">
+            <button class="btn-next" id="nextBtn">Следующий вопрос →</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const lessonId = {{ lesson.id }};
+    const exerciseId = {{ exercise.id }};
+    const wordsData = {{ words | tojson }};
+    let isLastQuestion = false;
+
+    const gridEl = document.getElementById('mpGrid');
+    const feedbackDiv = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNext');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let selectedCard = null;
+    let matchedCount = 0;
+    let isChecking = false;
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function buildCard(word, type) {
+        const card = document.createElement('div');
+        card.className = `mp-card mp-card--${type}`;
+        card.dataset.pairId = word.id;
+        card.dataset.type = type;
+
+        const text = document.createElement('div');
+        text.className = 'mp-card-text';
+        text.textContent = type === 'hanzi' ? word.word : word.translation;
+        card.appendChild(text);
+
+        card.addEventListener('click', () => onCardClick(card));
+        return card;
+    }
+
+    function buildGrid() {
+        const cards = [
+            ...wordsData.map(w => buildCard(w, 'hanzi')),
+            ...wordsData.map(w => buildCard(w, 'translation')),
+        ];
+        shuffle(cards).forEach(c => gridEl.appendChild(c));
+    }
+
+    function onCardClick(card) {
+        if (isChecking) return;
+        if (card.classList.contains('mp-card--matched')) return;
+
+        if (!selectedCard) {
+            selectedCard = card;
+            card.classList.add('mp-card--selected');
+            return;
+        }
+
+        if (selectedCard === card) {
+            selectedCard.classList.remove('mp-card--selected');
+            selectedCard = null;
+            return;
+        }
+
+        if (selectedCard.dataset.type === card.dataset.type) {
+            selectedCard.classList.remove('mp-card--selected');
+            selectedCard = card;
+            card.classList.add('mp-card--selected');
+            return;
+        }
+
+        const isMatch = selectedCard.dataset.pairId === card.dataset.pairId;
+        const first = selectedCard;
+        const second = card;
+        selectedCard = null;
+
+        if (isMatch) {
+            first.classList.remove('mp-card--selected');
+            first.classList.add('mp-card--correct');
+            second.classList.add('mp-card--correct');
+            isChecking = true;
+            setTimeout(() => {
+                first.classList.add('mp-card--matched');
+                second.classList.add('mp-card--matched');
+                isChecking = false;
+                matchedCount++;
+                if (matchedCount === wordsData.length) {
+                    onAllPairsFound();
+                }
+            }, 350);
+        } else {
+            first.classList.remove('mp-card--selected');
+            first.classList.add('mp-card--wrong');
+            second.classList.add('mp-card--wrong');
+            isChecking = true;
+            setTimeout(() => {
+                first.classList.remove('mp-card--wrong');
+                second.classList.remove('mp-card--wrong');
+                isChecking = false;
+            }, 500);
+        }
+    }
+
+    async function onAllPairsFound() {
+        const formData = new URLSearchParams();
+        formData.append('exercise_id', exerciseId);
+
+        try {
+            const response = await fetch(`/dashboard/exercises/lesson/${lessonId}/check`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: formData
+            });
+            const result = await response.json();
+
+            feedbackDiv.innerHTML = `
+                <div class="feedback-correct">
+                    <span class="feedback-icon">✅</span>
+                    <span class="feedback-text">Все пары найдены! Отличная работа!</span>
+                </div>
+            `;
+            feedbackDiv.style.display = 'block';
+
+            if (result.has_next) {
+                nextBtn.textContent = 'Следующий вопрос →';
+            } else {
+                isLastQuestion = true;
+                nextBtn.textContent = 'Завершить →';
+            }
+            nextContainer.style.display = 'block';
+        } catch (error) {
+            console.error('Ошибка:', error);
+            feedbackDiv.innerHTML = `
+                <div class="feedback-error">
+                    ❌ Ошибка при проверке ответа. Попробуйте еще раз.
+                </div>
+            `;
+            feedbackDiv.style.display = 'block';
+        }
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (isLastQuestion) {
+            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
+        } else {
+            window.location.reload();
+        }
+    });
+
+    buildGrid();
+</script>
+{% endblock %}

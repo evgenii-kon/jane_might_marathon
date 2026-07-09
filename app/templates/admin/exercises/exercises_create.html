@@ -3,6 +3,7 @@
 {% block title %}Добавить упражнение - Админка{% endblock %}
 
 {% block content %}
+{% set fd = form_data or {} %}
 <div class="admin-form-container">
     <div class="admin-header">
         <h1>Добавить упражнение</h1>
@@ -15,7 +16,7 @@
     <div class="alert alert-error">{{ error }}</div>
     {% endif %}
 
-    <form method="post" class="admin-form">
+    <form method="post" class="admin-form" id="exerciseForm">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <div class="form-grid">
             <div class="form-group">
@@ -23,7 +24,7 @@
                 <select id="lesson_id" name="lesson_id" required>
                     <option value="">Выберите урок</option>
                     {% for lesson in lessons %}
-                        <option value="{{ lesson.id }}" {% if selected_lesson_id == lesson.id %}selected{% endif %}>
+                        <option value="{{ lesson.id }}" {% if fd.lesson_id == lesson.id %}selected{% endif %}>
                             {{ lesson.name }}
                         </option>
                     {% endfor %}
@@ -32,53 +33,120 @@
 
             <div class="form-group">
                 <label for="order_in_lesson">Порядок в уроке</label>
-                <input type="number" id="order_in_lesson" name="order_in_lesson" value="{{ form_data.order_in_lesson or 0 }}" min="0">
+                <input type="number" id="order_in_lesson" name="order_in_lesson" value="{{ fd.order_in_lesson or 0 }}" min="0">
             </div>
 
             <div class="form-group full-width">
-                <label for="question_description">Описание задания *</label>
-                <input type="text" id="question_description" name="question_description" required value="{{ form_data.question_description or '' }}" placeholder="Например: Выберите правильный перевод">
-            </div>
-
-            <div class="form-group full-width">
-                <label for="question_text">Текст вопроса *</label>
-                <textarea id="question_text" name="question_text" rows="3" required placeholder="Например: apple или Я __ яблоко">{{ form_data.question_text or '' }}</textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="option_1">Вариант 1 *</label>
-                <input type="text" id="option_1" name="option_1" required value="{{ form_data.option_1 or '' }}">
-            </div>
-
-            <div class="form-group">
-                <label for="option_2">Вариант 2 *</label>
-                <input type="text" id="option_2" name="option_2" required value="{{ form_data.option_2 or '' }}">
-            </div>
-
-            <div class="form-group">
-                <label for="option_3">Вариант 3 *</label>
-                <input type="text" id="option_3" name="option_3" required value="{{ form_data.option_3 or '' }}">
-            </div>
-
-            <div class="form-group">
-                <label for="option_4">Вариант 4 *</label>
-                <input type="text" id="option_4" name="option_4" required value="{{ form_data.option_4 or '' }}">
-            </div>
-
-            <div class="form-group">
-                <label for="correct_answer">Правильный ответ *</label>
-                <select id="correct_answer" name="correct_answer" required>
-                    <option value="">Выберите номер</option>
-                    <option value="1" {% if form_data.correct_answer == '1' %}selected{% endif %}>1. {{ form_data.option_1 or 'Вариант 1' }}</option>
-                    <option value="2" {% if form_data.correct_answer == '2' %}selected{% endif %}>2. {{ form_data.option_2 or 'Вариант 2' }}</option>
-                    <option value="3" {% if form_data.correct_answer == '3' %}selected{% endif %}>3. {{ form_data.option_3 or 'Вариант 3' }}</option>
-                    <option value="4" {% if form_data.correct_answer == '4' %}selected{% endif %}>4. {{ form_data.option_4 or 'Вариант 4' }}</option>
+                <label for="exercise_type">Тип упражнения *</label>
+                <select id="exercise_type" name="exercise_type" required>
+                    {% for t in exercise_types %}
+                        <option value="{{ t }}" {% if fd.exercise_type == t %}selected{% endif %}>{{ type_labels[t] }}</option>
+                    {% endfor %}
                 </select>
+            </div>
+
+            <!-- quiz / choose_hanzi -->
+            <div class="ex-group form-group full-width" data-group="qh">
+                <label for="qh_question_text" id="qh-question-label">Текст вопроса (иероглиф / слово)</label>
+                <textarea id="qh_question_text" name="qh_question_text" rows="2" data-required>{{ fd.qh_question_text or '' }}</textarea>
+            </div>
+            <div class="ex-group form-group" data-group="qh">
+                <label for="qh_word_id">ID слова (опционально)</label>
+                <input type="number" id="qh_word_id" name="qh_word_id" value="{{ fd.qh_word_id or '' }}">
+            </div>
+            <div class="ex-group form-group full-width" data-group="qh">
+                <label id="qh-options-label">Варианты ответа (переводы)</label>
+            </div>
+            <div class="ex-group form-group" data-group="qh">
+                <label for="qh_option_1">Вариант 1 *</label>
+                <input type="text" id="qh_option_1" name="qh_option_1" value="{{ fd.qh_option_1 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="qh">
+                <label for="qh_option_2">Вариант 2 *</label>
+                <input type="text" id="qh_option_2" name="qh_option_2" value="{{ fd.qh_option_2 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="qh">
+                <label for="qh_option_3">Вариант 3 *</label>
+                <input type="text" id="qh_option_3" name="qh_option_3" value="{{ fd.qh_option_3 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="qh">
+                <label for="qh_option_4">Вариант 4 *</label>
+                <input type="text" id="qh_option_4" name="qh_option_4" value="{{ fd.qh_option_4 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="qh">
+                <label for="qh_correct_answer">Правильный ответ *</label>
+                <select id="qh_correct_answer" name="qh_correct_answer" data-required>
+                    <option value="">Выберите номер</option>
+                    <option value="1" {% if fd.qh_correct_answer == '1' %}selected{% endif %}>1</option>
+                    <option value="2" {% if fd.qh_correct_answer == '2' %}selected{% endif %}>2</option>
+                    <option value="3" {% if fd.qh_correct_answer == '3' %}selected{% endif %}>3</option>
+                    <option value="4" {% if fd.qh_correct_answer == '4' %}selected{% endif %}>4</option>
+                </select>
+            </div>
+
+            <!-- fill_blank -->
+            <div class="ex-group form-group full-width" data-group="fb">
+                <label for="fb_sentence">Предложение с пропуском (используйте ___) *</label>
+                <input type="text" id="fb_sentence" name="fb_sentence" value="{{ fd.fb_sentence or '' }}" data-required placeholder="我喜欢吃___">
+            </div>
+            <div class="ex-group form-group" data-group="fb">
+                <label for="fb_option_1">Вариант 1 *</label>
+                <input type="text" id="fb_option_1" name="fb_option_1" value="{{ fd.fb_option_1 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="fb">
+                <label for="fb_option_2">Вариант 2 *</label>
+                <input type="text" id="fb_option_2" name="fb_option_2" value="{{ fd.fb_option_2 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="fb">
+                <label for="fb_option_3">Вариант 3 *</label>
+                <input type="text" id="fb_option_3" name="fb_option_3" value="{{ fd.fb_option_3 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="fb">
+                <label for="fb_option_4">Вариант 4 *</label>
+                <input type="text" id="fb_option_4" name="fb_option_4" value="{{ fd.fb_option_4 or '' }}" data-required>
+            </div>
+            <div class="ex-group form-group" data-group="fb">
+                <label for="fb_correct_answer">Правильный ответ *</label>
+                <select id="fb_correct_answer" name="fb_correct_answer" data-required>
+                    <option value="">Выберите номер</option>
+                    <option value="1" {% if fd.fb_correct_answer == '1' %}selected{% endif %}>1</option>
+                    <option value="2" {% if fd.fb_correct_answer == '2' %}selected{% endif %}>2</option>
+                    <option value="3" {% if fd.fb_correct_answer == '3' %}selected{% endif %}>3</option>
+                    <option value="4" {% if fd.fb_correct_answer == '4' %}selected{% endif %}>4</option>
+                </select>
+            </div>
+
+            <!-- build_word -->
+            <div class="ex-group form-group full-width" data-group="bw">
+                <label for="bw_parts">Иероглифы по частям (через запятую) *</label>
+                <input type="text" id="bw_parts" name="bw_parts" value="{{ fd.bw_parts or '' }}" data-required placeholder="电, 话">
+                <small>Порядок в поле не важен — карточки перемешаются на экране пользователя.</small>
+            </div>
+            <div class="ex-group form-group" data-group="bw">
+                <label for="bw_answer">Правильный ответ (слово целиком) *</label>
+                <input type="text" id="bw_answer" name="bw_answer" value="{{ fd.bw_answer or '' }}" data-required placeholder="电话">
+            </div>
+            <div class="ex-group form-group" data-group="bw">
+                <label for="bw_translation">Перевод *</label>
+                <input type="text" id="bw_translation" name="bw_translation" value="{{ fd.bw_translation or '' }}" data-required placeholder="телефон">
+            </div>
+
+            <!-- matching_pairs -->
+            <div class="ex-group form-group" data-group="mp">
+                <label for="mp_pair_count">Количество пар</label>
+                <input type="number" id="mp_pair_count" name="mp_pair_count" value="{{ fd.mp_pair_count or 4 }}" min="4" max="4">
+                <small>Пока поддерживается фиксированный формат 4 пары (8 карточек).</small>
+            </div>
+            <div class="ex-group form-group full-width" data-group="mp">
+                <label>Слова для сопоставления (минимум 4) *</label>
+                <div class="mp-word-list" id="mpWordList">
+                    {% include "admin/exercises/_word_checkboxes.html" %}
+                </div>
             </div>
 
             <div class="form-group full-width">
                 <label for="explanation">Пояснение (опционально)</label>
-                <textarea id="explanation" name="explanation" rows="2" placeholder="Почему этот ответ правильный...">{{ form_data.explanation or '' }}</textarea>
+                <textarea id="explanation" name="explanation" rows="2" placeholder="Почему этот ответ правильный...">{{ fd.explanation or '' }}</textarea>
             </div>
         </div>
 
@@ -88,4 +156,99 @@
         </div>
     </form>
 </div>
+
+<style>
+.mp-word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-top: 6px;
+}
+.mp-word-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+    transition: all 0.15s;
+}
+.mp-word-checkbox:hover { border-color: #60a5fa; }
+.mp-hint { color: #6b7280; font-size: 14px; padding: 6px 2px; }
+</style>
+
+<script>
+    const TYPE_GROUPS = {
+        quiz: ['qh'],
+        choose_hanzi: ['qh'],
+        fill_blank: ['fb'],
+        build_word: ['bw'],
+        matching_pairs: ['mp'],
+    };
+    const QH_LABELS = {
+        quiz: { question: 'Текст вопроса (иероглиф / слово)', options: 'Варианты ответа (переводы)' },
+        choose_hanzi: { question: 'Текст вопроса (перевод слова)', options: 'Варианты ответа (иероглифы)' },
+    };
+
+    const typeSelect = document.getElementById('exercise_type');
+    const lessonSelect = document.getElementById('lesson_id');
+    const mpWordList = document.getElementById('mpWordList');
+
+    function applyType(type) {
+        const activeGroups = TYPE_GROUPS[type] || [];
+        document.querySelectorAll('.ex-group').forEach(el => {
+            const show = activeGroups.includes(el.dataset.group);
+            el.style.display = show ? '' : 'none';
+            el.querySelectorAll('[data-required]').forEach(input => { input.required = show; });
+        });
+        if (QH_LABELS[type]) {
+            const qLabel = document.getElementById('qh-question-label');
+            const oLabel = document.getElementById('qh-options-label');
+            if (qLabel) qLabel.textContent = QH_LABELS[type].question;
+            if (oLabel) oLabel.textContent = QH_LABELS[type].options;
+        }
+        if (type === 'matching_pairs' && lessonSelect.value) {
+            loadWordsForLesson(lessonSelect.value);
+        }
+    }
+
+    async function loadWordsForLesson(lessonId) {
+        if (!lessonId) {
+            mpWordList.innerHTML = '<p class="mp-hint">Сначала выберите урок</p>';
+            return;
+        }
+        mpWordList.innerHTML = '<p class="mp-hint">Загрузка...</p>';
+        try {
+            const res = await fetch(`/admin/api/words?lesson_id=${lessonId}`);
+            const words = await res.json();
+            if (!words.length) {
+                mpWordList.innerHTML = '<p class="mp-hint">В уроке нет слов</p>';
+                return;
+            }
+            mpWordList.innerHTML = words.map(w => `
+                <label class="mp-word-checkbox">
+                    <input type="checkbox" name="mp_word_ids" value="${w.id}">
+                    ${w.hanzi} — ${w.translation}
+                </label>
+            `).join('');
+        } catch (e) {
+            mpWordList.innerHTML = '<p class="mp-hint">Ошибка загрузки слов</p>';
+        }
+    }
+
+    typeSelect.addEventListener('change', () => applyType(typeSelect.value));
+    lessonSelect.addEventListener('change', () => {
+        if (typeSelect.value === 'matching_pairs') loadWordsForLesson(lessonSelect.value);
+    });
+
+    applyType(typeSelect.value);
+</script>
 {% endblock %}
