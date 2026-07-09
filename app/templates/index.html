@@ -1,485 +1,1670 @@
-{% extends "base.html" %}
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Практикум по китайскому — School Might</title>
+<meta name="description" content="За 30 дней ты поймёшь, способен ли выучить китайский. Практикум по китайскому языку для новичков.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Noto+Sans+SC:wght@900&display=swap');
 
-{% block body_class %}page-landing{% endblock %}
+:root{
+  --red:#940501;
+  --red-deep:#6B0000;
+  --red-badge:rgba(148,5,1,0.38);
+  --blue:#95BBEA;
+  --blue-2:#AACAF2;
+  --white:#FFFFFF;
+  --black:#111111;
+  --gray:rgba(2,2,2,0.6);
+  --gray-2:rgba(0,0,0,0.58);
+  --faq-pale:#F2D0D0;
+  --cjk-font:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+}
 
-{% block title %}Практикум по китайскому — School Might{% endblock %}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  color:var(--black);
+  background:var(--white);
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+button{font-family:'Montserrat',sans-serif;}
 
-{% block content %}
+.btn{
+  cursor:pointer;
+  transition:opacity 0.15s;
+  text-decoration:none;
+  display:inline-block;
+}
+.btn:hover{opacity:0.85;}
 
-<!-- ===== HERO ===== -->
-<section class="landing-hero">
-    <div class="landing-hero__content">
-        <span class="landing-hero__badge">практикум по китайскому</span>
-        <h1 class="landing-hero__title">
-            За 30 дней ты поймёшь,<br>
-            способен ли выучить<br>
-            китайский
-        </h1>
-        <p class="landing-hero__subtitle">
-            Не знаешь, стоит ли вообще связывать будущее с Китаем?
-            За месяц попробуешь китайский по-настоящему и поймёшь сам —
-            интересно тебе это или нет.
-        </p>
-        <div class="landing-hero__ctas">
-            <a href="/auth/register" class="landing-hero__cta">
-                Начать за 6 990 ₽ <span aria-hidden="true">→</span>
-            </a>
-            <a href="#pricing" class="landing-hero__cta-outline">Что внутри</a>
-        </div>
-        <p class="landing-hero__hint">
-            20–30 минут в день. Без переездов и обязательств — просто попробовать.
-        </p>
-    </div>
+.btn-fill{
+  background:var(--red);
+  color:var(--white);
+  border:none;
+  border-radius:50px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+.btn-outline{
+  background:var(--white);
+  color:var(--red);
+  border:2px solid var(--red);
+  border-radius:50px;
+  font-weight:600;
+}
 
-    <img src="/static/images/index_photo_png.png" alt="Практикум по китайскому" class="landing-hero__photo">
+/* ===================== HEADER ===================== */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:var(--white);
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:24px;
+  padding:18px 48px;
+}
+.site-header__nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:0.85rem;
+  font-weight:600;
+}
+.site-header__nav a{text-decoration:none;color:var(--black);}
+.site-header__nav a:hover{opacity:0.7;}
+.site-header__nav a.is-accent{color:var(--red);}
+.site-header__logo{
+  justify-self:center;
+}
+.site-header__logo img{height:31px;width:auto;}
+.site-header__right{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:20px;
+}
+.site-header__login{
+  font-size:0.9rem;
+  font-weight:600;
+  text-decoration:none;
+  color:rgba(0,0,0,0.6);
+}
+.site-header__login:hover{opacity:0.7;}
+.site-header__register{
+  padding:10px 24px;
+  font-size:0.9rem;
+}
+
+@media(max-width:860px){
+  .site-header{grid-template-columns:auto 1fr auto;padding:14px 16px;gap:10px;}
+  .site-header__nav{display:none;}
+  .site-header__logo{justify-self:start;}
+  .site-header__logo img{height:24px;}
+  .site-header__right{gap:10px;}
+  .site-header__login{display:none;}
+  .site-header__register{padding:8px 16px;font-size:0.8rem;}
+}
+
+/* ===================== HERO ===================== */
+.hero{
+  position:relative;
+  min-height:88vh;
+  background:var(--white);
+  overflow:hidden;
+}
+.hero__wordmark{
+  position:absolute;
+  top:14%;
+  left:-20px;
+  right:-10px;
+  z-index:0;
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-start;
+  gap:0;
+  pointer-events:none;
+}
+.hero__cjk{
+  font-size:16vw;
+  font-weight:900;
+  color:var(--black);
+  font-family:var(--cjk-font);
+  line-height:1;
+  white-space:nowrap;
+}
+.hero__latin{
+  font-size:16vw;
+  font-weight:700;
+  color:var(--black);
+  letter-spacing:-2px;
+  line-height:1;
+  white-space:nowrap;
+}
+.hero__photo{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-55%);
+  height:88%;
+  object-fit:contain;
+  z-index:2;
+}
+.hero__star{
+  position:absolute;
+  top:60px;
+  right:22%;
+  width:55px;
+  z-index:3;
+}
+.hero__text{
+  position:absolute;
+  right:60px;
+  bottom:12%;
+  z-index:4;
+  max-width:420px;
+  text-align:right;
+}
+.hero__text p.line{
+  font-size:1.4rem;
+  font-weight:700;
+  line-height:1.25;
+  margin:0;
+}
+.hero__text p.caption{
+  font-size:0.9rem;
+  color:var(--gray);
+  margin-top:6px;
+  font-weight:600;
+}
+.hero__cta{
+  padding:16px 52px;
+  font-size:1rem;
+  margin-top:20px;
+}
+
+@media(max-width:860px){
+  .hero{min-height:100vh;}
+  .hero__wordmark{top:4%;flex-direction:column;align-items:center;gap:0;left:0;right:0;}
+  .hero__cjk{font-size:32vw;}
+  .hero__latin{font-size:32vw;font-weight:700;}
+  .hero__photo{height:60%;left:50%;transform:translateX(-50%);}
+  .hero__star{top:20px;right:16px;width:36px;}
+  .hero__text{right:50%;transform:translateX(50%);bottom:auto;top:8%;text-align:center;max-width:88%;}
+  .hero__text p.line{font-size:1.5rem;}
+}
+
+/* ===================== FEARS SECTION ===================== */
+.fears{
+  background:var(--blue);
+  padding:80px 0;
+  overflow:hidden;
+}
+.section-title{
+  text-align:center;
+  font-size:2.2rem;
+  font-weight:700;
+  margin:0 0 48px;
+  padding:0 20px;
+}
+.slider{
+  position:relative;
+  overflow:hidden;
+}
+.slider__btn{
+  position:absolute;
+  top:40%;
+  z-index:10;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.5);
+  border:none;
+  cursor:pointer;
+  font-size:1.2rem;
+  transition:opacity 0.15s;
+}
+.slider__btn:hover{opacity:0.75;}
+.slider__btn--prev{left:20px;}
+.slider__btn--next{right:20px;}
+.slider--dark .slider__btn{background:rgba(255,255,255,0.23);color:var(--white);}
+
+.fears__track{
+  display:flex;
+  gap:24px;
+  transition:transform 0.4s ease;
+  padding:0 40px;
+}
+.fear-card-wrap{
+  flex-shrink:0;
+  width:230px;
+}
+.fear-card{
+  width:230px;
+  height:290px;
+  border-radius:32px;
+  overflow:hidden;
+  position:relative;
+}
+.fear-card img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:blur(2.1px);
+  transform:scale(1.08);
+}
+.fear-card__overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.38);
+}
+.fear-card__content{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  text-align:center;
+}
+.fear-card__pinyin{
+  color:var(--white);
+  font-size:0.75rem;
+  opacity:0.85;
+  margin-bottom:4px;
+  font-weight:600;
+}
+.fear-card__hanzi{
+  color:var(--white);
+  font-size:4.5rem;
+  font-weight:900;
+  line-height:1;
+  font-family:var(--cjk-font);
+}
+.fear-card__label{
+  color:var(--white);
+  font-size:0.9rem;
+  margin-top:8px;
+  font-weight:600;
+}
+.fear-card-wrap__quote{
+  color:#333;
+  font-size:0.8rem;
+  max-width:230px;
+  text-align:center;
+  margin-top:12px;
+  font-style:italic;
+  line-height:1.35;
+}
+
+@media(max-width:860px){
+  .fears{padding:56px 0;}
+  .section-title{font-size:1.6rem;margin-bottom:32px;}
+  .fears__track{padding:0 28px;gap:16px;}
+  .slider__btn{width:38px;height:38px;font-size:1rem;}
+}
+
+/* ===================== BLOCK 3 — REALLY NOT SCARY + AUTHOR ===================== */
+.truth{
+  background:var(--white);
+  padding:80px 120px;
+  overflow:hidden;
+}
+.truth__head{
+  text-align:center;
+  max-width:640px;
+  margin:0 auto;
+}
+.truth__head h2{
+  font-size:1.9rem;
+  font-weight:700;
+  margin:0 0 16px;
+}
+.truth__head p{
+  color:var(--gray);
+  font-size:1rem;
+  line-height:1.5;
+  margin:0;
+}
+.truth__cards{
+  display:flex;
+  gap:32px;
+  justify-content:center;
+  margin-top:48px;
+  flex-wrap:wrap;
+}
+.truth-card{
+  border:2px solid var(--red);
+  border-radius:24px;
+  padding:2rem;
+  text-align:center;
+  width:260px;
+}
+.truth-card__pinyin{
+  font-size:0.75rem;
+  color:#999;
+  margin-bottom:2px;
+  font-weight:600;
+}
+.truth-card__hanzi{
+  font-size:4rem;
+  color:var(--red);
+  font-weight:900;
+  line-height:1.1;
+  font-family:var(--cjk-font);
+}
+.truth-card__label{
+  font-size:1.15rem;
+  font-weight:700;
+  margin:8px 0 4px;
+}
+.truth-card__desc{
+  font-size:0.85rem;
+  color:var(--gray);
+  margin:0;
+}
+
+.author{
+  margin-top:100px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  align-items:start;
+  position:relative;
+}
+.author__body{
+  position:relative;
+  z-index:1;
+}
+.author__badge{
+  display:inline-block;
+  border:1.5px solid var(--black);
+  border-radius:50px;
+  padding:4px 16px;
+  font-size:0.75rem;
+  margin-bottom:16px;
+  font-weight:600;
+}
+.author__name{
+  font-size:2.6rem;
+  font-weight:900;
+  line-height:1.15;
+  margin:0;
+}
+.author__quote{
+  margin-top:8px;
+  color:var(--red);
+  font-size:0.95rem;
+  line-height:1.5;
+}
+.author__list{
+  margin:24px 0 0;
+  padding:0;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.author__list li{
+  font-size:0.95rem;
+  line-height:1.4;
+  padding-left:1.4em;
+  position:relative;
+}
+.author__list li::before{
+  content:"✦";
+  position:absolute;
+  left:0;
+  color:var(--red);
+}
+.author__collage{
+  position:relative;
+  z-index:1;
+  height:520px;
+}
+.author__collage img.coat{
+  position:absolute;
+  left:20px;
+  top:0;
+  height:440px;
+  object-fit:contain;
+  z-index:1;
+}
+.author__collage img.koi{
+  position:absolute;
+  top:-30px;
+  right:0;
+  width:200px;
+  z-index:3;
+  transform:rotate(-15deg);
+}
+.author__collage img.cat{
+  position:absolute;
+  bottom:0;
+  right:20px;
+  width:170px;
+  border-radius:8px;
+  z-index:2;
+  box-shadow:0 12px 30px rgba(0,0,0,0.2);
+}
+.author__cjk{
+  position:absolute;
+  bottom:-90px;
+  left:-20px;
+  font-size:19vw;
+  font-weight:900;
+  color:var(--red);
+  z-index:0;
+  white-space:nowrap;
+  line-height:1;
+  font-family:var(--cjk-font);
+}
+
+@media(max-width:960px){
+  .truth{padding:56px 24px;}
+  .truth__cards{gap:20px;}
+  .author{grid-template-columns:1fr;gap:48px;margin-top:64px;}
+  .author__collage{height:420px;order:-1;}
+  .author__name{font-size:2rem;}
+}
+
+/* ===================== REVIEWS ===================== */
+.reviews{
+  background:var(--red);
+  padding:80px 0;
+  overflow:hidden;
+}
+.reviews .section-title,
+.reviews__sub{color:var(--white);}
+.reviews__sub{
+  text-align:center;
+  max-width:520px;
+  margin:0 auto 48px;
+  font-size:0.95rem;
+  line-height:1.4;
+}
+.reviews__track{
+  display:flex;
+  gap:24px;
+  transition:transform 0.4s ease;
+  padding:0 40px;
+}
+.review-card{
+  flex-shrink:0;
+  width:280px;
+}
+.review-card__photo-wrap{
+  width:280px;
+  height:320px;
+  border-radius:32px;
+  overflow:hidden;
+  position:relative;
+}
+.review-card__photo-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.review-card__name{
+  position:absolute;
+  bottom:16px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(139,0,0,0.85);
+  color:var(--white);
+  border-radius:50px;
+  padding:6px 20px;
+  font-weight:600;
+  font-size:0.9rem;
+  white-space:nowrap;
+}
+.review-card__tg{
+  background:var(--white);
+  color:var(--red);
+  border-radius:50px;
+  padding:6px 20px;
+  font-size:0.85rem;
+  font-weight:600;
+  display:inline-block;
+  margin:12px 0;
+}
+.review-card__text{
+  color:var(--white);
+  font-size:0.85rem;
+  line-height:1.5;
+  margin:0;
+}
+.review-card--placeholder{
+  height:320px;
+  border-radius:32px;
+  background:#A52020;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:16px;
+}
+.review-card--placeholder .hanzi{
+  font-size:4.5rem;
+  font-weight:900;
+  color:var(--white);
+  font-family:var(--cjk-font);
+  line-height:1;
+}
+.review-card--placeholder .pinyin{
+  color:rgba(255,255,255,0.7);
+  font-size:0.9rem;
+  margin-top:8px;
+}
+.review-card__cta-photo{
+  position:relative;
+}
+.review-card__cta-photo::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.6) 100%);
+}
+.review-card__cta-mark{
+  position:absolute;
+  z-index:2;
+  bottom:16px;
+  right:20px;
+  font-size:2.2rem;
+  font-family:var(--cjk-font);
+  color:rgba(255,255,255,0.85);
+  font-weight:900;
+}
+
+@media(max-width:860px){
+  .reviews__track{padding:0 28px;gap:16px;}
+}
+
+/* ===================== PRICING ===================== */
+.pricing-hero{
+  position:relative;
+  z-index:2;
+  width:100%;
+  padding:64px 24px 70px;
+  text-align:center;
+}
+.pricing-hero__bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:grayscale(100%);
+  opacity:0.85;
+  z-index:0;
+}
+.pricing-hero__title{
+  position:relative;
+  z-index:2;
+  color:var(--white);
+  font-size:2.6rem;
+  font-weight:700;
+  text-shadow:0 2px 10px rgba(0,0,0,0.55);
+  margin:0;
+}
+.pricing-hero__cjk{
+  position:relative;
+  z-index:1;
+  font-size:8vw;
+  font-weight:900;
+  color:var(--red);
+  white-space:nowrap;
+  font-family:var(--cjk-font);
+  line-height:1;
+  margin:6px 0 0;
+}
+.pricing-hero__photo-card{
+  position:relative;
+  z-index:3;
+  width:504px;
+  max-width:100%;
+  margin:-64px auto -60px;
+  box-shadow:0 20px 46px rgba(0,0,0,0.35);
+}
+.pricing-hero__photo-card img{
+  width:100%;
+  height:384px;
+  object-fit:cover;
+  display:block;
+}
+.pricing-hero__cta{
+  position:absolute;
+  left:50%;
+  bottom:44px;
+  transform:translateX(-50%);
+  padding:16px 48px;
+}
+
+.pricing-body{
+  position:relative;
+  background:var(--white);
+  padding:80px 40px;
+  overflow:hidden;
+}
+.pricing-sparkle{
+  position:absolute;
+  color:var(--blue);
+  font-size:1.6rem;
+  pointer-events:none;
+  opacity:0.7;
+}
+.pricing-decor{
+  position:absolute;
+  z-index:0;
+  font-size:2.64rem;
+  color:var(--blue);
+  font-weight:900;
+  line-height:1.1;
+  pointer-events:none;
+  opacity:0.8;
+  text-align:center;
+}
+.pricing-decor__sub{
+  font-size:0.77rem;
+  color:var(--blue);
+  margin-top:6px;
+  font-weight:700;
+}
+.pricing-decor--left{
+  top:36px;
+  left:36px;
+}
+.pricing-decor--right{
+  bottom:36px;
+  right:36px;
+}
+.pricing-body__center{
+  position:relative;
+  z-index:1;
+  max-width:1160px;
+  margin:0 auto;
+}
+.pricing-body__center h2{
+  font-size:1.6rem;
+  font-weight:700;
+  text-align:center;
+  margin:0 0 40px;
+}
+.tariffs{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+.tariff-card{
+  border:2px solid var(--blue);
+  border-radius:48px;
+  padding:2.25rem 2rem;
+  display:flex;
+  flex-direction:column;
+  background:var(--white);
+}
+.tariff-card--highlight{
+  border:2px solid var(--blue);
+  background:rgba(149,187,234,0.14);
+}
+.tariff-card__head{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.tariff-card__badge{
+  background:var(--blue);
+  color:var(--red-deep);
+  border-radius:50px;
+  font-size:0.68rem;
+  padding:3px 12px;
+  display:inline-block;
+  font-weight:700;
+  white-space:nowrap;
+}
+.tariff-card__name{
+  font-size:1.3rem;
+  font-weight:700;
+  margin:0;
+}
+.tariff-card__price{
+  font-size:1.6rem;
+  font-weight:900;
+  color:var(--black);
+  margin:8px 0;
+}
+.tariff-card__desc{
+  font-size:0.85rem;
+  color:var(--gray);
+  margin:0 0 16px;
+}
+.tariff-card__list{
+  list-style:none;
+  margin:0 0 24px;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:1;
+}
+.tariff-card__list li{
+  font-size:0.85rem;
+  color:var(--gray-2);
+  padding-left:1.3em;
+  position:relative;
+  line-height:1.35;
+}
+.tariff-card__list li::before{
+  content:"✦";
+  position:absolute;
+  left:0;
+  color:var(--blue);
+}
+.tariff-card__btn{
+  padding:12px 24px;
+  width:100%;
+  text-align:center;
+  font-weight:600;
+  margin-top:auto;
+  border-radius:50px;
+}
+.tariff-card__btn--outline{
+  background:var(--white);
+  border:2px solid var(--blue);
+  color:var(--black);
+}
+.tariff-card__btn--fill{
+  background:var(--blue);
+  border:2px solid var(--blue);
+  color:var(--white);
+}
+
+@media(max-width:960px){
+  .pricing-hero{padding:48px 20px 56px;}
+  .pricing-hero__title{font-size:1.8rem;}
+  .pricing-hero__cjk{font-size:15vw;}
+  .pricing-hero__photo-card{margin:-40px auto -30px;}
+  .pricing-hero__photo-card img{height:288px;}
+  .pricing-hero__cta{bottom:28px;padding:14px 36px;}
+  .pricing-body{padding:56px 20px;}
+  .pricing-decor{display:none;}
+  .tariffs{grid-template-columns:1fr;}
+}
+
+/* ===================== PARENTS ===================== */
+.parents{
+  background:var(--white);
+  padding:80px 120px;
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+}
+.parents__collage{
+  position:relative;
+  z-index:1;
+  height:600px;
+}
+.parents__collage .p-lying{
+  position:absolute;
+  left:0;
+  top:60px;
+  width:320px;
+  z-index:1;
+  transform:rotate(-3deg);
+  border-radius:16px;
+}
+.parents__collage .p-pantone{
+  position:absolute;
+  right:80px;
+  top:80px;
+  width:150px;
+  z-index:2;
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.2);
+}
+.parents__collage .p-koi{
+  position:absolute;
+  top:20px;
+  right:0;
+  width:160px;
+  z-index:3;
+  transform:rotate(15deg);
+}
+.parents__collage .p-coffee{
+  position:absolute;
+  bottom:20px;
+  right:40px;
+  width:190px;
+  border-radius:16px;
+  z-index:4;
+  box-shadow:0 12px 30px rgba(0,0,0,0.2);
+}
+.parents__body{
+  position:relative;
+  z-index:1;
+}
+.parents__body h2{
+  font-size:3rem;
+  font-weight:900;
+  margin:0 0 32px;
+}
+.parents__qa{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+.parents__qa .q{
+  font-weight:700;
+  margin:0 0 6px;
+  padding-left:1.4em;
+  position:relative;
+}
+.parents__qa .q::before{
+  content:"✦";
+  position:absolute;
+  left:0;
+  color:var(--red);
+}
+.parents__qa .a{
+  color:var(--gray);
+  margin:0;
+  padding-left:1.4em;
+  line-height:1.5;
+  font-size:0.95rem;
+}
+.parents__cjk{
+  position:absolute;
+  bottom:-80px;
+  right:-40px;
+  font-size:18vw;
+  font-weight:900;
+  color:var(--blue);
+  z-index:0;
+  white-space:nowrap;
+  font-family:var(--cjk-font);
+}
+
+@media(max-width:960px){
+  .parents{grid-template-columns:1fr;padding:56px 24px;gap:48px;}
+  .parents__collage{height:420px;}
+  .parents__collage .p-lying{width:220px;}
+  .parents__collage .p-pantone{width:110px;right:40px;}
+  .parents__collage .p-koi{width:110px;}
+  .parents__collage .p-coffee{width:140px;}
+  .parents__body h2{font-size:2.2rem;}
+}
+
+/* ===================== FAQ ===================== */
+.faq{
+  background:var(--white);
+  padding:80px 120px;
+}
+.faq__sub{
+  text-align:center;
+  color:var(--gray);
+  margin:0 0 48px;
+}
+.faq-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  max-width:860px;
+  margin:0 auto;
+  counter-reset:faqIndex;
+}
+.faq-item{
+  counter-increment:faqIndex;
+  border-radius:28px;
+  transition:box-shadow 0.25s ease;
+}
+.faq-question{
+  position:relative;
+  background:var(--red);
+  color:var(--white);
+  border:none;
+  border-radius:50px;
+  padding:22px 26px 22px 32px;
+  display:flex;
+  align-items:center;
+  width:100%;
+  cursor:pointer;
+  font-size:1.02rem;
+  font-weight:600;
+  text-align:left;
+  font-family:'Montserrat',sans-serif;
+  gap:18px;
+  box-shadow:0 8px 20px rgba(148,5,1,0.18);
+  transition:box-shadow 0.25s ease, transform 0.25s ease, border-radius 0.25s ease;
+  z-index:1;
+}
+.faq-question::before{
+  content:"0" counter(faqIndex);
+  flex-shrink:0;
+  font-size:0.72rem;
+  font-weight:700;
+  letter-spacing:0.5px;
+  color:rgba(255,255,255,0.5);
+}
+.faq-question:hover{
+  box-shadow:0 12px 26px rgba(148,5,1,0.28);
+  transform:translateY(-1px);
+}
+.faq-question__text{
+  flex:1;
+  line-height:1.35;
+}
+.faq-question__icon{
+  position:relative;
+  flex-shrink:0;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.16);
+  transition:background 0.25s ease;
+}
+.faq-question__icon::before,
+.faq-question__icon::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  background:var(--white);
+  border-radius:2px;
+}
+.faq-question__icon::before{
+  width:14px;
+  height:2px;
+  transform:translate(-50%,-50%);
+}
+.faq-question__icon::after{
+  width:2px;
+  height:14px;
+  transform:translate(-50%,-50%);
+  transition:transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+.faq-item.open .faq-question__icon{background:rgba(255,255,255,0.28);}
+.faq-item.open .faq-question__icon::after{transform:translate(-50%,-50%) rotate(90deg) scale(0);}
+.faq-item.open .faq-question{
+  border-radius:28px 28px 0 0;
+}
+.faq-answer{
+  background:var(--faq-pale);
+  border-radius:0 0 28px 28px;
+  margin-top:-14px;
+  padding-top:14px;
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:max-height 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s ease, padding-top 0.35s ease;
+}
+.faq-answer__inner{
+  padding:26px 32px 26px 62px;
+  font-size:0.95rem;
+  color:var(--black);
+  line-height:1.6;
+  text-align:left;
+}
+.faq-answer__inner p{margin:0;}
+.faq-item.open .faq-answer{
+  opacity:1;
+}
+
+@media(max-width:860px){
+  .faq{padding:56px 20px;}
+  .faq-question{padding:18px 20px 18px 22px;font-size:0.92rem;gap:12px;}
+  .faq-answer__inner{padding:20px 22px;}
+}
+
+/* ===================== FINAL CTA ===================== */
+.final-cta{
+  background:var(--red);
+  padding:100px 24px;
+  text-align:center;
+}
+.final-cta h2{
+  color:var(--white);
+  font-size:2.3rem;
+  font-weight:700;
+  margin:0 0 16px;
+}
+.final-cta p{
+  color:var(--white);
+  font-size:1.05rem;
+  margin:0 0 32px;
+  line-height:1.4;
+}
+.final-cta .btn-fill{
+  background:var(--white);
+  color:var(--red);
+  padding:16px 64px;
+  font-size:1.1rem;
+}
+
+/* ===================== FOOTER ===================== */
+.site-footer{
+  background:var(--red-deep);
+  padding:60px 120px;
+  color:var(--white);
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr 1fr;
+  gap:40px;
+}
+.site-footer__logo{
+  height:36px;
+  width:auto;
+  filter:brightness(0) invert(1);
+  margin-bottom:16px;
+}
+.site-footer__col1 p{
+  color:rgba(255,255,255,0.6);
+  font-size:0.85rem;
+  line-height:1.5;
+  margin:0 0 4px;
+}
+.site-footer h4{
+  color:#C41E3A;
+  font-weight:600;
+  margin:0 0 16px;
+  font-size:1rem;
+}
+.site-footer a,
+.site-footer .plain{
+  color:var(--white);
+  text-decoration:none;
+  font-size:0.85rem;
+  display:block;
+  margin-bottom:8px;
+}
+.site-footer a:hover{opacity:0.8;}
+.site-footer__legal{
+  font-size:0.7rem;
+  color:rgba(255,255,255,0.5);
+  margin-top:8px;
+}
+
+@media(max-width:860px){
+  .site-footer{grid-template-columns:1fr 1fr;padding:48px 24px;gap:32px;}
+  .site-footer__col1{grid-column:1/-1;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header">
+  <nav class="site-header__nav">
+    <a href="#author" class="is-accent">Мастер Шифу ✦</a>
+    <a href="#reviews">У них получилось</a>
+    <a href="#pricing">А сколько стоит?</a>
+    <a href="#parents">Для родителей</a>
+    <a href="#faq">Мне просто спросить</a>
+  </nav>
+  <a href="/" class="site-header__logo">
+    <img src="/static/new_design/logo.png" alt="School Might" loading="lazy">
+  </a>
+  <div class="site-header__right">
+    <a href="/auth/login" class="site-header__login">Вход</a>
+    <a href="/auth/register" class="btn btn-fill site-header__register">Регистрация</a>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero__wordmark">
+    <span class="hero__cjk">迪尼娅</span>
+    <span class="hero__latin">Díniyă</span>
+  </div>
+  <img class="hero__photo" src="/static/new_design/hero-girl.png" alt="" loading="lazy">
+  <img class="hero__star" src="/static/new_design/hero-star.png" alt="" loading="lazy">
+  <div class="hero__text">
+    <p class="line">За 30 дней ты поймёшь,</p>
+    <p class="line">способен ли выучить китайский</p>
+    <p class="caption">практикум по китайскому</p>
+    <a href="/auth/register" class="btn btn-fill hero__cta">НАЧАТЬ</a>
+  </div>
 </section>
 
+<!-- ===================== FEARS ===================== -->
+<section class="fears" id="fears">
+  <h2 class="section-title">А вдруг я просто не потяну?</h2>
+  <div class="slider" id="fearsSlider">
+    <button class="slider__btn slider__btn--prev" aria-label="Назад">←</button>
+    <button class="slider__btn slider__btn--next" aria-label="Вперёд">→</button>
+    <div class="fears__track" id="fearsTrack">
 
-<!-- ===== TICKER STRIP ===== -->
-<div class="landing-ticker" aria-hidden="true">
-    <div class="landing-ticker__track">
-        <span class="landing-ticker__item">20–30 минут в день</span>
-        <span class="landing-ticker__item">бесплатный тренажёр слов</span>
-        <span class="landing-ticker__item">комьюнити</span>
-        <span class="landing-ticker__item">полезные статьи</span>
-        <span class="landing-ticker__item">рэд и грин флаги</span>
-        <span class="landing-ticker__item">база уровня HSK 1</span>
-        <span class="landing-ticker__item">20–30 минут в день</span>
-        <span class="landing-ticker__item">бесплатный тренажёр слов</span>
-        <span class="landing-ticker__item">комьюнити</span>
-        <span class="landing-ticker__item">полезные статьи</span>
-        <span class="landing-ticker__item">рэд и грин флаги</span>
-        <span class="landing-ticker__item">база уровня HSK 1</span>
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-1.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">kǒngjù</span>
+            <span class="fear-card__hanzi">恐惧</span>
+            <span class="fear-card__label">Страх</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Китайский язык — это нечто страшное и ужасное, что нужно учить всю жизнь.»</p>
+      </div>
+
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-2.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">jīngxià</span>
+            <span class="fear-card__hanzi">惊吓</span>
+            <span class="fear-card__label">Испуг</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Тебе почти 30, идиот.. китайский ты никогда не выучишь.»</p>
+      </div>
+
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-3.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">jiāolǜ</span>
+            <span class="fear-card__hanzi">焦虑</span>
+            <span class="fear-card__label">Тревога</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Через 2-3 дня меня накрыло. Я не могла успеть за всеми иероглифами и в итоге почувствовала себя разбитой, потеряла мотивацию и бросила.»</p>
+      </div>
+
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-4.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">kǒnghuāng</span>
+            <span class="fear-card__hanzi">恐慌</span>
+            <span class="fear-card__label">Паника</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Я смотрю на иероглифы и у меня буквально паника. Как вообще люди это учат?»</p>
+      </div>
+
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-5.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">kùnnán</span>
+            <span class="fear-card__hanzi">困难</span>
+            <span class="fear-card__label">Сложно</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Все вокруг говорят, что китайский нереально сложный. Наверное, это просто не для меня.»</p>
+      </div>
+
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-6.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">hūnmí</span>
+            <span class="fear-card__hanzi">昏迷</span>
+            <span class="fear-card__label">Оцепенение</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Я прочитала, что даже зная 3000 иероглифов, всё равно встаёшь в ступор. Зачем тогда вообще начинать?»</p>
+      </div>
+
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-7.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">niánshù</span>
+            <span class="fear-card__hanzi">年数</span>
+            <span class="fear-card__label">Годы</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Я не готова потратить лучшие годы на то, что может вообще не пригодиться.»</p>
+      </div>
+
+      <div class="fear-card-wrap">
+        <div class="fear-card">
+          <img src="/static/new_design/fear-card-8.png" alt="" loading="lazy">
+          <div class="fear-card__overlay"></div>
+          <div class="fear-card__content">
+            <span class="fear-card__pinyin">yánwù</span>
+            <span class="fear-card__hanzi">延误</span>
+            <span class="fear-card__label">Задержка</span>
+          </div>
+        </div>
+        <p class="fear-card-wrap__quote">«Мне уже 43. То, что реально говорит — начали в детстве или подростком. Я опоздала.»</p>
+      </div>
+
     </div>
-</div>
-
-
-<!-- ===== FEARS ("Знакомо?") ===== -->
-<div class="landing-fears scroll-target" id="fears">
-    <div class="landing-fears__title">«А вдруг я просто не потяну?»</div>
-    <p class="landing-fears__desc">
-        Ты ещё даже не начал, а в голове уже идёт спор. Китайский кажется слишком сложным,
-        иероглифов слишком много, времени слишком мало. Кажется, что нужен особый талант,
-        идеальная память или что начинать надо было ещё в детстве. А если снова бросишь на
-        полпути? Эти мысли знакомы почти каждому, кто задумывался о китайском.
-    </p>
-    <div class="landing-fears__quotes">
-        <div class="fear-quote">
-            <p>«китайский язык — это нечто страшное и ужасное, что нужно учить всю жизнь.»</p>
-        </div>
-        <div class="fear-quote">
-            <p>«Я пыталась учить, но бросила — слишком много времени надо на это.»</p>
-        </div>
-        <div class="fear-quote">
-            <p>«Через 2–3 дня меня накрыло. Слова начали наваливаться. Я не мог уследить за всеми иероглифами и в итоге почувствовал себя разбитым, потерял мотивацию и бросил.»</p>
-        </div>
-        <div class="fear-quote">
-            <p>«Тебе почти 30, идиот… китайский ты никогда не выучишь.»</p>
-        </div>
-    </div>
-</div>
-
-
-<!-- ===== CALM ("Спокойно") ===== -->
-<div class="landing-calm scroll-target" id="calm">
-    <div class="landing-calm__header">
-        <div class="landing-calm__title">На самом деле всё не так страшно</div>
-        <p class="landing-calm__desc">
-            Многие с удивлением обнаруживают: здесь нет времён, падежей, родов и
-            бесконечных исключений, из-за которых обычно страдают в других языках.
-        </p>
-        <p class="landing-calm__desc">
-            Со стороны иероглифы выглядят как набор непонятных значков, но у многих из них есть
-            простая и понятная логика.
-        </p>
-    </div>
-
-    <div class="landing-calm__cards">
-        <div class="calm-card">
-            <div class="calm-card__char">人</div>
-            <div class="calm-card__label">человек</div>
-            <div class="calm-card__explanation">
-                Смотри: две ноги, как будто человек идёт.
-            </div>
-        </div>
-        <div class="calm-card">
-            <div class="calm-card__char">木</div>
-            <div class="calm-card__label">дерево</div>
-            <div class="calm-card__explanation">
-                Добавляем ещё одно <strong>木</strong> → 林 («деревья»).<br>
-                Добавляем третье → 森 («лес»).
-            </div>
-        </div>
-        <div class="calm-card">
-            <div class="calm-card__char">你好</div>
-            <div class="calm-card__label">привет</div>
-            <div class="calm-card__explanation">
-                Иероглиф у каждого слова — это смысл, а не просто буква. Выучил один — запомнил целое слово.
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- ===== OUTCOMES ("Что будет через месяц") ===== -->
-<div class="landing-outcomes scroll-target" id="outcomes">
-    <div class="landing-outcomes__title">Вот что изменится всего за месяц</div>
-    <ul class="outcomes-list">
-        <li>Перестанешь думать, что китайский — это что-то запредельно сложное.</li>
-        <li>Поймёшь, нравится тебе китайский или нет.</li>
-        <li>Сможешь рассказать о себе на китайском.</li>
-        <li>Поздороваешься, познакомишься и поддержишь разговор.</li>
-        <li>Начнёшь понимать китайскую речь на слух.</li>
-    </ul>
-    <div class="landing-outcomes__note">
-        Я разрабатывала этот курс на основе международных стандартов, поэтому, если китайский
-        тебя затянет, к концу обучения у тебя уже будет база уровня HSK 1 — первой международной
-        ступени владения китайским языком.
-    </div>
-</div>
-
-
-<!-- ===== AUTHOR ("Кто будет учить") ===== -->
-<div class="author-section scroll-target" id="author">
-    <div class="author-photo-wrap">
-        <img src="/static/images/jane_photo.png" alt="Евгения — преподаватель" class="author-photo">
-        <div class="author-photo-badge">8+ лет 🏆</div>
-    </div>
-
-    <div class="author-info">
-        <span class="author-eyebrow">Кто будет учить</span>
-        <div class="author-name">Евгения 迪尼娅 (Díníyǎ)</div>
-        <div class="author-title">
-            Главный иероглиф в моём китайском имени — 迪 (Dí). Он означает «направлять», «вести вперёд», «показывать путь».
-        </div>
-        <div class="author-bio">
-            Уже больше 8 лет я учу людей языкам и за это время поняла одну вещь — большинство бросает
-            не потому, что неспособны, а именно:
-            <br><br>
-            — Потому что уверены, что у них нет способностей к языкам.<br>
-            — Потому что однажды уже бросили английский, испанский или другой язык.<br>
-            — Потому что считают, что начинать уже поздно.<br>
-            — Потому что смотрят на иероглифы и думают: «Я это никогда не запомню».
-            <br><br>
-            Поэтому моя главная задача — сделать так, чтобы ты спокойно дошёл до результата и не сдался на полпути.
-        </div>
-
-        <div class="author-achievements">
-            <div class="author-ach">
-                <span class="author-ach__num">8+</span>
-                <span class="author-ach__lbl">лет преподаю языки</span>
-            </div>
-            <div class="author-ach">
-                <span class="author-ach__num">10 000+</span>
-                <span class="author-ach__lbl">часов работы с учениками</span>
-            </div>
-            <div class="author-ach">
-                <span class="author-ach__num">3 года</span>
-                <span class="author-ach__lbl">ведущий преподаватель в «Тетрике»</span>
-            </div>
-            <div class="author-ach">
-                <span class="author-ach__num">5 лет</span>
-                <span class="author-ach__lbl">собственная школа School Might</span>
-            </div>
-        </div>
-
-        <div style="margin-top: 16px; margin-bottom: 16px;">
-            <div class="author-feature">Объясняю сложные вещи простым человеческим языком.</div>
-            <div class="author-feature">Не ругаю за ошибки. Ошибки — это часть обучения, а не повод чувствовать себя глупо.</div>
-            <div class="author-feature">Показываю язык таким, каким он живёт в реальности, а не только в учебниках.</div>
-            <div class="author-feature">Даю много практики и примеров из жизни вместо бесконечной теории.</div>
-            <div class="author-feature">Всегда остаюсь на связи, если что-то непонятно.</div>
-        </div>
-
-        <div class="author-creds">
-            <span class="author-cred">📍 диплом переводчика, СПбГУП</span>
-            <span class="author-cred">💬 Поддержка в Telegram</span>
-            <span class="author-cred">🎥 Видео-уроки с разбором</span>
-        </div>
-    </div>
-</div>
-
-
-<!-- ===== REVIEWS ("У них получилось") ===== -->
-<section class="landing-reviews scroll-target" id="reviews">
-    <div class="landing-reviews__header">
-        <div class="landing-reviews__title">У них получилось</div>
-        <p class="landing-reviews__sub">Это реальные ученики, каждый отзыв можно и нужно проверить — просто напиши им в тг.</p>
-    </div>
-
-    <div class="reviews-grid">
-        <div class="review-card">
-            <div style="display:flex;align-items:center;gap:12px;">
-                <div class="review-card__avatar-placeholder">А</div>
-                <div>
-                    <div class="review-card__name">Анна</div>
-                    <div class="review-card__handle">@tg_anna</div>
-                </div>
-            </div>
-            <div class="review-card__text">«Никогда не думала, что смогу хоть что-то сказать по-китайски. Уже через неделю поняла — это реально!»</div>
-        </div>
-        <div class="review-card">
-            <div style="display:flex;align-items:center;gap:12px;">
-                <div class="review-card__avatar-placeholder">М</div>
-                <div>
-                    <div class="review-card__name">Михаил</div>
-                    <div class="review-card__handle">@tg_misha</div>
-                </div>
-            </div>
-            <div class="review-card__text">«Боялся иероглифов, но Евгения объяснила их так, что теперь я даже запоминаю их логику. Спасибо!»</div>
-        </div>
-
-        <!-- CTA card -->
-        <div class="review-card review-card--cta">
-            <div class="review-cta__pinyin">nǐ de</div>
-            <div class="review-cta__char">你的</div>
-            <div class="review-cta__label">твой</div>
-            <div class="review-cta__title">Дальше здесь будет твой результат</div>
-            <div class="review-cta__sub">Попробуй и посмотри, как пойдёт</div>
-        </div>
-    </div>
+  </div>
 </section>
 
-
-<!-- ===== PRICING ("Тарифы") ===== -->
-<section class="landing-pricing scroll-target" id="pricing">
-    <div class="landing-pricing__header">
-        <div class="landing-pricing__title">Выбери комфортный темп</div>
-        <p class="landing-pricing__sub">Три варианта — для разных целей и ритма жизни</p>
+<!-- ===================== TRUTH + AUTHOR ===================== -->
+<section class="truth" id="author">
+  <div class="truth__head">
+    <h2>На самом деле всё не так страшно</h2>
+    <p>На самом деле все не так страшно! Многие с удивлением обнаруживают: здесь нет времён, падежей и окончаний, а иероглифы складываются как конструктор:</p>
+  </div>
+  <div class="truth__cards">
+    <div class="truth-card">
+      <div class="truth-card__pinyin">mù</div>
+      <div class="truth-card__hanzi">木</div>
+      <div class="truth-card__label">дерево</div>
+      <p class="truth-card__desc">Похоже на дерево с ветками и корнями.</p>
     </div>
-
-    <div class="pricing-grid">
-        <!-- Plan 1 -->
-        <div class="pricing-card">
-            <div>
-                <div class="pricing-name">Попробовать</div>
-                <div class="pricing-price">4 990 ₽</div>
-                <p class="pricing-desc">Для тех, кто хочет попробовать китайский и понять, нравится ли ему этот язык.</p>
-            </div>
-            <ul class="pricing-features">
-                <li>10 модулей с видео и заданиями</li>
-                <li>Тренажёр для запоминания слов и иероглифов</li>
-                <li>Итоговый тест на уровень HSK 1</li>
-                <li>Материалы о Китае (традиции, обучение, работа)</li>
-                <li>Доступ ко всем материалам 1,5 месяца</li>
-            </ul>
-            <a href="/auth/register" class="pricing-cta">Начать со «Старта»</a>
-        </div>
-
-        <!-- Plan 2 (featured) -->
-        <div class="pricing-card pricing-card--featured">
-            <div>
-                <span class="pricing-badge">🔥 Выбирают чаще всего</span>
-                <div class="pricing-name" style="color:white;margin-top:8px;">База</div>
-                <div class="pricing-price" style="color:#e9d5ff;">6 990 ₽</div>
-                <p class="pricing-desc" style="color:rgba(255,255,255,0.72);">Если не любишь спешку и хочешь спокойно пройти курс в своём ритме.</p>
-            </div>
-            <ul class="pricing-features">
-                <li>Всё из тарифа «Попробовать»</li>
-                <li>Доступ к материалам и тренажёру на 3 месяца</li>
-                <li>Доступ в закрытое Telegram-сообщество единомышленников</li>
-                <li>Библиотека фильмов, сериалов и музыки уровня HSK 1</li>
-                <li>Дополнительные практические модули</li>
-                <li class="pricing-features__bold">Поддержка кураторов в чате — отвечаем в течение 24 часов</li>
-            </ul>
-            <a href="/auth/register" class="pricing-cta">Выбрать «Оптимальный»</a>
-        </div>
-
-        <!-- Plan 3 -->
-        <div class="pricing-card">
-            <div>
-                <div class="pricing-name">С наставником</div>
-                <div class="pricing-price">9 990 ₽</div>
-                <p class="pricing-desc">Для тех, кто хочет сохранить материалы под рукой и возвращаться к ним в течение года.</p>
-            </div>
-            <ul class="pricing-features">
-                <li>Всё из тарифа «Оптимальный»</li>
-                <li>Доступ ко всем материалам на 12 месяцев</li>
-                <li class="pricing-features__bold">Общий чат с Евгенией — ответы лично от неё</li>
-                <li>Большой конспект по всему HSK 1 и список всех иероглифов навсегда</li>
-                <li>Мотивация от Евгении в течение всего курса, следим и не даём бросить</li>
-            </ul>
-            <a href="/auth/register" class="pricing-cta">Выбрать «Максимум»</a>
-        </div>
+    <div class="truth-card">
+      <div class="truth-card__pinyin">lín</div>
+      <div class="truth-card__hanzi">林</div>
+      <div class="truth-card__label">роща</div>
+      <p class="truth-card__desc">木 + 木 — два дерева рядом.</p>
     </div>
+    <div class="truth-card">
+      <div class="truth-card__pinyin">sēn</div>
+      <div class="truth-card__hanzi">森</div>
+      <div class="truth-card__label">лес</div>
+      <p class="truth-card__desc">木 + 木 + 木 — три дерева, полноценный лес.</p>
+    </div>
+  </div>
+
+  <div class="author">
+    <div class="author__body">
+      <span class="author__badge">Кто будет учить</span>
+      <h3 class="author__name">Евгения 迪尼娅 (Díniyă)</h3>
+      <p class="author__quote">Главный иероглиф в моём китайском имени — 迪 (Dí). Он означает «направлять», «вести вперёд», «показывать путь».</p>
+      <ul class="author__list">
+        <li>Дипломированный переводчик китайского языка в сфере профессиональной коммуникации (СПбГУП)</li>
+        <li>Более 8 лет преподаю китайский и английский языки</li>
+        <li>Более 3 лет работала в крупной онлайн-школе «Тетрика»</li>
+        <li>Провела более 20 000 уроков</li>
+        <li>Подготовила десятки учеников к сдаче HSK и других международных экзаменов</li>
+      </ul>
+    </div>
+    <div class="author__collage">
+      <img class="coat" src="/static/new_design/author-coat.png" alt="" loading="lazy">
+      <img class="koi" src="/static/new_design/author-koi.png" alt="" loading="lazy">
+      <img class="cat" src="/static/new_design/author-cat.png" alt="" loading="lazy">
+    </div>
+    <div class="author__cjk">迪尼娅 迪尼娅</div>
+  </div>
 </section>
 
+<!-- ===================== REVIEWS ===================== -->
+<section class="reviews" id="reviews">
+  <h2 class="section-title">У них получилось</h2>
+  <p class="reviews__sub">Это реальные ученики, каждый отзыв можно и нужно проверить — просто напиши им в тг.</p>
 
-<!-- ===== PLATFORM ("Не только месяц занятий") ===== -->
-<div class="landing-platform scroll-target" id="platform">
-    <div class="landing-platform__title">Этот практикум — не просто месяц занятий по китайскому</div>
-    <p class="landing-platform__desc">
-        Если язык тебя затянет, не придётся часами искать информацию по форумам, телеграм-чатам
-        и случайным статьям. Мы собрали в одном месте всё, что обычно приходится искать по
-        крупицам: от поступления в Китай до особенностей жизни, учёбы и работы там.
-    </p>
-    <div class="platform-features">
-        <div class="platform-feature">🎯 Где искать гранты и стипендии</div>
-        <div class="platform-feature">🎯 Как поступить в китайский вуз</div>
-        <div class="platform-feature">🎯 Учёба, карьера и работа с Китаем</div>
-        <div class="platform-feature">🎯 Что может неприятно удивить в Китае</div>
-        <div class="platform-feature">🎯 Реальные истории студентов</div>
-        <div class="platform-feature">🎯 Что важно знать о китайской культуре</div>
-        <div class="platform-feature">🎯 Тренажёр слов и иероглифов</div>
-        <div class="platform-feature">И многое другое!</div>
-    </div>
-</div>
+  <div class="slider slider--dark" id="reviewsSlider">
+    <button class="slider__btn slider__btn--prev" aria-label="Назад">←</button>
+    <button class="slider__btn slider__btn--next" aria-label="Вперёд">→</button>
+    <div class="reviews__track" id="reviewsTrack">
 
-
-<!-- ===== PARENTS ===== -->
-<div class="landing-parents scroll-target" id="parents">
-    <div class="landing-parents__title">Для родителей</div>
-    <p class="landing-parents__intro">
-        Если переживаете — это нормально. Китай для многих родителей кажется чем-то очень
-        далёким и непонятным: другой язык, другая культура, другая система образования.
-        Поэтому вместе с курсом вы получите не только базу китайского языка, но и понятную
-        информацию о том, что ждёт ребёнка, если однажды он захочет связать свою жизнь с Китаем.
-    </p>
-
-    <div class="parents-faq">
-        <div class="parents-faq__item">
-            <div class="parents-faq__q">Как понять, подходит ли это вообще моему ребёнку?</div>
-            <div class="parents-faq__a">
-                Именно для этого и создан практикум. За месяц ребёнок сможет познакомиться с языком и
-                культурой, а вы — увидеть, есть ли у него реальный интерес к этому направлению, прежде
-                чем принимать какие-либо серьёзные решения.
-            </div>
+      <div class="review-card">
+        <div class="review-card__photo-wrap">
+          <img src="/static/new_design/review-anna-maria.png" alt="" loading="lazy">
+          <span class="review-card__name">Анна-Мария</span>
         </div>
-        <div class="parents-faq__item">
-            <div class="parents-faq__q">А если потом захочется учиться в Китае? Где искать информацию?</div>
-            <div class="parents-faq__a">
-                Мы собрали материалы о вузах, грантах, поступлении и реальном опыте студентов в одном месте.
-                Вам не придётся неделями искать ответы по форумам и собирать информацию по крупицам.
-            </div>
-        </div>
-        <div class="parents-faq__item">
-            <div class="parents-faq__q">Насколько вообще безопасно и реально учиться в Китае?</div>
-            <div class="parents-faq__a">
-                Внутри практикума вы найдёте не только красивые истории успеха, но и честные рассказы
-                студентов о трудностях, адаптации, бытовых вопросах и том, с чем они столкнулись на самом деле.
-            </div>
-        </div>
-        <div class="parents-faq__item">
-            <div class="parents-faq__q">Я боюсь принять неправильное решение.</div>
-            <div class="parents-faq__a">
-                Именно поэтому сейчас не нужно принимать никаких больших решений. Этот месяц нужен
-                только для одного — спокойно разобраться, интересно ли ребёнку это направление и хочется
-                ли ему двигаться дальше.
-            </div>
-        </div>
-    </div>
-</div>
+        <span class="review-card__tg">тг @schvaam</span>
+        <p class="review-card__text">Получила степень бакалавра по направлению «Юриспруденция» с углублённым изучением китайского языка и права КНР. С уровня HSK3 за 4 месяца подготовились к сдаче HSK5. Овладела свободным китайским для общения, путешествий и работы.</p>
+      </div>
 
-
-<!-- ===== FAQ ===== -->
-<section class="landing-section scroll-target" id="faq">
-    <header class="landing-section__header">
-        <h2 class="landing-section__title">Мне только спросить!</h2>
-        <p class="landing-section__subtitle">Ответы на самые частые вопросы</p>
-    </header>
-
-    <div class="landing-faq">
-
-        <div class="faq-item">
-            <div class="faq-question">
-                <span class="faq-question__text">Я вообще ничего не знаю по-китайски и про Китай. Мне подойдёт?</span>
-                <span class="faq-question__arrow">▼</span>
-            </div>
-            <div class="faq-answer">
-                <p>Да, как раз для этого всё и сделано. Начинаем с самого начала. Ничего знать заранее не нужно.</p>
-            </div>
+      <div class="review-card">
+        <div class="review-card__photo-wrap">
+          <img src="/static/new_design/review-nastya.png" alt="" loading="lazy">
+          <span class="review-card__name">Настя</span>
         </div>
+        <span class="review-card__tg">тг @nyarusheva</span>
+        <p class="review-card__text">Сдала HSK4 на два года раньше срока. Получила 100/100 за чтение на HSK4. Выиграла академическую стипендию за высокий GPA. Планирует карьеру в Китае.</p>
+      </div>
 
-        <div class="faq-item">
-            <div class="faq-question">
-                <span class="faq-question__text">Сколько времени нужно в день?</span>
-                <span class="faq-question__arrow">▼</span>
-            </div>
-            <div class="faq-answer">
-                <p>от 10 до 40 минут в день. Обучение спокойно совмещается со школой, университетом или работой.</p>
-            </div>
+      <div class="review-card">
+        <div class="review-card--placeholder">
+          <span class="hanzi">你的</span>
+          <span class="pinyin">nǐ de</span>
         </div>
+        <span class="review-card__tg">Твой</span>
+        <p class="review-card__text">Дальше здесь будет твой результат. Попробуй и посмотри, как пойдёт.</p>
+      </div>
 
-        <div class="faq-item">
-            <div class="faq-question">
-                <span class="faq-question__text">А если пойму, что это не моё?</span>
-                <span class="faq-question__arrow">▼</span>
-            </div>
-            <div class="faq-answer">
-                <p>Нормальный итог. Смысл месяца как раз в том, чтобы понять это сейчас, а не через несколько лет. Лучше узнать быстро и недорого, чем гадать годами.</p>
-            </div>
+      <div class="review-card">
+        <div class="review-card__photo-wrap review-card__cta-photo">
+          <img src="/static/new_design/review-jane.png" alt="" loading="lazy">
+          <span class="review-card__cta-mark">迪</span>
         </div>
-
-        <div class="faq-item">
-            <div class="faq-question">
-                <span class="faq-question__text">Я смогу поступить в Китай после вашего практикума?</span>
-                <span class="faq-question__arrow">▼</span>
-            </div>
-            <div class="faq-answer">
-                <p>Сразу честно: это не услуга «поступим вас в вуз». Это первый шаг — попробовать язык и понять, твоё или нет. Но внутри есть материалы про вузы, гранты и поступление, и если решишь идти дальше — подскажу, что делать.</p>
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">
-                <span class="faq-question__text">Что такое HSK 1?</span>
-                <span class="faq-question__arrow">▼</span>
-            </div>
-            <div class="faq-answer">
-                <p>HSK — это международный экзамен по китайскому языку (как IELTS или TOEFL в английском). HSK 1 — это первая, начальная ступенька этой лестницы. Если за месяц выходишь на этот уровень — значит, у тебя реальный результат, который можно подтвердить.</p>
-            </div>
-        </div>
+        <span class="review-card__tg">Перейти в тг</span>
+        <p class="review-card__text">Больше кейсов в моём тгк: Jane Might о китайском.</p>
+      </div>
 
     </div>
+  </div>
 </section>
 
+<!-- ===================== PRICING ===================== -->
+<section id="pricing">
+  <div class="pricing-hero">
+    <img class="pricing-hero__bg" src="/static/new_design/pricing-bg.jpg" alt="" loading="lazy">
+    <h2 class="pricing-hero__title">Выбери комфортный темп</h2>
+    <div class="pricing-hero__cjk">选择舒适的步伐</div>
+    <div class="pricing-hero__photo-card">
+      <img src="/static/new_design/pricing-bg.jpg" alt="" loading="lazy">
+      <a href="/auth/register" class="btn btn-fill pricing-hero__cta">НАЧАТЬ</a>
+    </div>
+  </div>
 
-<!-- ===== CTA ===== -->
-<div class="cta-section">
-    <h2>Можно просто попробовать и понять</h2>
-    <p>Не обязательно думать об этом ещё год и бояться ошибиться.</p>
-    <a href="/auth/register" class="btn-primary">Попробовать за 6 990 ₽</a>
-</div>
+  <div class="pricing-body">
+    <span class="pricing-sparkle" style="top:18%;left:6%;transform:rotate(-8deg);">✦</span>
+    <span class="pricing-sparkle" style="top:62%;left:10%;font-size:1.1rem;transform:rotate(12deg);">✦</span>
+    <span class="pricing-sparkle" style="top:12%;right:7%;font-size:1.2rem;transform:rotate(6deg);">✦</span>
+    <span class="pricing-sparkle" style="top:68%;right:9%;transform:rotate(-14deg);">✦</span>
 
-{% endblock %}
+    <div class="pricing-decor pricing-decor--left">
+      导师
+      <div class="pricing-decor__sub">dàoshī<br>Наставник</div>
+    </div>
 
+    <div class="pricing-body__center">
+      <h2>Три варианта — для разных целей и ритма жизни</h2>
+      <div class="tariffs">
 
-{% block extra_js %}
+        <div class="tariff-card">
+          <div class="tariff-card__head">
+            <h3 class="tariff-card__name">Попробовать</h3>
+          </div>
+          <div class="tariff-card__price">4 990 ₽</div>
+          <p class="tariff-card__desc">Для тех, кто хочет попробовать китайский и понять, нравится ли ему этот язык.</p>
+          <ul class="tariff-card__list">
+            <li>10 модулей с видео и заданиями</li>
+            <li>Тренажёр для запоминания слов и иероглифов</li>
+            <li>Итоговый тест на уровень HSK 1</li>
+            <li>Материалы о Китае (традиции, обучение, работа)</li>
+            <li>Доступ ко всем материалам 1,5 месяца</li>
+          </ul>
+          <a href="/auth/register" class="btn tariff-card__btn tariff-card__btn--outline">Начать со «Старта»</a>
+        </div>
+
+        <div class="tariff-card tariff-card--highlight">
+          <div class="tariff-card__head">
+            <h3 class="tariff-card__name">База</h3>
+            <span class="tariff-card__badge">Выбирают чаще всего</span>
+          </div>
+          <div class="tariff-card__price">6 990 ₽</div>
+          <p class="tariff-card__desc">Доступ к материалам и тренажёру на 3 месяца, поддержка сообщества и кураторов.</p>
+          <ul class="tariff-card__list">
+            <li>Всё из тарифа «Попробовать»</li>
+            <li>Доступ к материалам и тренажёру на 3 месяца</li>
+            <li>Доступ в закрытое Telegram-сообщество единомышленников</li>
+            <li>Библиотека фильмов, сериалов и музыки уровня HSK 1</li>
+            <li>Дополнительные практические модули</li>
+            <li>Поддержка кураторов в чате — отвечаем в течение 24 часов</li>
+          </ul>
+          <a href="/auth/register" class="btn tariff-card__btn tariff-card__btn--fill">Выбрать «Оптимальный»</a>
+        </div>
+
+        <div class="tariff-card">
+          <div class="tariff-card__head">
+            <h3 class="tariff-card__name">С наставником</h3>
+          </div>
+          <div class="tariff-card__price">9 990 ₽</div>
+          <p class="tariff-card__desc">Максимальная поддержка и материалы на весь год вперёд.</p>
+          <ul class="tariff-card__list">
+            <li>Всё из тарифа «Оптимальный»</li>
+            <li>Доступ ко всем материалам на 12 месяцев</li>
+            <li>Общий чат с Евгенией — ответы лично от неё</li>
+            <li>Большой конспект по всему HSK 1 и список всех иероглифов навсегда</li>
+            <li>Мотивация от Евгении в течение всего курса, следим и не даём бросить</li>
+          </ul>
+          <a href="/auth/register" class="btn tariff-card__btn tariff-card__btn--outline">Выбрать «Максимум»</a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pricing-decor pricing-decor--right">
+      尝试
+      <div class="pricing-decor__sub">cháng shì<br>Попробовать</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PARENTS ===================== -->
+<section class="parents" id="parents">
+  <div class="parents__collage">
+    <img class="p-lying" src="/static/new_design/parents-girl-lying.png" alt="" loading="lazy">
+    <img class="p-pantone" src="/static/new_design/parents-pantone.png" alt="" loading="lazy">
+    <img class="p-koi" src="/static/new_design/parents-koi.png" alt="" loading="lazy">
+    <img class="p-coffee" src="/static/new_design/parents-coffee.png" alt="" loading="lazy">
+  </div>
+  <div class="parents__body">
+    <h2>Для родителей</h2>
+    <div class="parents__qa">
+      <div>
+        <p class="q">Как понять, подходит ли это вообще моему ребёнку?</p>
+        <p class="a">Именно для этого и создан практикум. За месяц ребёнок сможет познакомиться с языком и культурой, а вы — увидеть, есть ли у него реальный интерес к этому направлению, прежде чем принимать какие-либо серьёзные решения.</p>
+      </div>
+      <div>
+        <p class="q">А если потом захочется учиться в Китае? Где искать информацию?</p>
+        <p class="a">Мы собрали материалы о вузах, грантах, поступлении и реальном опыте студентов в одном месте. Вам не придётся неделями искать ответы по форумам и собирать информацию по крупицам.</p>
+      </div>
+      <div>
+        <p class="q">Насколько вообще безопасно и реально учиться в Китае?</p>
+        <p class="a">Внутри практикума вы найдёте не только красивые истории успеха, но и честные рассказы студентов о трудностях, адаптации, бытовых вопросах и том, с чем они столкнулись на самом деле.</p>
+      </div>
+      <div>
+        <p class="q">Я боюсь принять неправильное решение.</p>
+        <p class="a">Именно поэтому сейчас не нужно принимать никаких больших решений. Этот месяц нужен только для одного — спокойно разобраться, интересно ли ребёнку это направление и хочется ли ему двигаться дальше.</p>
+      </div>
+    </div>
+  </div>
+  <div class="parents__cjk">父母亲</div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section class="faq" id="faq">
+  <h2 class="section-title">Мне только спросить!</h2>
+  <p class="faq__sub">Ответы на самые частые вопросы</p>
+
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-question">
+        <span class="faq-question__text">Я вообще ничего не знаю по-китайски и про Китай. Мне подойдет?</span>
+        <span class="faq-question__icon"></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer__inner">
+          <p>Да, как раз для этого всё и сделано. Начинаем с самого начала. Ничего знать заранее не нужно.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-question__text">Сколько времени на это нужно в день?</span>
+        <span class="faq-question__icon"></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer__inner">
+          <p>30-40 минут в день достаточно для комфортного прохождения курса в базовом темпе.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-question__text">А если пойму, что это не моё?</span>
+        <span class="faq-question__icon"></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer__inner">
+          <p>Именно для этого и сделан практикум — чтобы понять за 30 дней, не тратя год и большие деньги.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-question__text">Я смогу поступить в Китай после вашего интенсива?</span>
+        <span class="faq-question__icon"></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer__inner">
+          <p>Практикум даёт базу HSK1 и понимание языка. Для поступления нужен более высокий уровень, но это отличный первый шаг.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-question__text">Что такое HSK1?</span>
+        <span class="faq-question__icon"></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer__inner">
+          <p>HSK — международный экзамен по китайскому языку. Уровень 1 — начальный, 150 слов. После практикума вы будете готовы к его сдаче.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FINAL CTA ===================== -->
+<section class="final-cta">
+  <h2>Не обязательно принимать решение на год вперёд</h2>
+  <p>Дайте себе возможность попробовать и понять, подходит ли вам китайский язык</p>
+  <a href="/auth/register" class="btn btn-fill">НАЧАТЬ</a>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="site-footer__col1">
+    <img class="site-footer__logo" src="/static/new_design/logo.png" alt="School Might" loading="lazy">
+    <p>Практикум по китайскому языку для новичков</p>
+    <p>schoolmoght@gmail.com</p>
+  </div>
+  <div></div>
+  <div>
+    <h4>Документы</h4>
+    <a href="/offer">Договор оферты</a>
+    <a href="/privacy">Политика конфиденциальности</a>
+    <a href="/personal-data">Согласие на обработку персональных данных</a>
+    <span class="plain">ИП Горбунова Евгения Витальевна</span>
+  </div>
+  <div>
+    <h4>Соцсети</h4>
+    <a href="#">Telegram</a>
+    <a href="#">VK</a>
+    <a href="#">YouTube</a>
+    <a href="#">Instagram*</a>
+    <p class="site-footer__legal">*Признаны экстремистскими организациями и запрещены на территории РФ.</p>
+  </div>
+</footer>
+
 <script>
-/* ── FAQ accordion ── */
-document.querySelectorAll('.faq-question').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-        var item = this.closest('.faq-item');
-        var isOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
-        if (!isOpen) item.classList.add('open');
+function initSlider(trackId, cardSelector, sliderId){
+  const track = document.getElementById(trackId);
+  const slider = document.getElementById(sliderId);
+  if(!track || !slider) return;
+  const prevBtn = slider.querySelector('.slider__btn--prev');
+  const nextBtn = slider.querySelector('.slider__btn--next');
+  const cards = track.querySelectorAll(cardSelector);
+  let index = 0;
+
+  function step(){
+    const card = cards[0];
+    if(!card) return 0;
+    const gap = parseFloat(getComputedStyle(track).gap) || 0;
+    return card.getBoundingClientRect().width + gap;
+  }
+
+  function maxScroll(){
+    // Measured from the last card's own layout position (offsetLeft/offsetWidth
+    // are unaffected by the track's transform) rather than track.scrollWidth,
+    // which some browsers under-report the trailing padding for on a
+    // transformed flex child — that under-report was collapsing the right-side
+    // margin to ~0 while the left side kept its full padding.
+    const lastCard = cards[cards.length - 1];
+    if(!lastCard) return 0;
+    const paddingRight = parseFloat(getComputedStyle(track).paddingRight) || 0;
+    const rightEdge = lastCard.offsetLeft + lastCard.offsetWidth + paddingRight;
+    return Math.max(0, rightEdge - slider.clientWidth);
+  }
+
+  // Number of distinct scroll positions the track can actually land on.
+  // Using cards.length here would let several trailing indices all clamp
+  // to the same position, so "next" would appear to do nothing (freeze)
+  // for a few clicks before finally wrapping back to the start.
+  function pageCount(){
+    const s = step();
+    if(!s) return 1;
+    return Math.max(1, Math.ceil(maxScroll() / s) + 1);
+  }
+
+  function update(){
+    const translate = Math.min(index * step(), maxScroll());
+    track.style.transform = `translateX(${-translate}px)`;
+  }
+
+  nextBtn.addEventListener('click', () => {
+    index = (index + 1) % pageCount();
+    update();
+  });
+  prevBtn.addEventListener('click', () => {
+    index = (index - 1 + pageCount()) % pageCount();
+    update();
+  });
+  window.addEventListener('resize', () => {
+    index = 0;
+    update();
+  });
+}
+
+initSlider('fearsTrack', '.fear-card-wrap', 'fearsSlider');
+initSlider('reviewsTrack', '.review-card', 'reviewsSlider');
+
+function setFaqHeight(item){
+  const answer = item.querySelector('.faq-answer');
+  answer.style.maxHeight = item.classList.contains('open')
+    ? answer.querySelector('.faq-answer__inner').offsetHeight + 'px'
+    : '0px';
+}
+
+document.querySelectorAll('.faq-item').forEach(item => setFaqHeight(item));
+
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      setFaqHeight(i);
     });
+    if(!isOpen){
+      item.classList.add('open');
+      setFaqHeight(item);
+    }
+  });
 });
 
-/* ── Scroll reveal ── */
-(function () {
-    var STAGGER = 320; // ms between children
-
-    var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-            var section = entry.target;
-            var children = Array.from(section.children);
-            children.forEach(function (child, i) {
-                setTimeout(function () {
-                    child.classList.add('is-visible');
-                }, i * STAGGER);
-            });
-            observer.unobserve(section);
-        });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.scroll-target').forEach(function (section) {
-        Array.from(section.children).forEach(function (child) {
-            child.classList.add('reveal');
-        });
-        observer.observe(section);
-    });
-})();
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.faq-item.open').forEach(item => setFaqHeight(item));
+});
 </script>
-{% endblock %}
+
+</body>
+</html>
