@@ -12,6 +12,8 @@
             <h1 class="tr-title">{{ mode_name }}</h1>
             {% if mode == 'daily' %}
                 <span class="tr-due-badge">📅 {{ due_count }} слов сегодня</span>
+            {% elif mode == 'mistakes' %}
+                <span class="tr-mistake-badge" id="mistake-count-badge">🔴 {{ words|length }} слов в стеке</span>
             {% endif %}
         </div>
     </div>
@@ -115,11 +117,16 @@
 
     </div>
 
-    <!-- ═══ НЕТ СЛОВ (ежедневный режим) ═════════════════════ -->
+    <!-- ═══ НЕТ СЛОВ (ежедневный режим / режим ошибок) ═══════ -->
     <div id="no-words-card" style="display:none;" class="tr-no-words">
         <img src="/static/images/orange_logo.png" alt="Логотип" class="tr-no-words-logo">
+        {% if mode == 'mistakes' %}
+        <h3>Стек ошибок пуст!</h3>
+        <p>Продолжайте тренироваться — ошибки будут попадать сюда автоматически.</p>
+        {% else %}
         <h3>Все слова на сегодня изучены!</h3>
         <p>Отличная работа! Возвращайтесь завтра или потренируйтесь в режиме «Все слова»</p>
+        {% endif %}
         <a href="/word-trainer" class="btn-primary">← К режимам</a>
     </div>
 
@@ -131,11 +138,11 @@
     const wordsData = {{ words | tojson }};
     const mode = '{{ mode }}';
 
-    if (mode === 'daily' && (!wordsData || wordsData.length === 0)) {
+    if ((mode === 'daily' || mode === 'mistakes') && (!wordsData || wordsData.length === 0)) {
         document.getElementById('trainer-main').style.display = 'none';
         document.getElementById('no-words-card').style.display = 'flex';
         document.getElementById('stats').style.display = 'none';
-        throw new Error('No words for daily session');
+        throw new Error('No words for session');
     }
 
     let sessionWords = [...wordsData];
@@ -293,6 +300,10 @@
                 wrongCount++;
                 feedbackEl.innerHTML = `❌ Неправильно! Правильный ответ: «${data.translation || 'неизвестно'}»`;
                 feedbackEl.classList.add('feedback-wrong');
+                if (mode === 'mistakes') {
+                    // Слово остаётся в стеке — возвращаем его в конец очереди сессии
+                    sessionWords.push(word);
+                }
             }
             loadAnswer(data);
             showBack();
@@ -335,7 +346,7 @@
         correctCountEl = document.getElementById('correct-count');
         wrongCountEl = document.getElementById('wrong-count');
         remainingCountEl = document.getElementById('remaining-count');
-        if (mode === 'daily') {
+        if (mode === 'daily' || mode === 'mistakes') {
             loadCurrentWord(); showFront();
         } else if (mode === 'all') {
             logoContainer.style.display = 'none';
@@ -355,6 +366,16 @@
     }
 
     function finishSession() {
+        if (mode === 'mistakes') {
+            sessionActive = false;
+            waitingForNext = false;
+            document.getElementById('trainer-main').style.display = 'none';
+            document.getElementById('no-words-card').style.display = 'flex';
+            document.getElementById('stats').style.display = 'none';
+            const badge = document.getElementById('mistake-count-badge');
+            if (badge) badge.textContent = '🔴 0 слов в стеке';
+            return;
+        }
         const total = correctCount + wrongCount;
         const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
         document.getElementById('final-correct').textContent = correctCount;
@@ -384,7 +405,7 @@
     }
 
     function init() {
-        if (mode === 'daily') {
+        if (mode === 'daily' || mode === 'mistakes') {
             if (startControls) startControls.style.display = 'none';
             startNewSession();
         } else if (mode === 'all') {

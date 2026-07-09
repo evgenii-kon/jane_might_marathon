@@ -40,3 +40,6 @@ class User(Base):
     reading_progress = relationship(
         "UserReadingProgress", back_populates="user", cascade="all, delete-orphan"
     )
+    word_mistakes = relationship(
+        "UserWordMistake", back_populates="user", cascade="all, delete-orphan"
+    )

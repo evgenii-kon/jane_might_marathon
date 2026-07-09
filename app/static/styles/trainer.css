@@ -123,6 +123,7 @@
 .hub-mode-card--orange .hub-mode-accent { background: linear-gradient(90deg, #60a5fa, #2563eb); }
 .hub-mode-card--blue   .hub-mode-accent { background: linear-gradient(90deg, #3b82f6, #2563eb); }
 .hub-mode-card--green  .hub-mode-accent { background: linear-gradient(90deg, #34d399, #059669); }
+.hub-mode-card--red    .hub-mode-accent { background: linear-gradient(90deg, #f87171, #dc2626); }
 
 /* Hover */
 .hub-mode-card:not(.hub-mode-card--locked):hover { transform: translateY(-4px); }
@@ -137,6 +138,10 @@
 .hub-mode-card--green:hover {
     box-shadow: 0 10px 36px rgba(16,185,129,.14), 0 2px 8px rgba(16,185,129,.09);
     border-color: rgba(16,185,129,.22);
+}
+.hub-mode-card--red:hover {
+    box-shadow: 0 10px 36px rgba(248,113,113,.16), 0 2px 8px rgba(220,38,38,.10);
+    border-color: rgba(248,113,113,.24);
 }
 
 /* Locked */
@@ -179,6 +184,10 @@
 .hub-mode-icon--green {
     background: linear-gradient(135deg, rgba(52,211,153,.14), rgba(5,150,105,.07));
     border: 1px solid rgba(52,211,153,.18);
+}
+.hub-mode-icon--red {
+    background: linear-gradient(135deg, rgba(248,113,113,.16), rgba(220,38,38,.08));
+    border: 1px solid rgba(248,113,113,.20);
 }
 
 .hub-mode-badge {
@@ -227,6 +236,7 @@
 }
 .hub-mode-cta--blue  { color: #3b82f6; }
 .hub-mode-cta--green { color: #34d399; }
+.hub-mode-cta--red    { color: #f87171; }
 .hub-mode-card:not(.hub-mode-card--locked):hover .hub-mode-cta { letter-spacing: .4px; }
 
 
@@ -294,6 +304,16 @@
     background: rgba(96,165,250,.1);
     border: 1px solid rgba(96,165,250,.18);
     color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 13px;
+    border-radius: 100px;
+}
+
+.tr-mistake-badge {
+    background: rgba(248,113,113,.1);
+    border: 1px solid rgba(248,113,113,.22);
+    color: #dc2626;
     font-size: 13px;
     font-weight: 600;
     padding: 5px 13px;
@@ -624,6 +644,7 @@
     .tr-title     { font-size: 17px !important; }
     .tr-back      { padding: 5px 12px; font-size: 11px; }
     .tr-due-badge { font-size: 11px; padding: 4px 10px; }
+    .tr-mistake-badge { font-size: 11px; padding: 4px 10px; }
 
     .trainer-stats { padding: 8px 12px; }
     .tr-stat-pill  { padding: 6px 8px; gap: 5px; }

@@ -10,6 +10,7 @@ from app.services.word_trainer_service import WordTrainerService
 from app.services.user_activity_service import UserActivityService
 from app.repositories.word_repository import WordRepository
 from app.repositories.user_word_progress_repository import UserWordProgressRepository
+from app.repositories.user_word_mistake_repository import UserWordMistakeRepository
 from app.csrf import get_csrf_token
 import re
 
@@ -111,6 +112,43 @@ async def matching_trainer(
     )
 
 
+@router.get("/mistakes", response_class=HTMLResponse)
+async def mistakes_trainer(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Режим работы над ошибками"""
+    mistake_repo = UserWordMistakeRepository(db)
+    mistake_words = await mistake_repo.get_mistakes(current_user.id)
+
+    words = [
+        {
+            "id": w.id,
+            "word": w.hanzi,
+            "translation": w.translation,
+            "transcription": w.transcription,
+            "example_sentence": w.example_sentence,
+            "audio_url": w.audio_url,
+            "mastery_level": None,
+        }
+        for w in mistake_words
+    ]
+    random.shuffle(words)
+
+    return templates.TemplateResponse(
+        "word_trainer/session.html",
+        {
+            "request": request,
+            "words": words,
+            "mode": "mistakes",
+            "mode_name": "Мои ошибки",
+            "user": current_user,
+            "csrf_token": get_csrf_token(request),
+        },
+    )
+
+
 @router.post("/check")
 async def check_answer(
     word_id: int = Form(...),
@@ -122,11 +160,12 @@ async def check_answer(
     """Проверка ответа пользователя"""
     word_repo = WordRepository(db)
     service = WordTrainerService(db)
+    mistake_repo = UserWordMistakeRepository(db)
 
     word = await word_repo.get_by_id(word_id)
     if not word:
         return {"error": "Word not found"}
-    
+
     cleaned = re.sub(r'\(.*?\)', '', word.translation)
     parts = {p.strip().lower() for p in re.split(r'[/,]', cleaned) if p.strip()}
 
@@ -135,6 +174,14 @@ async def check_answer(
     progress = await service.progress_repo.update_mastery(
         current_user.id, word_id, is_correct
     )
+
+    if not is_correct:
+        # Ошибка в любом режиме → слово в стек
+        await mistake_repo.add_mistake(current_user.id, word_id)
+    elif mode == "mistakes":
+        # Правильный ответ В РЕЖИМЕ ОШИБОК → убрать из стека
+        await mistake_repo.remove_mistake(current_user.id, word_id)
+    # Правильный ответ в daily/all → НЕ убирать из стека (только режим ошибок убирает)
 
     if mode == "daily" and is_correct:
         activity_service = UserActivityService(db)
@@ -149,4 +196,5 @@ async def check_answer(
         "next_review_days": UserWordProgressRepository.MASTERY_INTERVALS.get(
             progress.mastery_level, 1
         ),
+        "mistake_stack_count": await mistake_repo.get_mistake_count(current_user.id),
     }
