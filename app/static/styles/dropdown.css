@@ -58,7 +58,8 @@
     padding: 6px;
 }
 
-.dropdown:hover .dropdown-menu {
+.dropdown:hover .dropdown-menu,
+.dropdown.force-open .dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);

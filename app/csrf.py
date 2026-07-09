@@ -12,6 +12,9 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         if CSRF_SESSION_KEY not in request.session:
             request.session[CSRF_SESSION_KEY] = secrets.token_urlsafe(32)
 
+        if request.method == "POST" and request.url.path == "/payment/webhook":
+            return await call_next(request)
+
         if request.method == "POST":
             session_token = request.session.get(CSRF_SESSION_KEY)
 

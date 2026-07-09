@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.csrf import get_csrf_token
 from app.database import get_db
 from app.dependencies.auth import get_current_user_optional, get_current_user
+from app.dependencies.subscription import require_feature
 from app.models.user import User
 from app.services.idiom_service import IdiomService
 from app.services.user_idiom_progress_service import UserIdiomProgressService
@@ -20,6 +21,7 @@ async def list_idioms(
     request: Request,
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("idioms")),
 ):
     service = IdiomService(db)
     idioms = await service.get_all_idioms()
@@ -48,6 +50,7 @@ async def idiom_detail(
     idiom_id: int,
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("idioms")),
 ):
     service = IdiomService(db)
     idiom = await service.get_idiom_by_id(idiom_id)
@@ -79,6 +82,7 @@ async def set_idiom_progress(
     body: ProgressBody,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("idioms")),
 ):
     service = UserIdiomProgressService(db)
     new_status = await service.set_status(current_user.id, idiom_id, body.status)

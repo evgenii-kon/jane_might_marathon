@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.dependencies.auth import get_current_user
+from app.dependencies.subscription import require_feature
 from app.models.user import User
 from app.repositories.user_word_mistake_repository import UserWordMistakeRepository
 
@@ -16,6 +17,7 @@ async def word_trainer_hub(
     request: Request,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("word_trainer")),
 ):
     """
     Страница выбора режима тренажёра

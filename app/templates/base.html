@@ -39,14 +39,26 @@
                 {% if user %}
                     <a href="/dashboard">Главная</a>
                     <a href="/word-trainer">Тренажёр</a>
-                    <a href="/auth/me" id="tour-profile">Профиль</a>
-                    
-                    <a href="/about">О проекте</a>
-                    <a href="/articles" id="tour-articles">Статьи</a>
-                    <a href="/idioms" id="tour-idioms">Идиомы</a>
-                    <a href="/grammar" id="tour-grammar">Грамматика</a>
-                    <a href="/reading" id="tour-reading">Тексты</a>
-                    
+
+                    <div class="dropdown">
+                        <button type="button" class="dropdown-btn">Информация <span class="dropdown-arrow">▼</span></button>
+                        <div class="dropdown-menu">
+                            <a href="/auth/me" id="tour-profile">Профиль</a>
+                            <a href="/about">О проекте</a>
+                            <a href="/pricing">Тарифы</a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown">
+                        <button type="button" class="dropdown-btn">Теория <span class="dropdown-arrow">▼</span></button>
+                        <div class="dropdown-menu">
+                            <a href="/articles" id="tour-articles">Статьи</a>
+                            <a href="/idioms" id="tour-idioms">Идиомы</a>
+                            <a href="/grammar" id="tour-grammar">Грамматика</a>
+                            <a href="/reading" id="tour-reading">Тексты</a>
+                        </div>
+                    </div>
+
                     {% if user.is_admin %}
                         <a href="/admin" class="admin-link">Админка</a>
                     {% endif %}

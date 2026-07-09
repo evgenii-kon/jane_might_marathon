@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.dependencies.auth import get_current_user_optional
+from app.dependencies.subscription import require_feature
 from app.models.user import User
 from app.services.grammar_rule_service import GrammarRuleService
 from app.services.grammar_tag_service import GrammarTagService
@@ -19,6 +20,7 @@ async def list_grammar_rules(
     tag: str = None,
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("grammar")),
 ):
     rule_service = GrammarRuleService(db)
     tag_service = GrammarTagService(db)
@@ -44,6 +46,7 @@ async def grammar_rule_detail(
     slug: str,
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("grammar")),
 ):
     service = GrammarRuleService(db)
     try:

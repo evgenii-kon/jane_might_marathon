@@ -453,6 +453,23 @@
       document.removeEventListener('touchmove', stopScroll);
     }
 
+    // Шаги профиля/статей/идиом/грамматики/чтения указывают на пункты,
+    // которые видимы только внутри открытого выпадающего меню в шапке.
+    function openDropdownFor(selector) {
+      document.querySelectorAll('.dropdown.force-open').forEach(function (el) {
+        el.classList.remove('force-open');
+      });
+      var target = document.querySelector(selector);
+      var dropdown = target && target.closest('.dropdown');
+      if (dropdown) dropdown.classList.add('force-open');
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dropdown.force-open').forEach(function (el) {
+        el.classList.remove('force-open');
+      });
+    }
+
     function renderProgressBar() {
       var footer = document.querySelector('.driver-popover.hsk-tour-popover .driver-popover-footer');
       var progressText = document.querySelector('.driver-popover.hsk-tour-popover .driver-popover-progress-text');
@@ -490,6 +507,14 @@
       stagePadding: 8,
       stageRadius: 14,
       onHighlightStarted: function () {
+        var step = STEPS[tour.getActiveIndex()];
+        var target = step && step.element ? document.querySelector(step.element) : null;
+        if (target && target.closest('.dropdown-menu')) {
+          openDropdownFor(step.element);
+        } else {
+          closeAllDropdowns();
+        }
+
         // Weeks step: position top of section at ~45% of viewport height
         // so the popover fits above and header+cards are visible below
         if (tour.getActiveIndex() === 9) {
@@ -505,6 +530,7 @@
       },
       onDestroyStarted: function () {
         unlockScroll();
+        closeAllDropdowns();
         localStorage.setItem('tour_completed', 'true');
         tour.destroy();
       },

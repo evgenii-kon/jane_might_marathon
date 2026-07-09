@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.dependencies.auth import get_current_user_optional
+from app.dependencies.subscription import require_feature
 from app.models.user import User
 from app.services.reading_text_service import ReadingTextService
 from app.repositories.user_reading_progress_repository import UserReadingProgressRepository
@@ -19,6 +20,7 @@ async def list_reading_texts(
     request: Request,
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("reading")),
 ):
     service = ReadingTextService(db)
     texts = await service.get_all()
@@ -40,6 +42,7 @@ async def reading_detail(
     slug: str,
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("reading")),
 ):
     service = ReadingTextService(db)
     try:
@@ -71,6 +74,7 @@ async def check_answers(
     slug: str,
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("reading")),
 ):
     service = ReadingTextService(db)
     try:

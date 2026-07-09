@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.dependencies.auth import get_current_user
+from app.dependencies.subscription import require_feature
 from app.models.user import User
 from app.services.exercise_service import ExerciseService
 from app.services.lesson_service import LessonService
@@ -81,6 +82,7 @@ async def exercises_quiz(
     lesson_id: int,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("exercises")),
 ):
     """Пошаговое прохождение упражнений урока"""
     exercise_service = ExerciseService(db)
@@ -163,6 +165,7 @@ async def check_exercise_answer(
     user_answer: str = Form(None),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    _: User = Depends(require_feature("exercises")),
 ):
     """Проверка ответа на упражнение (AJAX)"""
     exercise_service = ExerciseService(db)
@@ -234,6 +237,7 @@ async def exercises_reset(
     lesson_id: int,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("exercises")),
 ):
     """Сбросить прогресс упражнений урока и перейти к прохождению заново"""
     lesson_service = LessonService(db)
@@ -253,6 +257,7 @@ async def exercises_completed(
     lesson_id: int,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("exercises")),
 ):
     """Страница завершения всех упражнений"""
     lesson_service = LessonService(db)

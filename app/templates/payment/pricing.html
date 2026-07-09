@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Тарифы — HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <div class="landing-pricing__header" style="text-align:center;">
+        <div class="landing-pricing__title">Выбери тариф</div>
+        <p class="landing-pricing__sub">Открой доступ к урокам, тренажёру слов и материалам курса</p>
+    </div>
+
+    {% if active_sub %}
+    <div class="pricing-card" style="text-align:center;">
+        <div class="pricing-name">У вас уже есть активная подписка «{{ active_sub.plan.name }}»</div>
+        <p class="pricing-desc">Действует до {{ active_sub.expires_at.strftime('%d.%m.%Y') }}</p>
+    </div>
+    {% endif %}
+
+    <div class="pricing-grid">
+        {% for plan in plans %}
+        <div class="pricing-card{% if plan.badge %} pricing-card--featured{% endif %}">
+            {% if plan.badge %}
+            <span class="pricing-badge">{{ plan.badge }}</span>
+            {% endif %}
+            <div class="pricing-name">{{ plan.name }}</div>
+            <div class="pricing-price">{{ plan.price_display }}</div>
+            <p class="pricing-desc">
+                {% if plan.description %}{{ plan.description }}{% endif %}
+                Доступ на {{ plan.duration_days }} дней
+            </p>
+
+            <ul class="pricing-features">
+                {% for feature in ["lessons", "exercises", "word_trainer", "grammar", "reading", "idioms"] %}
+                <li{% if feature not in plan.features %} style="opacity:0.4; text-decoration:line-through;"{% endif %}>
+                    {% if feature == "lessons" %}Уроки и недели марафона
+                    {% elif feature == "exercises" %}Упражнения после уроков
+                    {% elif feature == "word_trainer" %}Тренажёр слов
+                    {% elif feature == "grammar" %}Разбор грамматики
+                    {% elif feature == "reading" %}Тексты для чтения
+                    {% elif feature == "idioms" %}Идиомы
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+
+            {% if not user %}
+                <a href="/auth/register" class="pricing-cta">Начать</a>
+            {% elif active_sub %}
+                <span class="pricing-cta" style="opacity:0.5; pointer-events:none;">Уже подключено</span>
+            {% else %}
+                <form method="post" action="/payment/create">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="plan_id" value="{{ plan.id }}">
+                    <button type="submit" class="pricing-cta" style="width:100%; border:none; cursor:pointer;">Выбрать «{{ plan.name }}»</button>
+                </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

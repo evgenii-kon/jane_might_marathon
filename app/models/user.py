@@ -43,3 +43,6 @@ class User(Base):
     word_mistakes = relationship(
         "UserWordMistake", back_populates="user", cascade="all, delete-orphan"
     )
+    subscriptions = relationship(
+        "Subscription", back_populates="user", cascade="all, delete-orphan"
+    )

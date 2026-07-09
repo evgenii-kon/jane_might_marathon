@@ -54,6 +54,10 @@ class Settings(BaseSettings):
     # Окружение
     DEBUG: bool = Field(False, description="Debug mode; set True only in development")
 
+    # Tinkoff Касса
+    TINKOFF_TERMINAL_KEY: str = Field("", description="Tinkoff terminal key")
+    TINKOFF_PASSWORD: str = Field("", description="Tinkoff terminal password")
+
     # Static files
     static_dir: str = "static"
     images_dir: str = "static/images"

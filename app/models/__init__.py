@@ -19,3 +19,6 @@ from .reading_text import ReadingText
 from .reading_question import ReadingQuestion
 from .user_reading_progress import UserReadingProgress
 from .user_word_mistake import UserWordMistake
+from .plan import Plan
+from .subscription import Subscription
+from .payment import Payment

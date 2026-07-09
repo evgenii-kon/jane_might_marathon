@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.dependencies.auth import get_current_user
+from app.dependencies.subscription import require_feature
 from app.models.user import User
 
 from app.services.week_service import WeekService
@@ -23,6 +24,7 @@ async def week_detail(
     week_id: int,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("lessons")),
 ):
     week_service = WeekService(db)
     lesson_service = LessonService(db)

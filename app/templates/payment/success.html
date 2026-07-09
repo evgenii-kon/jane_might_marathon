@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Оплата прошла успешно — HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="align-items:center; text-align:center;">
+    <div class="pricing-card" style="max-width:480px; margin:60px auto; align-items:center;">
+        <div style="font-size:56px;">🎉</div>
+        <h1 class="pricing-name">Оплата прошла успешно</h1>
+        {% if subscription %}
+        <p class="pricing-desc">
+            Тариф «{{ subscription.plan.name }}» активирован.<br>
+            Доступ действует до {{ subscription.expires_at.strftime('%d.%m.%Y') }}.
+        </p>
+        {% else %}
+        <p class="pricing-desc">Подписка скоро появится в вашем кабинете — обработка подтверждения занимает несколько секунд.</p>
+        {% endif %}
+        <a href="/dashboard" class="pricing-cta">Перейти в кабинет</a>
+    </div>
+</div>
+{% endblock %}

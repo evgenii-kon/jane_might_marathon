@@ -19,6 +19,9 @@
                 <div class="welcome-chips">
                     <span class="welcome-chip">📅 День {{ days_after_start }}</span>
                     <span class="welcome-chip welcome-chip--muted">Китайский ждёт тебя</span>
+                    {% if not has_subscription %}
+                    <a href="/pricing" class="welcome-chip" style="background: linear-gradient(135deg, var(--accent-dark), var(--accent)); color:white; text-decoration:none;">Выбрать тариф</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -89,6 +92,7 @@
     </div>
 
     <!-- ===== НЕДЕЛИ МАРАФОНА ===== -->
+    {% if "lessons" in user_features %}
     <div class="weeks-section" id="tour-weeks">
         <div class="section-header" id="tour-weeks-header">
             <div>
@@ -145,6 +149,41 @@
             {% endfor %}
         </div>
     </div>
+    {% else %}
+    <div class="weeks-section" id="tour-weeks" style="position:relative;">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Недели марафона</h2>
+                <p class="section-subtitle">Ваш учебный план</p>
+            </div>
+        </div>
+
+        <div style="position:relative;">
+            <div style="position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; background:rgba(0,0,0,0.35); border-radius:22px; padding:24px;">
+                <span style="font-size:40px;">🔒</span>
+                <p style="color:white; font-weight:600; font-size:16px; max-width:320px;">Уроки марафона открываются по подписке</p>
+                <a href="/pricing" class="pricing-cta" style="width:auto; padding:12px 28px;">Выбрать тариф</a>
+            </div>
+            <div class="weeks-grid" style="filter:blur(4px); pointer-events:none;">
+                {% for week in weeks[:3] %}
+                <div class="week-card">
+                    <div class="week-num">Неделя {{ week.number }}</div>
+                    <div class="week-title">{{ week.short_description }}</div>
+                    <div class="week-progress-wrap">
+                        <div class="week-track">
+                            <div class="week-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="week-stats-row">
+                            <span class="week-lessons-count">0/{{ week.total_lessons }} уроков</span>
+                            <span class="week-pct">0%</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
 </div>
 {% endblock %}
