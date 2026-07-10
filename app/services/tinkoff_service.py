@@ -14,7 +14,10 @@ TINKOFF_API_URL = "https://securepay.tinkoff.ru/v2"
 
 def _generate_token(params: dict) -> str:
     excluded = {"Token", "Receipt", "DATA", "Items"}
-    filtered = {k: str(v) for k, v in params.items() if k not in excluded}
+    filtered = {
+    k: ('true' if v else 'false') if isinstance(v, bool) else str(v)
+    for k, v in params.items() if k not in excluded
+    }
     filtered["Password"] = settings.TINKOFF_PASSWORD
     sorted_values = "".join(v for _, v in sorted(filtered.items()))
     return hashlib.sha256(sorted_values.encode()).hexdigest()
