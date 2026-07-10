@@ -79,7 +79,10 @@ async def create_payment(
 
 
 async def handle_notification(db: AsyncSession, payload: dict) -> bool:
+    print(f"WEBHOOK PAYLOAD: {payload}")
+    print(f"TOKEN VALID: {_verify_notification_token(payload)}")
     if not _verify_notification_token(payload):
+        print("TOKEN VERIFICATION FAILED")
         return False
     payment_id = str(payload.get("PaymentId"))
     status = payload.get("Status", "")
