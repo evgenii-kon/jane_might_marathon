@@ -11,6 +11,7 @@ Seed script: полная переинициализация контента м
 import os
 import json
 import psycopg2
+import psycopg2.extras
 
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
@@ -369,6 +370,7 @@ ARTICLES = [
 IDIOMS = [
     {
         "hanzi": "一石二鸟",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/yi_shi_er_niao.mp3",
         "pinyin": "yī shí èr niǎo",
         "translate": "Одним камнем двух птиц",
         "meaning": "Убить двух зайцев одним выстрелом",
@@ -376,6 +378,7 @@ IDIOMS = [
     },
     {
         "hanzi": "马到成功",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/ma_dao_cheng_gong.mp3",
         "pinyin": "mǎ dào chéng gōng",
         "translate": "Конь пришёл — успех пришёл",
         "meaning": "Пожелание немедленного и полного успеха",
@@ -383,6 +386,7 @@ IDIOMS = [
     },
     {
         "hanzi": "半途而废",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/ban_tu_er_fei.mp3",
         "pinyin": "bàn tú ér fèi",
         "translate": "Бросить на полпути",
         "meaning": "Не доводить дело до конца",
@@ -390,6 +394,7 @@ IDIOMS = [
     },
     {
         "hanzi": "自食其果",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/zi_shi_qi_guo.mp3",
         "pinyin": "zì shí qí guǒ",
         "translate": "Самому съесть свои плоды",
         "meaning": "Пожинать плоды собственных поступков (обычно плохих)",
@@ -397,6 +402,7 @@ IDIOMS = [
     },
     {
         "hanzi": "亡羊补牢",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/wang_yang_bu_lao.mp3",
         "pinyin": "wáng yáng bǔ láo",
         "translate": "Чинить загон, когда овца сбежала",
         "meaning": "Лучше поздно, чем никогда; исправлять ошибки, пусть и с опозданием",
@@ -404,6 +410,7 @@ IDIOMS = [
     },
     {
         "hanzi": "一帆风顺",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/yi_fan_feng_shun.mp3",
         "pinyin": "yī fān fēng shùn",
         "translate": "Попутный ветер в паруса",
         "meaning": "Пожелание всё идёт гладко, без препятствий",
@@ -411,6 +418,7 @@ IDIOMS = [
     },
     {
         "hanzi": "对牛弹琴",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/dui_niu_tan_qin.mp3",
         "pinyin": "duì niú tán qín",
         "translate": "Играть на скрипке перед коровой",
         "meaning": "Говорить с тем, кто не способен понять; метать бисер перед свиньями",
@@ -418,6 +426,7 @@ IDIOMS = [
     },
     {
         "hanzi": "狐假虎威",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/hu_jia_hu_wei.mp3",
         "pinyin": "hú jiǎ hǔ wēi",
         "translate": "Лиса использует могущество тигра",
         "meaning": "Пользоваться чужим авторитетом, запугивать именем сильного",
@@ -425,6 +434,7 @@ IDIOMS = [
     },
     {
         "hanzi": "功亏一篑",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/gong_kui_yi_kui.mp3",
         "pinyin": "gōng kuī yī kuì",
         "translate": "Весь труд рухнул из-за одной корзины земли",
         "meaning": "Провалить дело в самом конце из-за одного последнего усилия",
@@ -432,6 +442,7 @@ IDIOMS = [
     },
     {
         "hanzi": "班门弄斧",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/ban_men_nong_fu.mp3",
         "pinyin": "bān mén nòng fǔ",
         "translate": "Размахивать топором у ворот мастера Лу Баня",
         "meaning": "Показывать мастерство перед экспертом; лезть с советами к профессионалу",
@@ -439,6 +450,7 @@ IDIOMS = [
     },
     {
         "hanzi": "画蛇添足",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/hua_she_tian_zu.mp3",
         "pinyin": "huà shé tiān zú",
         "translate": "Дорисовать змее ноги",
         "meaning": "Делать лишнее, портя то, что и так хорошо",
@@ -446,6 +458,7 @@ IDIOMS = [
     },
     {
         "hanzi": "叶公好龙",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/ye_gong_hao_long.mp3",
         "pinyin": "yè gōng hào lóng",
         "translate": "Господин Е любит драконов (только на картинках)",
         "meaning": "Говорить, что любишь что-то, а на деле бояться или избегать",
@@ -453,6 +466,7 @@ IDIOMS = [
     },
     {
         "hanzi": "守株待兔",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/shou_zhu_dai_tu.mp3",
         "pinyin": "shǒu zhū dài tù",
         "translate": "Стоять у пня и ждать зайца",
         "meaning": "Ждать удачи без усилий; цепляться за случай, который больше не повторится",
@@ -460,6 +474,7 @@ IDIOMS = [
     },
     {
         "hanzi": "杯弓蛇影",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/bei_gong_she_ying.mp3",
         "pinyin": "bēi gōng shé yǐng",
         "translate": "Принять отражение лука в кубке за змею",
         "meaning": "Бояться призрака; пугаться того, чего нет",
@@ -467,6 +482,7 @@ IDIOMS = [
     },
     {
         "hanzi": "火上浇油",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/huo_shang_jiao_you.mp3",
         "pinyin": "huǒ shàng jiāo yóu",
         "translate": "Лить масло в огонь",
         "meaning": "Усугублять конфликт; подливать масла в огонь",
@@ -474,6 +490,7 @@ IDIOMS = [
     },
     {
         "hanzi": "半斤八两",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/ban_jin_ba_liang.mp3",
         "pinyin": "bàn jīn bā liǎng",
         "translate": "Полфунта и восемь лян",
         "meaning": "Друг друга стоят; оба одинаково плохи или одинаковы",
@@ -481,6 +498,7 @@ IDIOMS = [
     },
     {
         "hanzi": "异想天开",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/yi_xiang_tian_kai.mp3",
         "pinyin": "yì xiǎng tiān kāi",
         "translate": "Небо открылось от странных мыслей",
         "meaning": "Фантазировать, мечтать о несбыточном; нереалистичная идея",
@@ -488,6 +506,7 @@ IDIOMS = [
     },
     {
         "hanzi": "半信半疑",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/ban_xin_ban_yi.mp3",
         "pinyin": "bàn xìn bàn yí",
         "translate": "Наполовину верить, наполовину сомневаться",
         "meaning": "Верить и не верить одновременно; относиться скептически",
@@ -495,6 +514,7 @@ IDIOMS = [
     },
     {
         "hanzi": "雪上加霜",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/xue_shang_jia_shuang.mp3",
         "pinyin": "xuě shàng jiā shuāng",
         "translate": "Добавить мороз поверх снега",
         "meaning": "Беда за бедой; усугубить и без того плохую ситуацию",
@@ -502,6 +522,7 @@ IDIOMS = [
     },
     {
         "hanzi": "一鸣惊人",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/yi_ming_jing_ren.mp3",
         "pinyin": "yī míng jīng rén",
         "translate": "Один крик — и все потрясены",
         "meaning": "Поразить всех одним выступлением после долгого молчания; выстрелить внезапно",
@@ -509,6 +530,7 @@ IDIOMS = [
     },
     {
         "hanzi": "三心二意",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/san_xin_er_yi.mp3",
         "pinyin": "sān xīn èr yì",
         "translate": "Три сердца, два намерения",
         "meaning": "Колебаться, быть нерешительным; делать что-то без полной отдачи",
@@ -516,6 +538,7 @@ IDIOMS = [
     },
     {
         "hanzi": "一举两得",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/yi_ju_liang_de.mp3",
         "pinyin": "yī jǔ liǎng dé",
         "translate": "Одним действием получить два результата",
         "meaning": "Убить двух зайцев; получить двойную выгоду от одного шага",
@@ -526,6 +549,7 @@ IDIOMS = [
     },
     {
         "hanzi": "理所当然",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/li_suo_dang_ran.mp3",
         "pinyin": "lǐ suǒ dāng rán",
         "translate": "Само собой разумеется",
         "meaning": "Считать что-то само собой разумеющимся, принимать как должное",
@@ -533,6 +557,7 @@ IDIOMS = [
     },
     {
         "hanzi": "心想事成",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/xin_xiang_shi_cheng.mp3",
         "pinyin": "xīn xiǎng shì chéng",
         "translate": "Что задумал — то сбудется",
         "meaning": "Пожелание, чтобы все мечты сбылись",
@@ -540,6 +565,7 @@ IDIOMS = [
     },
     {
         "hanzi": "大同小异",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/da_tong_xiao_yi.mp3",
         "pinyin": "dà tóng xiǎo yì",
         "translate": "В большом одинаковы, в малом различны",
         "meaning": "Почти одно и то же; практически без отличий",
@@ -547,6 +573,7 @@ IDIOMS = [
     },
     {
         "hanzi": "情不自禁",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/qing_bu_zi_jin.mp3",
         "pinyin": "qíng bù zì jīn",
         "translate": "Чувство не удержать",
         "meaning": "Не мочь сдержать эмоции; невольно, против воли",
@@ -554,6 +581,7 @@ IDIOMS = [
     },
     {
         "hanzi": "无可奈何",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/wu_ke_nai_he.mp3",
         "pinyin": "wú kě nài hé",
         "translate": "Ничего не поделать",
         "meaning": "Беспомощность перед ситуацией; делать против воли, потому что выбора нет",
@@ -561,6 +589,7 @@ IDIOMS = [
     },
     {
         "hanzi": "来龙去脉",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/lai_long_qu_mai.mp3",
         "pinyin": "lái lóng qù mài",
         "translate": "Откуда дракон пришёл и куда жила ведёт",
         "meaning": "Подробности, предыстория; полная картина событий",
@@ -568,6 +597,7 @@ IDIOMS = [
     },
     {
         "hanzi": "津津有味",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/jin_jin_you_wei.mp3",
         "pinyin": "jīn jīn yǒu wèi",
         "translate": "С нескрываемым удовольствием",
         "meaning": "Делать что-то с явным наслаждением, погружённым вниманием",
@@ -575,6 +605,7 @@ IDIOMS = [
     },
     {
         "hanzi": "莫名其妙",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/mo_ming_qi_miao.mp3",
         "pinyin": "mò míng qí miào",
         "translate": "Непонятно каким образом",
         "meaning": "Непонятно, без причины, необъяснимо",
@@ -582,6 +613,7 @@ IDIOMS = [
     },
     {
         "hanzi": "息息相关",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/xi_xi_xiang_guan.mp3",
         "pinyin": "xī xī xiāng guān",
         "translate": "Каждый вдох связан",
         "meaning": "Тесно связаны; неразрывно связанные вещи",
@@ -589,6 +621,7 @@ IDIOMS = [
     },
     {
         "hanzi": "心灰意冷",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/xin_hui_yi_leng.mp3",
         "pinyin": "xīn huī yì lěng",
         "translate": "Сердце серое, воля холодная",
         "meaning": "Разочарование, упадок духа, потеря надежды",
@@ -596,6 +629,7 @@ IDIOMS = [
     },
     {
         "hanzi": "眉飞色舞",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/mei_fei_se_wu.mp3",
         "pinyin": "méi fēi sè wǔ",
         "translate": "Брови летят, краски танцуют",
         "meaning": "Сиять от радости; рассказывать с воодушевлением и гордостью",
@@ -603,6 +637,7 @@ IDIOMS = [
     },
     {
         "hanzi": "风雨同舟",
+        "audio_url": "https://a0999e77-eccc-465c-893a-83b1555f4932.selstorage.ru/feng_yu_tong_zhou.mp3",
         "pinyin": "fēng yǔ tóng zhōu",
         "translate": "В шторм — в одной лодке",
         "meaning": "Быть вместе в трудную минуту; держаться сообща",
@@ -614,7 +649,6 @@ IDIOMS = [
 for _idiom in IDIOMS:
     _idiom.setdefault("story", None)
     _idiom.setdefault("example_translation", None)
-    _idiom["audio_url"] = _idiom["hanzi"]
 
 
 # ══════════════════════════════════════════════════════════════
@@ -3488,13 +3522,16 @@ def seed_exercises(cur, lesson_ids):
             continue
         lesson_id = lesson_ids[name]
         for desc, question, o1, o2, o3, o4, correct, explanation, order_n in exercises:
+            config = {
+                "topic": desc,
+                "options": [o1, o2, o3, o4],
+                "correct": correct - 1,  # в LESSONS_DATA correct 1-based, в config — 0-based
+            }
             cur.execute(
                 """INSERT INTO exercises
-                   (lesson_id, question_description, question_text,
-                    option_1, option_2, option_3, option_4,
-                    correct_answer, explanation, order_in_lesson)
-                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-                (lesson_id, desc, question, o1, o2, o3, o4, correct, explanation, order_n),
+                   (lesson_id, type, question_text, config, explanation, order_in_lesson)
+                   VALUES (%s, %s, %s, %s, %s, %s)""",
+                (lesson_id, "quiz", question, psycopg2.extras.Json(config), explanation, order_n),
             )
             total += 1
     print(f"   ✅ Вставлено упражнений: {total}")

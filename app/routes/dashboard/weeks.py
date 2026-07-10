@@ -1,18 +1,17 @@
-from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.dependencies.auth import get_current_user
-from app.dependencies.subscription import require_feature
+from app.dependencies.subscription import require_feature_or_trial_week
 from app.models.user import User
 
 from app.services.week_service import WeekService
 from app.services.lesson_service import LessonService
-from app.services.user_week_progress_service import UserWeekProgressService
 from app.services.user_exercise_progress_service import UserExerciseProgressService
 from app.services.user_lesson_progress_service import UserLessonProgressService
+from app.services.subscription_service import get_active_subscription
 
 router = APIRouter(prefix="/dashboard/weeks", tags=["dashboard"])
 templates = Jinja2Templates(directory="app/templates")
@@ -24,12 +23,11 @@ async def week_detail(
     week_id: int,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-    _: User = Depends(require_feature("lessons")),
+    _: User = Depends(require_feature_or_trial_week("lessons")),
 ):
     week_service = WeekService(db)
     lesson_service = LessonService(db)
     lesson_progress_service = UserLessonProgressService(db)
-    week_progress_service = UserWeekProgressService(db)
     exercise_progress_service = UserExerciseProgressService(db)
 
     week = await week_service.get_week_by_id(week_id)
@@ -37,17 +35,11 @@ async def week_detail(
         raise HTTPException(404, "Week not found")
 
     # Определяем, заблокирована ли неделя
-    user_week_prog = await week_progress_service.repository.get_by_user_and_week(
-        current_user.id, week_id
-    )
-    if user_week_prog:
-        now = datetime.now(timezone.utc)
-        opens_at = user_week_prog.opens_at
-        if opens_at.tzinfo is None:
-            opens_at = opens_at.replace(tzinfo=timezone.utc)
-        is_locked = now < opens_at
+    if week.number == 1:
+        is_locked = False
     else:
-        is_locked = week.number != 1
+        sub = await get_active_subscription(db, current_user.id)
+        is_locked = sub is None
 
     lessons = await lesson_service.get_lessons_by_week(week_id)
 

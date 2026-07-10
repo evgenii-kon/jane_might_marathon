@@ -76,11 +76,18 @@ const idiomAudio = document.getElementById('idiom-audio');
 const idiomAudioBtn = document.getElementById('idiom-audio-btn');
 if (idiomAudio && idiomAudioBtn) {
     idiomAudio.onended = () => { idiomAudioBtn.textContent = '🔊 Слушать'; };
+    idiomAudio.onerror = () => { idiomAudioBtn.textContent = '🔊 Слушать'; };
+    idiomAudio.onpause = () => { idiomAudioBtn.textContent = '🔊 Слушать'; };
 }
 function toggleIdiomAudio() {
     if (!idiomAudio) return;
-    if (idiomAudio.paused) { idiomAudio.play(); idiomAudioBtn.textContent = '⏸ Пауза'; }
-    else                   { idiomAudio.pause(); idiomAudioBtn.textContent = '🔊 Слушать'; }
+    if (idiomAudio.paused) {
+        idiomAudio.play()
+            .then(() => { idiomAudioBtn.textContent = '⏸ Пауза'; })
+            .catch(() => { idiomAudioBtn.textContent = '🔊 Слушать'; });
+    } else {
+        idiomAudio.pause();
+    }
 }
 
 // ── Progress slider ────────────────────────────────────────

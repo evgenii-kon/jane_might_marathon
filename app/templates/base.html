@@ -30,6 +30,9 @@
                 <a href="{% if user %}/dashboard{% else %}/{% endif %}" class="logo-link">
                     <img src="/static/new_design/logo_red_1l.png" alt="Логотип" class="logo">
                 </a>
+                {% if user %}
+                <button type="button" id="theme-toggle" class="theme-toggle" title="Переключить тему" aria-label="Переключить тему"><span class="theme-toggle-icon">🌙</span></button>
+                {% endif %}
             </div>
             {% if not user %}
             <nav class="nav-landing">
@@ -73,7 +76,6 @@
                     {% if user.is_admin %}
                         <a href="/admin" class="admin-link">Админка</a>
                     {% endif %}
-                    <button type="button" id="theme-toggle" class="theme-toggle" title="Переключить тему" aria-label="Переключить тему">🌙</button>
                     <a href="/auth/logout" class="btn-outline">Выйти</a>
                 {% else %}
                     <a href="/auth/login">Вход</a>
@@ -120,7 +122,7 @@
 
         <div class="footer-bottom">
             <div class="footer-bottom-container">
-                <div class="footer-copyright">© 2023 School Might</div>
+                <div class="footer-copyright">© 2026 School Might</div>
                 <div class="footer-dev">Практикум по китайскому языку</div>
             </div>
         </div>

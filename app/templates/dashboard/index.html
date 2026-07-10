@@ -38,6 +38,27 @@
         </div>
     </div>
 
+    <!-- ===== СЕГОДНЯШНИЙ УРОК ===== -->
+    {% if today_lesson %}
+    <div class="today-lesson-card">
+        <div class="today-lesson-inner">
+            <div class="today-lesson-body">
+                <div class="today-lesson-label">
+                    {% if pace_label %}
+                        {{ pace_label }}
+                    {% else %}
+                        📅 Следующий урок
+                    {% endif %}
+                </div>
+                <h3 class="today-lesson-title">{% if today_lesson_week_number %}Неделя {{ today_lesson_week_number }} | {% endif %}{{ today_lesson.name }}</h3>
+            </div>
+            <a href="/dashboard/lessons/{{ today_lesson.id }}" class="today-lesson-btn">
+                Перейти <span>→</span>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- ===== БЫСТРЫЕ ДЕЙСТВИЯ ===== -->
     {% set trainer_locked = "word_trainer" not in user_features %}
     <div class="actions-grid">
@@ -101,7 +122,6 @@
     </div>
 
     <!-- ===== НЕДЕЛИ МАРАФОНА ===== -->
-    {% if "lessons" in user_features %}
     <div class="weeks-section" id="tour-weeks">
         <div class="section-header" id="tour-weeks-header">
             <div>
@@ -115,20 +135,14 @@
             {% for week in weeks %}
 
                 {% if week.is_locked %}
-                <div class="week-card week-card--locked">
+                <a href="/pricing" class="week-card week-card--locked">
                     <div class="week-card-top">
                         <div class="week-num">Неделя {{ week.number }}</div>
-                        <span class="week-lock-badge" title="Заблокировано">🔒</span>
+                        <span class="week-lock-badge" title="Доступно по подписке">🔒</span>
                     </div>
                     <div class="week-title">{{ week.short_description }}</div>
-                    <div class="week-lock-label">
-                        {% if week.days_until_open and week.days_until_open > 0 %}
-                            Откроется через {{ week.days_until_open }} дней
-                        {% else %}
-                            Скоро
-                        {% endif %}
-                    </div>
-                </div>
+                    <div class="week-lock-label">Доступно по подписке</div>
+                </a>
 
                 {% else %}
                 <div class="week-card{% if week.is_completed %} week-card--done{% endif %}">
@@ -158,30 +172,6 @@
             {% endfor %}
         </div>
     </div>
-    {% else %}
-    <div class="weeks-section" id="tour-weeks">
-        <div class="section-header">
-            <div>
-                <h2 class="section-title">Недели марафона</h2>
-                <p class="section-subtitle">Ваш учебный план</p>
-            </div>
-            <span class="weeks-badge">{{ weeks|length }} недель</span>
-        </div>
-
-        <div class="weeks-grid">
-            {% for week in weeks %}
-            <a href="/pricing" class="week-card week-card--locked">
-                <div class="week-card-top">
-                    <div class="week-num">Неделя {{ week.number }}</div>
-                    <span class="week-lock-badge" title="Доступно по подписке">🔒</span>
-                </div>
-                <div class="week-title">{{ week.short_description }}</div>
-                <div class="week-lock-label">Доступно по подписке</div>
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
 
 </div>
 {% endblock %}

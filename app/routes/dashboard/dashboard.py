@@ -10,7 +10,6 @@ from app.services.week_service import WeekService
 from app.services.lesson_service import LessonService
 from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.word_trainer_service import WordTrainerService
-from app.services.user_week_progress_service import UserWeekProgressService
 from app.services.user_activity_service import UserActivityService
 from app.services.word_of_day_service import get_word_of_day
 from app.services.subscription_service import get_active_subscription, get_user_features
@@ -19,6 +18,17 @@ from app.redis_client import get_redis
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 templates = Jinja2Templates(directory="app/templates")
+
+
+def days_word(n: int) -> str:
+    if 11 <= n % 100 <= 19:
+        return "дней"
+    r = n % 10
+    if r == 1:
+        return "день"
+    if 2 <= r <= 4:
+        return "дня"
+    return "дней"
 
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
@@ -32,7 +42,6 @@ async def get_dashboard(
     lesson_service = LessonService(db)
     progress_service = UserLessonProgressService(db)
     word_trainer_service = WordTrainerService(db)
-    week_progress_service = UserWeekProgressService(db)
 
     # Данные пользователя
     user = current_user
@@ -57,33 +66,14 @@ async def get_dashboard(
 
     # Прогресс по неделям
     weeks_with_progress = []
-    now = datetime.now(timezone.utc)
 
     for week in weeks:
         week_progress = await progress_service.get_week_progress(current_user.id, week.id)
 
-        # Получаем opens_at для этой недели
-        user_week_progress = await week_progress_service.repository.get_by_user_and_week(
-            current_user.id, week.id
-        )
-
-        if user_week_progress:
-            opens_at = user_week_progress.opens_at
-            if opens_at.tzinfo is None:
-                opens_at = opens_at.replace(tzinfo=timezone.utc)
-            is_locked = now < opens_at
-            days_until_open = (opens_at - now).days + 1 if is_locked else None
+        if week.number == 1:
+            is_locked = False
         else:
-            # Если нет записи — неделя 1 открыта, остальные по расписанию
-            if week.number == 1:
-                is_locked = False
-                # Для первой недели можно создать запись, чтобы избежать повторных проверок
-                await week_progress_service.get_or_create(current_user.id, week.id)
-            else:
-                # Создаём запись для первой недели, если нет
-                await week_progress_service.get_or_create(current_user.id, week.id)
-                is_locked = True
-            days_until_open = None
+            is_locked = not has_subscription
 
         weeks_with_progress.append({
             "id": week.id,
@@ -94,8 +84,42 @@ async def get_dashboard(
             "progress_percent": week_progress.progress_percent,
             "is_locked": is_locked,
             "is_completed": week_progress.is_week_completed,
-            "days_until_open": days_until_open,
         })
+
+    # "Сегодняшний урок" — первый непройденный урок пользователя
+    all_lessons = await lesson_service.get_all_lessons()
+    week_number_map = {w.id: w.number for w in weeks}
+    completed_ids = set(await progress_service.get_completed_lesson_ids(user.id))
+
+    all_lessons_sorted = sorted(
+        all_lessons, key=lambda l: (week_number_map.get(l.week_id, 0), l.order_in_week)
+    )
+
+    today_lesson = None
+    today_lesson_week_number = None
+    for lesson in all_lessons_sorted:
+        if lesson.id not in completed_ids:
+            today_lesson = lesson
+            today_lesson_week_number = week_number_map.get(lesson.week_id)
+            break
+
+    # Темп прохождения — только при активной подписке
+    pace_label = None
+    if sub:
+        started_at = sub.started_at
+        if started_at.tzinfo is None:
+            started_at = started_at.replace(tzinfo=timezone.utc)
+        days_since_payment = (datetime.now(timezone.utc) - started_at).days
+
+        paid_completed = len(completed_ids)
+        days_diff = abs(paid_completed - days_since_payment)
+
+        if paid_completed > days_since_payment:
+            pace_label = f"🚀 Вы опережаете график на {days_diff} {days_word(days_diff)}! Не бегите вперед, потратьте сегодня время на тренажеры или вспормите грамматику, которую уже прошли"
+        elif paid_completed < days_since_payment:
+            pace_label = f"⏰ Вы отстаёте от графика на {days_diff} {days_word(days_diff)}, стоит немного поднажать!"
+        else:
+            pace_label = "✅ Вы идёте прямо по графику!"
 
     # Статистика по словам
     due_today = await word_trainer_service.get_due_count(user.id)
@@ -136,6 +160,9 @@ async def get_dashboard(
             "active_plan": active_plan,
             "user_features": user_features,
             "subscription": sub,
+            "today_lesson": today_lesson,
+            "today_lesson_week_number": today_lesson_week_number,
+            "pace_label": pace_label,
         },
     )
 

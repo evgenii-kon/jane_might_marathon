@@ -130,7 +130,6 @@ ul,ol{margin:0;}
   position:sticky;
   top:0;
   z-index:100;
-  border-bottom:2px solid var(--blue-2);
 }
 
 .header-container{
@@ -213,18 +212,24 @@ ul,ol{margin:0;}
   flex-shrink:0;
   border:2px solid var(--blue-2);
   background:transparent;
-  border-radius:50%;
+  border-radius:8px;
   font-size:16px;
   line-height:1;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:transform 0.2s ease, border-color 0.2s ease;
+  transition:border-color 0.2s ease;
 }
 .theme-toggle:hover{
-  transform:rotate(15deg);
   border-color:var(--red);
+}
+.theme-toggle-icon{
+  display:inline-block;
+  transition:transform 0.2s ease;
+}
+.theme-toggle:hover .theme-toggle-icon{
+  transform:rotate(15deg);
 }
 
 @media(max-width:860px){
@@ -948,6 +953,49 @@ a:focus, a:focus-visible{
   .welcome-progress-full .progress-bar-large{height:7px;}
 }
 
+/* ===================== TODAY LESSON CARD ===================== */
+.today-lesson-card{
+  background:var(--surface);
+  border:2px solid var(--blue);
+  border-radius:16px;
+  padding:20px 24px;
+}
+.today-lesson-inner{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.today-lesson-body{flex:1;min-width:0;}
+.today-lesson-label{
+  font-size:0.85rem;
+  color:var(--gray);
+  margin-bottom:4px;
+}
+.today-lesson-title{
+  font-size:1.1rem;
+  font-weight:700;
+  margin:0;
+  color:var(--black);
+}
+.today-lesson-btn{
+  background:var(--red);
+  color:var(--white);
+  padding:10px 20px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  white-space:nowrap;
+  flex-shrink:0;
+  transition:background 0.2s ease;
+}
+.today-lesson-btn:hover{background:var(--red-deep);}
+
+@media(max-width:600px){
+  .today-lesson-card{padding:16px;border-radius:14px;}
+  .today-lesson-inner{flex-wrap:wrap;}
+  .today-lesson-btn{width:100%;text-align:center;}
+}
+
 /* ===================== ACTION CARDS GRID ===================== */
 .actions-grid{
   display:grid;
@@ -1540,7 +1588,18 @@ a:focus, a:focus-visible{
     background: var(--red);
     color: var(--white);
     border: 2px solid var(--red);
+    overflow: hidden;
 }
+
+.flashcard-deco {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    background: rgba(255, 248, 231, 0.08);
+}
+.flashcard-deco--1 { width: 160px; height: 160px; top: -50px; right: -40px; }
+.flashcard-deco--2 { width: 100px; height: 100px; bottom: -40px; left: 20%; }
+.flashcard-deco--3 { width: 70px; height: 70px; top: 10px; left: -20px; background: rgba(255, 248, 231, 0.05); }
 
 .flashcard-back {
     background: var(--surface);

@@ -17,15 +17,17 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("/", response_class=HTMLResponse)
 async def feedback_form(
     request: Request,
+    sent: bool = False,
     current_user: User = Depends(get_current_user),
 ):
     """Отображает форму обратной связи"""
     return templates.TemplateResponse(
         "dashboard/feedback_form.html",
         {
-            "request": request, 
+            "request": request,
             "user": current_user,
             "csrf_token": get_csrf_token(request),
+            "success": "Спасибо! Ваш отзыв отправлен." if sent else None,
             }
     )
 
@@ -40,4 +42,4 @@ async def submit_feedback(
     """Обрабатывает отправку формы"""
     service = FeedbackService(db)
     await service.create_feedback(current_user.id, FeedbackCreate(text=text))
-    return RedirectResponse(url="/dashboard/", status_code=302)
+    return RedirectResponse(url="/dashboard/feedback/?sent=true", status_code=302)
