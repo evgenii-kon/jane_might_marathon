@@ -13,7 +13,8 @@ from app.services.word_trainer_service import WordTrainerService
 from app.services.user_week_progress_service import UserWeekProgressService
 from app.services.user_activity_service import UserActivityService
 from app.services.word_of_day_service import get_word_of_day
-from app.services.subscription_service import get_active_subscription
+from app.services.subscription_service import get_active_subscription, get_user_features
+from app.dependencies.subscription import require_feature
 from app.redis_client import get_redis
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
@@ -38,7 +39,7 @@ async def get_dashboard(
     sub = await get_active_subscription(db, current_user.id)
     active_plan = sub.plan if sub else None
     has_subscription = sub is not None
-    user_features = active_plan.features if active_plan else []
+    user_features = await get_user_features(db, current_user)
     # Используем UTC-дату для корректного вычисления независимо от серверной timezone
     today_utc = datetime.now(timezone.utc).date()
     created_date = user.created_at.date() if user.created_at.tzinfo else user.created_at.replace(tzinfo=timezone.utc).date()
@@ -143,7 +144,8 @@ async def get_dashboard(
 async def word_rating(
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_feature("word_trainer")),
 ):
     service = WordTrainerService(db)
     words = await service.get_word_ranking(current_user.id)

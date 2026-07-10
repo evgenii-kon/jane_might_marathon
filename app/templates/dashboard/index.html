@@ -19,11 +19,11 @@
                 <div class="welcome-chips">
                     <span class="welcome-chip">📅 День {{ days_after_start }}</span>
                     <span class="welcome-chip welcome-chip--muted">Китайский ждёт тебя</span>
-                    {% if not has_subscription %}
-                    <a href="/pricing" class="welcome-chip" style="background: linear-gradient(135deg, var(--accent-dark), var(--accent)); color:white; text-decoration:none;">Выбрать тариф</a>
-                    {% endif %}
                 </div>
             </div>
+            {% if not has_subscription %}
+            <a href="/pricing" class="welcome-cta">Выбрать тариф</a>
+            {% endif %}
         </div>
 
         <!-- Низ: прогресс во всю ширину -->
@@ -39,26 +39,35 @@
     </div>
 
     <!-- ===== БЫСТРЫЕ ДЕЙСТВИЯ ===== -->
+    {% set trainer_locked = "word_trainer" not in user_features %}
     <div class="actions-grid">
 
-        <a href="/word-trainer" class="action-card action-card--orange" id="tour-trainer">
+        <a href="{{ '/pricing' if trainer_locked else '/word-trainer' }}" class="action-card action-card--orange{% if trainer_locked %} action-card--locked{% endif %}" id="tour-trainer">
             <div class="action-accent"></div>
             <div class="action-icon action-icon--orange">📚</div>
             <div class="action-body">
                 <h3>Тренажёр слов</h3>
                 <p>Ежедневное повторение и марафон</p>
             </div>
+            {% if trainer_locked %}
+            <span class="action-lock" title="Доступно по подписке">🔒</span>
+            {% else %}
             <div class="action-arrow">→</div>
+            {% endif %}
         </a>
 
-        <a href="/dashboard/words/rating" class="action-card action-card--blue" id="tour-rating">
+        <a href="{{ '/pricing' if trainer_locked else '/dashboard/words/rating' }}" class="action-card action-card--blue{% if trainer_locked %} action-card--locked{% endif %}" id="tour-rating">
             <div class="action-accent"></div>
             <div class="action-icon action-icon--blue">🏆</div>
             <div class="action-body">
                 <h3>Рейтинг слов</h3>
                 <p>Уровень mastery для слов HSK-1</p>
             </div>
+            {% if trainer_locked %}
+            <span class="action-lock" title="Доступно по подписке">🔒</span>
+            {% else %}
             <div class="action-arrow">→</div>
+            {% endif %}
         </a>
 
         <a href="https://t.me/your_channel" target="_blank" class="action-card action-card--blue">
@@ -107,17 +116,17 @@
 
                 {% if week.is_locked %}
                 <div class="week-card week-card--locked">
-                    <div class="week-num">Неделя {{ week.number }}</div>
+                    <div class="week-card-top">
+                        <div class="week-num">Неделя {{ week.number }}</div>
+                        <span class="week-lock-badge" title="Заблокировано">🔒</span>
+                    </div>
                     <div class="week-title">{{ week.short_description }}</div>
-                    <div class="week-lock-body">
-                        <span class="week-lock-icon">🔒</span>
-                        <span class="week-lock-label">
-                            {% if week.days_until_open and week.days_until_open > 0 %}
-                                Откроется через {{ week.days_until_open }} дней
-                            {% else %}
-                                Скоро
-                            {% endif %}
-                        </span>
+                    <div class="week-lock-label">
+                        {% if week.days_until_open and week.days_until_open > 0 %}
+                            Откроется через {{ week.days_until_open }} дней
+                        {% else %}
+                            Скоро
+                        {% endif %}
                     </div>
                 </div>
 
@@ -150,37 +159,26 @@
         </div>
     </div>
     {% else %}
-    <div class="weeks-section" id="tour-weeks" style="position:relative;">
+    <div class="weeks-section" id="tour-weeks">
         <div class="section-header">
             <div>
                 <h2 class="section-title">Недели марафона</h2>
                 <p class="section-subtitle">Ваш учебный план</p>
             </div>
+            <span class="weeks-badge">{{ weeks|length }} недель</span>
         </div>
 
-        <div style="position:relative;">
-            <div style="position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; background:rgba(0,0,0,0.35); border-radius:22px; padding:24px;">
-                <span style="font-size:40px;">🔒</span>
-                <p style="color:white; font-weight:600; font-size:16px; max-width:320px;">Уроки марафона открываются по подписке</p>
-                <a href="/pricing" class="pricing-cta" style="width:auto; padding:12px 28px;">Выбрать тариф</a>
-            </div>
-            <div class="weeks-grid" style="filter:blur(4px); pointer-events:none;">
-                {% for week in weeks[:3] %}
-                <div class="week-card">
+        <div class="weeks-grid">
+            {% for week in weeks %}
+            <a href="/pricing" class="week-card week-card--locked">
+                <div class="week-card-top">
                     <div class="week-num">Неделя {{ week.number }}</div>
-                    <div class="week-title">{{ week.short_description }}</div>
-                    <div class="week-progress-wrap">
-                        <div class="week-track">
-                            <div class="week-fill" style="width: 0%"></div>
-                        </div>
-                        <div class="week-stats-row">
-                            <span class="week-lessons-count">0/{{ week.total_lessons }} уроков</span>
-                            <span class="week-pct">0%</span>
-                        </div>
-                    </div>
+                    <span class="week-lock-badge" title="Доступно по подписке">🔒</span>
                 </div>
-                {% endfor %}
-            </div>
+                <div class="week-title">{{ week.short_description }}</div>
+                <div class="week-lock-label">Доступно по подписке</div>
+            </a>
+            {% endfor %}
         </div>
     </div>
     {% endif %}

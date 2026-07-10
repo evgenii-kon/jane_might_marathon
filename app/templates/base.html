@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+    (function(){
+        try{
+            if(localStorage.getItem('theme') === 'dark'){
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }catch(e){}
+    })();
+    </script>
     <title>{% block title %}Практикум по китайскому — School Might{% endblock %}</title>
-    <link rel="icon" type="image/png" href="/static/images/logo_orange_circle.png">
-    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/styles/main.css">
+    <link rel="icon" type="image/png" href="/static/new_design/logo_o_red.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Noto+Sans+SC:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles/main_new.css">
     {% if user %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css">
     {% endif %}
     {% block extra_css %}{% endblock %}
-    <script>
-        (function(){
-            var t = localStorage.getItem('theme') || 'dark';
-            document.documentElement.dataset.theme = t;
-        })();
-    </script>
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <header class="header">
         <div class="header-container">
             <div class="logo-area">
                 <a href="{% if user %}/dashboard{% else %}/{% endif %}" class="logo-link">
-                    <img src="/static/images/orange_logo.png" alt="Логотип" class="logo">
+                    <img src="/static/new_design/logo_red_1l.png" alt="Логотип" class="logo">
                 </a>
-                <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Переключить тему"></button>
             </div>
             {% if not user %}
             <nav class="nav-landing">
@@ -37,8 +41,15 @@
             {% endif %}
             <nav class="nav-links" id="main-nav">
                 {% if user %}
+                    {% set nav_unlocked = user.is_admin %}
+                    {% set nav_features = request.state.nav_features if (request.state.nav_features is defined and request.state.nav_features is not none) else [] %}
+                    {% set trainer_locked = not nav_unlocked and "word_trainer" not in nav_features %}
+                    {% set idioms_locked = not nav_unlocked and "idioms" not in nav_features %}
+                    {% set grammar_locked = not nav_unlocked and "grammar" not in nav_features %}
+                    {% set reading_locked = not nav_unlocked and "reading" not in nav_features %}
+
                     <a href="/dashboard">Главная</a>
-                    <a href="/word-trainer">Тренажёр</a>
+                    <a href="{{ '/pricing' if trainer_locked else '/word-trainer' }}" class="{{ 'nav-link--locked' if trainer_locked }}">Тренажёр{% if trainer_locked %} <span class="nav-lock">🔒</span>{% endif %}</a>
 
                     <div class="dropdown">
                         <button type="button" class="dropdown-btn">Информация <span class="dropdown-arrow">▼</span></button>
@@ -53,15 +64,16 @@
                         <button type="button" class="dropdown-btn">Теория <span class="dropdown-arrow">▼</span></button>
                         <div class="dropdown-menu">
                             <a href="/articles" id="tour-articles">Статьи</a>
-                            <a href="/idioms" id="tour-idioms">Идиомы</a>
-                            <a href="/grammar" id="tour-grammar">Грамматика</a>
-                            <a href="/reading" id="tour-reading">Тексты</a>
+                            <a href="{{ '/pricing' if idioms_locked else '/idioms' }}" id="tour-idioms" class="{{ 'nav-link--locked' if idioms_locked }}">Идиомы{% if idioms_locked %} <span class="nav-lock">🔒</span>{% endif %}</a>
+                            <a href="{{ '/pricing' if grammar_locked else '/grammar' }}" id="tour-grammar" class="{{ 'nav-link--locked' if grammar_locked }}">Грамматика{% if grammar_locked %} <span class="nav-lock">🔒</span>{% endif %}</a>
+                            <a href="{{ '/pricing' if reading_locked else '/reading' }}" id="tour-reading" class="{{ 'nav-link--locked' if reading_locked }}">Тексты{% if reading_locked %} <span class="nav-lock">🔒</span>{% endif %}</a>
                         </div>
                     </div>
 
                     {% if user.is_admin %}
                         <a href="/admin" class="admin-link">Админка</a>
                     {% endif %}
+                    <button type="button" id="theme-toggle" class="theme-toggle" title="Переключить тему" aria-label="Переключить тему">🌙</button>
                     <a href="/auth/logout" class="btn-outline">Выйти</a>
                 {% else %}
                     <a href="/auth/login">Вход</a>
@@ -79,7 +91,7 @@
         <div class="footer-container">
             <div class="footer-column">
                 <div class="footer-logo">
-                    <img src="/static/images/orange_logo.png" alt="School Might">
+                    <img src="/static/new_design/logo_red_2l.png" alt="School Might">
                 </div>
                 <p class="footer-description">Практикум по китайскому языку для новичков</p>
                 <p class="footer-description" style="margin-top:8px;">✉️ schoolmoght@gmail.com</p>
@@ -114,6 +126,7 @@
         </div>
     </footer>
 
+    <script src="/static/js/theme.js"></script>
     {% block extra_js %}{% endblock %}
     {% if user %}
     <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
@@ -121,23 +134,5 @@
     <script src="/static/js/tour.js"></script>
     {% endif %}
     {% endif %}
-    <script>
-    var THEME_ICONS = {
-        sun: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>',
-        moon: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-    };
-    function setThemeIcon(theme) {
-        var btn = document.getElementById('theme-toggle');
-        if (btn) btn.innerHTML = theme === 'light' ? THEME_ICONS.moon : THEME_ICONS.sun;
-    }
-    function toggleTheme() {
-        var html = document.documentElement;
-        var next = html.dataset.theme === 'light' ? 'dark' : 'light';
-        html.dataset.theme = next;
-        localStorage.setItem('theme', next);
-        setThemeIcon(next);
-    }
-    (function(){ setThemeIcon(document.documentElement.dataset.theme || 'dark'); })();
-    </script>
 </body>
 </html>

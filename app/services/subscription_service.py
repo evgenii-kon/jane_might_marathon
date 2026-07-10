@@ -15,6 +15,8 @@ SECTION_REQUIRED_FEATURE = {
     "reading": "reading",
 }
 
+ALL_FEATURES = ["lessons", "exercises", "word_trainer", "idioms", "grammar", "reading"]
+
 
 async def get_active_plans(db: AsyncSession) -> List[Plan]:
     result = await db.execute(
@@ -41,6 +43,17 @@ async def get_active_subscription(db: AsyncSession, user_id: int) -> Optional[Su
         .limit(1)
     )
     return result.scalar_one_or_none()
+
+
+async def get_user_features(db: AsyncSession, user) -> List[str]:
+    """Список фич, разблокированных для UI (замочки/бейджи). Админы видят всё разблокированным,
+    так как require_feature() пропускает их независимо от подписки."""
+    if user.is_admin:
+        return list(ALL_FEATURES)
+    sub = await get_active_subscription(db, user.id)
+    if not sub or not sub.plan:
+        return []
+    return sub.plan.features or []
 
 
 async def user_has_access(db: AsyncSession, user_id: int, section: str) -> bool:

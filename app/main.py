@@ -6,6 +6,9 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.redis_client import close_redis, init_redis
+from app.database import AsyncSessionLocal
+from app.utils.jwt import decode_token
+from app.services.subscription_service import get_active_subscription
 
 from .routes.admin.dashboard import router as admin_router
 from .routes.dashboard.dashboard import router as dashboard_router
@@ -59,6 +62,25 @@ app.add_middleware(CSRFMiddleware)
 app.add_middleware(SlowAPIMiddleware)
 app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+@app.middleware("http")
+async def inject_nav_features(request: Request, call_next):
+    """Прокидывает список доступных по подписке фич в request.state,
+    чтобы шапка сайта (base.html) могла показать замочек на заблокированных разделах меню."""
+    request.state.nav_features = None
+    if request.method == "GET" and not request.url.path.startswith("/static"):
+        token = request.cookies.get("access_token")
+        if token:
+            if token.startswith("Bearer "):
+                token = token[7:]
+            payload = decode_token(token)
+            user_id = payload.get("user_id") if payload else None
+            if user_id:
+                async with AsyncSessionLocal() as db:
+                    sub = await get_active_subscription(db, user_id)
+                    request.state.nav_features = (sub.plan.features or []) if sub and sub.plan else []
+    return await call_next(request)
 
 
 app.include_router(admin_router)
