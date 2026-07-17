@@ -70,10 +70,18 @@
         card.dataset.pairId = word.id;
         card.dataset.type = type;
 
+        const inner = document.createElement('div');
+        inner.className = 'mp-card-inner';
+
+        const front = document.createElement('div');
+        front.className = 'mp-card-face mp-card-face--front';
         const text = document.createElement('div');
         text.className = 'mp-card-text';
         text.textContent = type === 'hanzi' ? word.word : word.translation;
-        card.appendChild(text);
+        front.appendChild(text);
+
+        inner.appendChild(front);
+        card.appendChild(inner);
 
         card.addEventListener('click', () => onCardClick(card));
         return card;

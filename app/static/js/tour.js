@@ -96,47 +96,55 @@
       title: 'Так выглядят уроки внутри недели',
       description:
         'Каждый урок — это отдельная карточка. Нажми «Начать», чтобы открыть материал.' +
-        '<div class="hsk-mock-card" style="margin-top:14px;background:#f0f4ff;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;border:1px solid #dce6ff;">' +
-          '<div class="hsk-mock-badge" style="width:36px;height:36px;border-radius:50%;background:#6b7cff;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>' +
-          '<div style="flex:1;min-width:0;">' +
-            '<div style="font-weight:700;font-size:14px;color:#1a1a2e;">Историческая лексика</div>' +
-            '<div style="font-size:12px;color:#6b7cff;margin-top:2px;">Изучите новую тему</div>' +
-            '<div style="font-size:11px;color:#888;margin-top:4px;">📝 Упражнения: 0/4</div>' +
+        '<div class="week-lesson-row hsk-mock-row">' +
+          '<div class="wl-info">' +
+            '<div class="wl-number">6</div>' +
+            '<div class="wl-details">' +
+              '<div class="wl-name">Историческая лексика</div>' +
+              '<div class="wl-desc">Изучите новую тему</div>' +
+              '<div class="wl-exercises-badge"><span>📝 Упражнения: 0/4</span></div>' +
+            '</div>' +
           '</div>' +
-          '<div style="background:linear-gradient(135deg,#2563eb,#60a5fa);color:#fff;border-radius:50px;padding:8px 18px;font-size:13px;font-weight:700;white-space:nowrap;">🚀 Начать</div>' +
+          '<div class="wl-actions">' +
+            '<span class="wl-btn wl-btn-start">🚀 Начать</span>' +
+          '</div>' +
         '</div>',
     },
     {
       title: 'После теории появляются упражнения',
       description:
         'Как только ты изучишь теорию урока, появится кнопка «Упражнения» — обязательно выполни их для закрепления материала.' +
-        '<div class="hsk-mock-card" style="margin-top:14px;background:#f0f4ff;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;border:1px solid #dce6ff;">' +
-          '<div class="hsk-mock-badge" style="width:36px;height:36px;border-radius:50%;background:#22c55e;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>' +
-          '<div style="flex:1;min-width:0;">' +
-            '<div style="font-weight:700;font-size:14px;color:#1a1a2e;">Историческая лексика</div>' +
-            '<div style="font-size:12px;color:#6b7cff;margin-top:2px;">Изучите новую тему</div>' +
-            '<div style="font-size:11px;color:#888;margin-top:4px;">📝 Упражнения: 0/4</div>' +
+        '<div class="week-lesson-row wl-completed hsk-mock-row">' +
+          '<div class="wl-info">' +
+            '<div class="wl-number">6</div>' +
+            '<div class="wl-details">' +
+              '<div class="wl-name">Историческая лексика</div>' +
+              '<div class="wl-desc">Изучите новую тему</div>' +
+              '<div class="wl-exercises-badge"><span>📝 Упражнения: 0/4</span></div>' +
+            '</div>' +
           '</div>' +
-          '<div style="display:flex;gap:8px;">' +
-            '<div style="background:linear-gradient(135deg,#2563eb,#60a5fa);color:#fff;border-radius:50px;padding:8px 16px;font-size:13px;font-weight:700;white-space:nowrap;">✍️ Упражнения</div>' +
-            '<div style="background:#dcfce7;color:#16a34a;border-radius:50px;padding:8px 14px;font-size:13px;font-weight:600;white-space:nowrap;border:1px solid #bbf7d0;">✅ Теория</div>' +
+          '<div class="wl-actions">' +
+            '<span class="wl-btn wl-btn-exercises">✍️ Упражнения</span>' +
+            '<span class="wl-btn wl-btn-done">✅ Теория</span>' +
           '</div>' +
         '</div>',
     },
     {
       title: 'Урок завершён!',
       description:
-        'Когда теория изучена и все упражнения выполнены — обе кнопки становятся зелёными и появляется метка «Все выполнены». Так ты отслеживаешь, что уже пройдено.' +
-        '<div class="hsk-mock-card" style="margin-top:14px;background:#f0fff4;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;border:1px solid #bbf7d0;">' +
-          '<div class="hsk-mock-badge" style="width:36px;height:36px;border-radius:50%;background:#22c55e;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>' +
-          '<div style="flex:1;min-width:0;">' +
-            '<div style="font-weight:700;font-size:14px;color:#1a1a2e;">Историческая лексика</div>' +
-            '<div style="font-size:12px;color:#6b7cff;margin-top:2px;">Изучите новую тему</div>' +
-            '<div style="font-size:11px;color:#888;margin-top:4px;display:flex;align-items:center;gap:8px;">📝 Упражнения: 4/4 <span style="background:#dcfce7;color:#16a34a;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:600;border:1px solid #bbf7d0;">✅ Все выполнены</span></div>' +
+        'Когда теория изучена и все упражнения выполнены — появляется метка «Все выполнены». Так ты отслеживаешь, что уже пройдено.' +
+        '<div class="week-lesson-row wl-completed hsk-mock-row">' +
+          '<div class="wl-info">' +
+            '<div class="wl-number">6</div>' +
+            '<div class="wl-details">' +
+              '<div class="wl-name">Историческая лексика</div>' +
+              '<div class="wl-desc">Изучите новую тему</div>' +
+              '<div class="wl-exercises-badge"><span>📝 Упражнения: 4/4</span> <span class="wl-exercises-done">✅ Все выполнены</span></div>' +
+            '</div>' +
           '</div>' +
-          '<div style="display:flex;gap:8px;">' +
-            '<div style="background:#dcfce7;color:#16a34a;border-radius:50px;padding:8px 16px;font-size:13px;font-weight:600;white-space:nowrap;border:1px solid #bbf7d0;">✅ Упражнения</div>' +
-            '<div style="background:#dcfce7;color:#16a34a;border-radius:50px;padding:8px 14px;font-size:13px;font-weight:600;white-space:nowrap;border:1px solid #bbf7d0;">✅ Теория</div>' +
+          '<div class="wl-actions">' +
+            '<span class="wl-btn wl-btn-exercises-done">✅ Упражнения</span>' +
+            '<span class="wl-btn wl-btn-done">✅ Теория</span>' +
           '</div>' +
         '</div>',
     },
@@ -161,7 +169,7 @@
       .hsk-slide-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(4, 13, 30, 0.72);
+        background: rgba(17, 8, 6, 0.68);
         z-index: 1000000000;
         display: flex;
         align-items: center;
@@ -170,9 +178,10 @@
       }
       .hsk-slide-card {
         position: relative;
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        background: var(--surface);
+        border: 2px solid var(--blue);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         width: 100%;
         max-width: 420px;
         max-height: 82vh;
@@ -186,61 +195,62 @@
         right: 12px;
         border: none;
         background: transparent;
-        color: #b0b4bd;
+        color: var(--gray);
         font-size: 22px;
         line-height: 1;
         padding: 6px;
         cursor: pointer;
         z-index: 1;
       }
-      .hsk-slide-skip:hover { color: #4b5563; }
+      .hsk-slide-skip:hover { color: var(--red); }
       .hsk-slide-body {
         padding: 28px 22px 16px;
         overflow-y: auto;
       }
       .hsk-slide-title {
-        font-family: 'Onest', 'Inter', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 17px;
         font-weight: 700;
-        color: #111827;
+        color: var(--black);
         margin: 0;
         line-height: 1.3;
       }
       .hsk-slide-desc {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 13.5px;
         line-height: 1.55;
-        color: #4b5563;
+        color: var(--gray);
         margin-top: 10px;
       }
-      .hsk-slide-desc .hsk-mock-card {
-        padding: 10px 12px !important;
-        gap: 10px !important;
+      .hsk-slide-desc .hsk-mock-row {
+        margin-top: 14px;
+        padding: 10px 12px;
+        gap: 10px;
         flex-wrap: wrap;
       }
       .hsk-slide-footer {
         padding: 14px 22px 18px;
-        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        border-top: 2px solid var(--blue);
       }
       .hsk-progress-track {
         height: 8px;
-        background: #e5e7eb;
+        background: rgba(149, 187, 234, 0.3);
         border-radius: 999px;
         overflow: hidden;
       }
       .hsk-progress-fill {
         height: 100%;
-        background: #6366f1;
+        background: var(--red);
         border-radius: 999px;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .hsk-progress-label {
         display: block;
         margin-top: 6px;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 11px;
         font-weight: 600;
-        color: #9ca3af;
+        color: var(--gray);
         text-align: right;
       }
       .hsk-slide-btns {
@@ -250,31 +260,35 @@
       }
       .hsk-slide-btns button {
         flex: 1;
-        border: none;
         border-radius: 50px;
         padding: 12px 16px;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 14px;
         font-weight: 700;
         cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
       }
       .hsk-slide-next {
-        background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
-        color: #fff;
-        box-shadow: 0 4px 20px rgba(96, 165, 250, 0.45);
+        background: var(--red);
+        color: var(--white);
+        border: none;
         flex-grow: 2;
       }
+      .hsk-slide-next:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+      }
       .hsk-slide-prev {
-        background: transparent;
-        color: #2563eb;
-        border: 1px solid rgba(37, 99, 235, 0.25);
+        background: var(--surface);
+        color: var(--red);
+        border: 2px solid var(--red);
       }
       .hsk-slide-prev:disabled {
         opacity: 0.25;
         cursor: default;
       }
       @media (max-width: 380px) {
-        .hsk-slide-desc .hsk-mock-badge { display: none; }
+        .hsk-slide-desc .wl-number { display: none; }
       }
     `;
     document.head.appendChild(style);
@@ -346,43 +360,46 @@
     var style = document.createElement('style');
     style.textContent = `
       .driver-popover.hsk-tour-popover {
-        background: #ffffff;
-        border: 1px solid rgba(0, 0, 0, 0.07);
-        border-radius: 20px;
+        background: var(--surface);
+        border: 2px solid var(--blue);
+        border-radius: 24px;
         box-shadow:
-          0 8px 32px rgba(0, 0, 0, 0.10),
+          0 8px 32px rgba(0, 0, 0, 0.14),
           0 1px 4px rgba(0, 0, 0, 0.06);
         padding: 42px 45px 33px;
         max-width: 570px;
         min-width: 450px;
       }
       .driver-popover.hsk-tour-popover .driver-popover-title {
-        font-family: 'Onest', 'Inter', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 19px;
         font-weight: 700;
-        color: #111827;
+        color: var(--black);
         margin: 0;
         padding: 0;
         line-height: 1.3;
       }
       .driver-popover.hsk-tour-popover .driver-popover-description {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 14px;
         line-height: 1.65;
-        color: #4b5563;
+        color: var(--gray);
         margin: 10px 0 0;
         padding: 0;
       }
+      .driver-popover.hsk-tour-popover .driver-popover-description .hsk-mock-row {
+        margin-top: 14px;
+      }
       .driver-popover.hsk-tour-popover .driver-popover-next-btn {
-        background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
-        color: #fff;
+        background: var(--red);
+        color: var(--white);
         padding: 14px 36px;
         border-radius: 50px;
         font-size: 15px;
         font-weight: 700;
         border: none;
-        box-shadow: 0 4px 20px rgba(96, 165, 250, 0.45);
-        transition: box-shadow 0.2s, transform 0.2s;
+        box-shadow: none;
+        transition: transform 0.2s, opacity 0.2s;
         white-space: nowrap;
         cursor: pointer;
         text-shadow: none;
@@ -390,23 +407,23 @@
       }
       .driver-popover.hsk-tour-popover .driver-popover-next-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(96, 165, 250, 0.55);
+        opacity: 0.9;
       }
       .driver-popover.hsk-tour-popover .driver-popover-prev-btn {
-        background: transparent;
-        color: #2563eb;
+        background: var(--surface);
+        color: var(--red);
         padding: 14px 28px;
         border-radius: 50px;
         font-size: 15px;
         font-weight: 600;
-        border: 1px solid rgba(37, 99, 235, 0.25);
-        transition: background 0.2s, border-color 0.2s;
+        border: 2px solid var(--red);
+        transition: background 0.2s, color 0.2s;
         white-space: nowrap;
         cursor: pointer;
       }
       .driver-popover.hsk-tour-popover .driver-popover-prev-btn:hover:not(:disabled) {
-        background: rgba(37, 99, 235, 0.06);
-        border-color: rgba(37, 99, 235, 0.45);
+        background: var(--red);
+        color: var(--white);
       }
       .driver-popover.hsk-tour-popover .driver-popover-prev-btn:disabled {
         opacity: 0.25;
@@ -420,23 +437,35 @@
       .hsk-progress-track {
         flex: 1;
         height: 10px;
-        background: #e5e7eb;
+        background: rgba(149, 187, 234, 0.3);
         border-radius: 999px;
         overflow: hidden;
       }
       .hsk-progress-label {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 12px;
         font-weight: 600;
-        color: #9ca3af;
+        color: var(--gray);
         white-space: nowrap;
         flex-shrink: 0;
       }
       .hsk-progress-fill {
         height: 100%;
-        background: #6366f1;
+        background: var(--red);
         border-radius: 999px;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      /* driver.js's popover arrow is hardcoded white in its base CSS; it only
+         matched the old plain-white popover by coincidence. Re-point it at
+         --surface so it still blends once the popover itself is themed. */
+      .driver-popover-arrow {
+        border-color: var(--surface);
+      }
+      .driver-popover.hsk-tour-popover .driver-popover-close-btn {
+        color: var(--gray);
+      }
+      .driver-popover.hsk-tour-popover .driver-popover-close-btn:hover {
+        color: var(--red);
       }
     `;
     document.head.appendChild(style);

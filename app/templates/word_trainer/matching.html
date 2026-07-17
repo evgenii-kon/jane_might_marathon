@@ -3,7 +3,7 @@
 {% block title %}{{ mode_name }} — Тренажёр слов{% endblock %}
 
 {% block content %}
-<div class="trainer-page">
+<div class="trainer-page trainer-page--matching">
 
     <div class="tr-header">
         <a href="/word-trainer" class="tr-back">← К режимам</a>
@@ -12,17 +12,28 @@
         </div>
     </div>
 
-    <div class="trainer-stats">
+    <div class="trainer-results mp-setup" id="mp-setup">
+        <label class="mp-settings-label" for="mp-pair-count">Сколько пар слов сопоставить?</label>
+        <select id="mp-pair-count" class="mp-settings-select"></select>
+    </div>
+
+    <div class="trainer-stats" id="mp-stats" style="display:none;">
         <div style="display:flex; gap:8px; justify-content:center; width:100%;">
             <div class="tr-stat-pill tr-stat-remain">
                 <span class="tr-stat-icon">🃏</span>
                 <span class="tr-stat-val" id="mp-found-count">0</span>
-                <span class="tr-stat-lbl">из 4 пар найдено</span>
+                <span class="tr-stat-lbl" id="mp-total-label">из 4 пар найдено</span>
+            </div>
+            <div class="tr-stat-pill tr-stat-timer">
+                <span class="tr-stat-icon">⏱️</span>
+                <span class="tr-stat-val" id="mp-timer">0:00</span>
             </div>
         </div>
     </div>
 
     <div class="mp-grid" id="mp-grid"></div>
+
+    <button id="mp-start-btn" class="btn-primary mp-start-btn">▶ Начать раунд</button>
 
     <div class="mp-empty" id="mp-empty" style="display:none;">
         Недостаточно слов для этого режима. Изучите больше слов и возвращайтесь!
@@ -31,9 +42,10 @@
     <div class="trainer-results mp-success" id="mp-success" style="display:none;">
         <span class="results-icon">🎉</span>
         <h2>Все пары найдены!</h2>
-        <p class="mp-success-sub">Отличная работа, продолжаем закреплять слова</p>
+        <p class="mp-success-sub" id="mp-success-time">Отличная работа, продолжаем закреплять слова</p>
         <div class="results-buttons">
             <button id="mp-next-round" class="btn-primary">🔄 Следующий раунд</button>
+            <button id="mp-change-settings" class="btn-secondary">⚙ Изменить количество пар</button>
             <a href="/word-trainer" class="btn-secondary">← К режимам</a>
         </div>
     </div>
@@ -44,16 +56,31 @@
 {% block extra_js %}
 <script>
     const wordsPool = {{ words | tojson }};
+    const PAIR_COUNT_STORAGE_KEY = 'mp_pair_count';
+    const FLIP_DURATION = 500;
+    const FLIP_STAGGER = 25;
 
+    const setupEl = document.getElementById('mp-setup');
+    const statsEl = document.getElementById('mp-stats');
     const gridEl = document.getElementById('mp-grid');
     const emptyEl = document.getElementById('mp-empty');
     const successEl = document.getElementById('mp-success');
     const foundCountEl = document.getElementById('mp-found-count');
+    const totalLabelEl = document.getElementById('mp-total-label');
+    const timerEl = document.getElementById('mp-timer');
+    const successTimeEl = document.getElementById('mp-success-time');
     const nextRoundBtn = document.getElementById('mp-next-round');
+    const changeSettingsBtn = document.getElementById('mp-change-settings');
+    const startBtn = document.getElementById('mp-start-btn');
+    const pairCountSelect = document.getElementById('mp-pair-count');
 
     let selectedCard = null;
     let matchedCount = 0;
+    let roundPairCount = 4;
     let isChecking = false;
+    let roundActive = false;
+    let timerInterval = null;
+    let timerStart = null;
 
     function shuffle(arr) {
         const a = [...arr];
@@ -64,34 +91,86 @@
         return a;
     }
 
-    function pickRoundWords() {
-        return shuffle(wordsPool).slice(0, 4);
+    function pickRoundWords(count) {
+        return shuffle(wordsPool).slice(0, count);
+    }
+
+    function populatePairCountOptions() {
+        const maxPairs = Math.min(16, wordsPool.length);
+        for (let n = 4; n <= maxPairs; n++) {
+            const opt = document.createElement('option');
+            opt.value = String(n);
+            opt.textContent = String(n);
+            pairCountSelect.appendChild(opt);
+        }
+        const stored = parseInt(localStorage.getItem(PAIR_COUNT_STORAGE_KEY), 10);
+        let initial = Number.isFinite(stored) ? stored : 4;
+        initial = Math.min(Math.max(initial, 4), maxPairs);
+        pairCountSelect.value = String(initial);
+        return maxPairs;
+    }
+
+    function formatTime(ms) {
+        const totalSec = Math.floor(ms / 1000);
+        const m = Math.floor(totalSec / 60);
+        const s = totalSec % 60;
+        return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timerStart = Date.now();
+        timerEl.textContent = '0:00';
+        timerInterval = setInterval(() => {
+            timerEl.textContent = formatTime(Date.now() - timerStart);
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    function computeColumns(pairCount) {
+        const isMobile = window.matchMedia('(max-width: 860px)').matches;
+        const totalCards = pairCount * 2;
+        if (isMobile) return totalCards > 16 ? 4 : (totalCards > 8 ? 3 : 2);
+        return totalCards > 16 ? 8 : (totalCards > 8 ? 6 : 4);
     }
 
     function buildCard(word, type) {
         const card = document.createElement('div');
-        card.className = `mp-card mp-card--${type}`;
+        card.className = `mp-card mp-card--${type} mp-card--facedown`;
         card.dataset.pairId = word.id;
         card.dataset.type = type;
 
+        const inner = document.createElement('div');
+        inner.className = 'mp-card-inner';
+
+        const back = document.createElement('div');
+        back.className = 'mp-card-face mp-card-face--back';
+        back.innerHTML = '<span class="mp-card-back-mark">汉</span>';
+
+        const front = document.createElement('div');
+        front.className = 'mp-card-face mp-card-face--front';
         const text = document.createElement('div');
         text.className = 'mp-card-text';
         text.textContent = type === 'hanzi' ? word.word : word.translation;
-        card.appendChild(text);
+        front.appendChild(text);
+
+        inner.appendChild(back);
+        inner.appendChild(front);
+        card.appendChild(inner);
 
         card.addEventListener('click', () => onCardClick(card));
         return card;
     }
 
-    function startRound() {
-        selectedCard = null;
-        matchedCount = 0;
-        isChecking = false;
-        foundCountEl.textContent = '0';
-        successEl.style.display = 'none';
-        gridEl.style.display = 'grid';
+    function dealGrid(pairCount) {
+        totalLabelEl.textContent = `из ${pairCount} пар найдено`;
+        gridEl.style.gridTemplateColumns = `repeat(${computeColumns(pairCount)}, minmax(0, 1fr))`;
 
-        const roundWords = pickRoundWords();
+        const roundWords = pickRoundWords(pairCount);
         const cards = [
             ...roundWords.map(w => buildCard(w, 'hanzi')),
             ...roundWords.map(w => buildCard(w, 'translation')),
@@ -102,7 +181,54 @@
         shuffledCards.forEach(c => gridEl.appendChild(c));
     }
 
+    function renderPreview() {
+        stopTimer();
+        roundActive = false;
+        selectedCard = null;
+        matchedCount = 0;
+        isChecking = false;
+
+        successEl.style.display = 'none';
+        statsEl.style.display = 'none';
+        setupEl.style.display = 'flex';
+        startBtn.style.display = 'inline-flex';
+        foundCountEl.textContent = '0';
+
+        dealGrid(parseInt(pairCountSelect.value, 10));
+    }
+
+    function flipCardsAndPlay() {
+        const cards = Array.from(gridEl.children);
+        cards.forEach((card, i) => {
+            setTimeout(() => card.classList.remove('mp-card--facedown'), i * FLIP_STAGGER);
+        });
+
+        const totalDelay = (cards.length - 1) * FLIP_STAGGER + FLIP_DURATION;
+        setTimeout(() => {
+            roundActive = true;
+            resetTimer();
+        }, totalDelay);
+    }
+
+    function startRound() {
+        roundPairCount = parseInt(pairCountSelect.value, 10);
+        selectedCard = null;
+        matchedCount = 0;
+        isChecking = false;
+        roundActive = false;
+
+        foundCountEl.textContent = '0';
+        successEl.style.display = 'none';
+        setupEl.style.display = 'none';
+        startBtn.style.display = 'none';
+        statsEl.style.display = 'block';
+
+        dealGrid(roundPairCount);
+        flipCardsAndPlay();
+    }
+
     function onCardClick(card) {
+        if (!roundActive) return;
         if (isChecking) return;
         if (card.classList.contains('mp-card--matched')) return;
 
@@ -141,7 +267,11 @@
                 isChecking = false;
                 matchedCount++;
                 foundCountEl.textContent = String(matchedCount);
-                if (matchedCount === 4) {
+                if (matchedCount === roundPairCount) {
+                    stopTimer();
+                    roundActive = false;
+                    const elapsed = formatTime(Date.now() - timerStart);
+                    successTimeEl.textContent = `Готово за ${elapsed}. Продолжаем закреплять слова`;
                     setTimeout(() => {
                         successEl.style.display = 'block';
                     }, 300);
@@ -160,14 +290,26 @@
         }
     }
 
+    startBtn.addEventListener('click', () => {
+        localStorage.setItem(PAIR_COUNT_STORAGE_KEY, pairCountSelect.value);
+        startRound();
+    });
+
     nextRoundBtn.addEventListener('click', startRound);
 
+    changeSettingsBtn.addEventListener('click', renderPreview);
+
+    pairCountSelect.addEventListener('change', renderPreview);
+
     if (wordsPool.length < 4) {
+        setupEl.style.display = 'none';
         gridEl.style.display = 'none';
-        document.querySelector('.trainer-stats').style.display = 'none';
+        statsEl.style.display = 'none';
+        startBtn.style.display = 'none';
         emptyEl.style.display = 'block';
     } else {
-        startRound();
+        populatePairCountOptions();
+        renderPreview();
     }
 </script>
 {% endblock %}
