@@ -124,8 +124,9 @@
       .novel-next-btn {
         position: absolute;
         right: 24px;
-        bottom: 24px;
+        bottom: -20px;
         background: var(--red, #940501);
+        opacity: 1;
         color: var(--white, #FFF8E7);
         border: none;
         border-radius: 50px;
@@ -134,20 +135,27 @@
         font-size: 14px;
         font-weight: 700;
         cursor: pointer;
-        transition: transform 0.2s, opacity 0.2s;
+        transition: transform 0.2s;
         z-index: 2;
       }
       .novel-next-btn:hover {
         transform: translateY(-2px);
-        opacity: 0.9;
       }
       @media (max-width: 768px) {
         .novel-sprite {
           height: 62vh;
           max-width: 78vw;
+          transform: scale(1.4);
+        }
+        .novel-sprite--left {
+          transform-origin: left bottom;
+        }
+        .novel-sprite--right {
+          right: -10vw;
+          transform-origin: right bottom;
         }
         .novel-dialogue-box {
-          bottom: 10vh;
+          bottom: 40vh;
           padding: 26px 18px 18px;
         }
         .novel-speaker-row {
@@ -161,7 +169,7 @@
         }
         .novel-next-btn {
           right: 16px;
-          bottom: 16px;
+          bottom: -16px;
           padding: 10px 20px;
         }
         .novel-text {
@@ -210,8 +218,8 @@
             '<span class="novel-speaker-star">&#10022;</span>' +
           '</div>' +
           '<div class="novel-text"></div>' +
+          '<button type="button" class="novel-next-btn">Далее →</button>' +
         '</div>' +
-        '<button type="button" class="novel-next-btn">Далее →</button>' +
       '</div>';
 
     this.overlay = overlay;
