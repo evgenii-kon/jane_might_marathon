@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, status, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -137,6 +139,7 @@ async def login_post(
                     "error": "Подтвердите email перед входом. Письмо было отправлено при регистрации.",
                     "user": current_user,
                     "csrf_token": get_csrf_token(request),
+                    "email": email,
                 },
             )
 
@@ -148,7 +151,7 @@ async def login_post(
             httponly=True,
             secure=not settings.DEBUG,
             samesite="lax",
-            max_age=60 * 60 * 24 * 7,
+            max_age=60 * 60 * 24,  # 1 день
         )
         return response
 
@@ -186,6 +189,36 @@ async def verify_email(
     user_service = UserService(db)
     await user_service.update_user_by_id(user_id, {"is_verified": True})
     return RedirectResponse(url="/auth/login?verified=1", status_code=302)
+
+
+@router.post("/resend-verification", response_class=HTMLResponse)
+@limiter.limit("3/minute")
+async def resend_verification(
+    request: Request,
+    email: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    """Повторная отправка письма подтверждения email"""
+    user_service = UserService(db)
+    user = await user_service.get_user_by_email_optional(email)
+
+    # Отвечаем одинаково — не раскрываем, существует ли email
+    message = "Если этот email зарегистрирован и не подтверждён — письмо отправлено."
+
+    if user and not user.is_verified:
+        token = await create_verification_token(user.id)
+        await send_verification_email(user.email, token)
+
+    return templates.TemplateResponse(
+        "auth/login.html",
+        {
+            "request": request,
+            "user": current_user,
+            "csrf_token": get_csrf_token(request),
+            "message": message,
+        },
+    )
 
 
 # ============ ЗАБЫЛИ ПАРОЛЬ ============
@@ -276,7 +309,10 @@ async def reset_password_post(
 
     user_service = UserService(db)
     hashed = user_service._hash_password(new_password)
-    await user_service.update_user_by_id(user_id, {"password_hash": hashed})
+    await user_service.update_user_by_id(user_id, {
+        "password_hash": hashed,
+        "password_changed_at": datetime.now(timezone.utc),
+    })
     return RedirectResponse(url="/auth/login?reset=1", status_code=302)
 
 
@@ -411,9 +447,15 @@ async def delete_account_get(
 
 @router.post("/me/delete")
 async def delete_account_post(
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    token = request.cookies.get("access_token")
+    if token:
+        if token.startswith("Bearer "):
+            token = token[7:]
+        await blacklist_token(token)
     user_service = UserService(db)
     await user_service.delete_user(current_user.id)
     response = RedirectResponse(url="/", status_code=302)

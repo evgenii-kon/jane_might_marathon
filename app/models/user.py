@@ -15,6 +15,7 @@ class User(Base):
     deleted_at = Column(DateTime(timezone=True))
     is_admin = Column(Boolean, default=False, nullable=False)
     is_verified = Column(Boolean, nullable=False, default=False)
+    password_changed_at = Column(DateTime(timezone=True), nullable=True)
     novel_onboarding_completed = Column(Boolean, default=False, nullable=False)
     novel_skipped = Column(Boolean, default=False, nullable=False)
     novel_skipped_at = Column(DateTime(timezone=True), nullable=True)

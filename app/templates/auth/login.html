@@ -14,6 +14,13 @@
         <div class="auth-error">
             ⚠️ {{ error }}
         </div>
+        {% if "Подтвердите email" in error %}
+        <form method="post" action="/auth/resend-verification" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="email" value="{{ email or '' }}">
+            <button type="submit" class="btn-primary btn-block">Отправить письмо повторно</button>
+        </form>
+        {% endif %}
         {% endif %}
 
         {% if success %}

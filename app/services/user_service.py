@@ -97,7 +97,7 @@ class UserService:
         if user_exist_check:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"user with email {user_data.email} is already exist",
+                detail="Не удалось создать аккаунт. Проверьте введённые данные.",
             )
         await self.cache.delete_pattern("*")
         data_dict = user_data.model_dump(mode='json')

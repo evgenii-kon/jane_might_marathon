@@ -70,12 +70,20 @@ class AuthService:
         return user_id
 
     @staticmethod
-    async def get_user_by_id(db: AsyncSession, user_id: int) -> User:
+    async def get_user_by_id(db: AsyncSession, user_id: int, token_issued_at: float | None = None) -> User:
         """Получает пользователя из БД (обязательный режим)"""
         user_service = UserService(db)
         user = await user_service.repository.get_by_id(user_id)
         if not user:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "User not found")
+
+        # Если пароль менялся после выдачи токена — токен недействителен
+        if token_issued_at and user.password_changed_at:
+            from datetime import datetime, timezone
+            token_dt = datetime.fromtimestamp(token_issued_at, tz=timezone.utc)
+            if user.password_changed_at > token_dt:
+                raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Password was changed, please log in again")
+
         return user
 
     @staticmethod
@@ -96,7 +104,8 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
 
     payload = AuthService.validate_token(token)
     user_id = AuthService.get_user_id(payload)
-    user = await AuthService.get_user_by_id(db, user_id)
+    token_issued_at = payload.get("iat")
+    user = await AuthService.get_user_by_id(db, user_id, token_issued_at)
     return user
 
 
@@ -106,6 +115,9 @@ async def get_current_user_optional(
     """Получает текущего пользователя, если авторизован, иначе None (опциональная авторизация)"""
     token = AuthService.extract_token_optional(request)
     if not token:
+        return None
+
+    if await is_token_in_blacklist(token):
         return None
 
     payload = AuthService.validate_token_optional(token)

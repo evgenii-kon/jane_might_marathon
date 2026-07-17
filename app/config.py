@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     # JWT
     SECRET_KEY: str = Field(..., description="Secret key for JWT signing")
     ALGORITHM: str = Field("HS256", description="JWT signing algorithm")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(10080, description="Token TTL in minutes (default 7 days)")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(1440, description="Token TTL in minutes (default 1 day)")
 
     # Окружение
     DEBUG: bool = Field(False, description="Debug mode; set True only in development")

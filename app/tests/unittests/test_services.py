@@ -168,7 +168,7 @@ class TestUserService:
 
     async def test_authenticate_user_wrong_password(self, db_session):
         svc = UserService(db_session)
-        data = UserCreate(name="WrongPw", email="wrongpw@svc.com", password="correct")
+        data = UserCreate(name="WrongPw", email="wrongpw@svc.com", password="correctpw")
         await svc.create_user(data)
         with pytest.raises(HTTPException) as exc_info:
             await svc.authenticate_user("wrongpw@svc.com", "wrong")

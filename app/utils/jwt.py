@@ -6,14 +6,15 @@ from app.config import settings
 
 def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
     to_encode = data.copy()
+    now = datetime.now(timezone.utc)
     if expires_delta:
-        expires = datetime.now(timezone.utc) + expires_delta
+        expires = now + expires_delta
     else:
-        expires = datetime.now(timezone.utc) + timedelta(
+        expires = now + timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
 
-    to_encode.update({"exp": expires})
+    to_encode.update({"exp": expires, "iat": now})
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
     )
