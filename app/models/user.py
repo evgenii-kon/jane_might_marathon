@@ -15,6 +15,7 @@ class User(Base):
     deleted_at = Column(DateTime(timezone=True))
     is_admin = Column(Boolean, default=False, nullable=False)
     is_verified = Column(Boolean, nullable=False, default=False)
+    novel_onboarding_completed = Column(Boolean, default=False, nullable=False)
 
     lesson_progress = relationship(
         "UserLessonProgress", back_populates="user", cascade="all, delete-orphan"

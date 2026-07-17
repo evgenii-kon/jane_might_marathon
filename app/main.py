@@ -21,6 +21,7 @@ from .routes.dashboard.exercises import router as exercise_router
 from app.routes.admin.article import router as article_admin_router
 from .routes.public.public import router as public_router
 from .routes.auth import router as auth_router
+from .routes.user import router as user_router
 from .routes.admin.user import router as admin_user_router
 from .routes.dashboard.weeks import router as dashboard_weeks_router
 from .routes.dashboard.lessons import router as dashboard_lessons_router
@@ -92,6 +93,7 @@ app.include_router(lesson_router)
 app.include_router(week_router)
 app.include_router(word_router)
 app.include_router(auth_router)
+app.include_router(user_router)
 app.include_router(admin_user_router)
 app.include_router(exercise_admin_router)
 app.include_router(exercise_admin_api_router)

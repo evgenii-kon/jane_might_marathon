@@ -33,6 +33,7 @@
         <div class="profile-actions">
             <a href="/auth/me/edit" class="btn-primary">Редактировать профиль</a>
             <button class="btn-secondary" onclick="restartTour()" title="Повторить экскурсию по платформе">Обучение платформе</button>
+            <button class="btn-secondary" onclick="restartComic()" title="Показать комикс-онбординг заново">Повторить комикс</button>
             <a href="/auth/me/delete" class="btn-danger">Удалить аккаунт</a>
         </div>
     </div>
@@ -59,6 +60,14 @@
 <script>
 function restartTour() {
     localStorage.removeItem('tour_completed');
+    window.location.href = '/dashboard';
+}
+
+async function restartComic() {
+    await fetch('/user/reset-novel-onboarding', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+    });
     window.location.href = '/dashboard';
 }
 </script>
