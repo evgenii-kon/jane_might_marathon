@@ -16,6 +16,9 @@ class User(Base):
     is_admin = Column(Boolean, default=False, nullable=False)
     is_verified = Column(Boolean, nullable=False, default=False)
     novel_onboarding_completed = Column(Boolean, default=False, nullable=False)
+    novel_skipped = Column(Boolean, default=False, nullable=False)
+    novel_skipped_at = Column(DateTime(timezone=True), nullable=True)
+    novel_skip_asked = Column(Boolean, default=False, nullable=False)
 
     lesson_progress = relationship(
         "UserLessonProgress", back_populates="user", cascade="all, delete-orphan"

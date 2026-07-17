@@ -1300,6 +1300,11 @@ a:focus, a:focus-visible{
 
 .lesson-nav {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .back-link {
@@ -6193,6 +6198,10 @@ a:focus, a:focus-visible{
 
 .week-header-card .progress-bar {
     background: rgba(255, 248, 231, 0.25);
+}
+
+.week-header-card .progress-fill {
+    background: var(--white);
 }
 
 .week-lessons-card {

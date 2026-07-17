@@ -36,6 +36,7 @@ from .routes.public.grammar import router as grammar_router
 from .routes.admin.grammar import router as grammar_admin_router
 from .routes.public.reading import router as reading_router
 from .routes.admin.reading import router as reading_admin_router
+from .routes.admin.novel import router as novel_admin_router
 from .routes.payment import router as payment_router
 
 from .csrf import CSRFMiddleware, get_csrf_token
@@ -110,6 +111,7 @@ app.include_router(grammar_router)
 app.include_router(grammar_admin_router)
 app.include_router(reading_router)
 app.include_router(reading_admin_router)
+app.include_router(novel_admin_router)
 app.include_router(payment_router)
 
 templates = Jinja2Templates("app/templates")

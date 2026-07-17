@@ -1,12 +1,20 @@
 {% extends "base.html" %}
+{% set novel_auto_show = novel_lines and not novel_skipped and not novel_already_seen %}
 
 {% block title %}{{ lesson.name }} - HSK-1 Марафон{% endblock %}
 
 {% block content %}
+{% if novel_lines %}
+<div id="novel-overlay" style="display:none"></div>
+<div id="lesson-content" {% if novel_auto_show %}style="display:none"{% endif %}>
+{% endif %}
 <div class="lesson-container">
     <!-- Навигация -->
     <div class="lesson-nav">
         <a href="/dashboard/weeks/{{ lesson.week_id }}" class="back-link">← Назад к неделе</a>
+        {% if novel_lines %}
+        <button type="button" class="btn-secondary" onclick="window.novelPlayer && window.novelPlayer.start()">🎬 Повторить историю</button>
+        {% endif %}
     </div>
 
     <!-- Заголовок урока -->
@@ -101,9 +109,23 @@
         {% endif %}
     </div>
 </div>
+{% if novel_lines %}
+</div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
+{% if novel_lines %}
+<script src="/static/js/novel_player.js"></script>
+<script>
+    const novelLines = {{ novel_lines | tojson }};
+    const userName = {{ user_name | tojson }};
+    window.novelPlayer = new NovelPlayer(novelLines, userName, "{{ csrf_token }}", {{ lesson.id }});
+    {% if novel_auto_show %}
+    window.novelPlayer.start();
+    {% endif %}
+</script>
+{% endif %}
 <script>
     // Табы
     const tabBtns = document.querySelectorAll('.tab-btn');

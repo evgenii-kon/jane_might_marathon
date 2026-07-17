@@ -1,0 +1,150 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ lesson.name }} — реплики новеллы{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Реплики новеллы: {{ lesson.name }}</h1>
+        <a href="/admin/novel" class="btn-outline">← Ко всем урокам</a>
+    </div>
+
+    {% for line in lines %}
+    <div class="novel-line-card">
+        <form method="post" action="/admin/novel/lines/{{ line.id }}/update">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="lesson_id" value="{{ lesson.id }}">
+            <div class="novel-line-row">
+                <label>Порядок
+                    <input type="number" name="order" value="{{ line.order }}" style="width:80px">
+                </label>
+                <label>Тип
+                    <select name="type">
+                        {% for t in line_types %}
+                        <option value="{{ t }}" {% if line.type == t %}selected{% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Персонаж
+                    <select name="character">
+                        <option value="">—</option>
+                        {% for c in characters %}
+                        <option value="{{ c }}" {% if line.character == c %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Имя (speaker)
+                    <input type="text" name="speaker" value="{{ line.speaker or '' }}">
+                </label>
+                <label>Сторона
+                    <select name="side">
+                        <option value="">—</option>
+                        <option value="left" {% if line.side == "left" %}selected{% endif %}>left</option>
+                        <option value="right" {% if line.side == "right" %}selected{% endif %}>right</option>
+                    </select>
+                </label>
+            </div>
+            <label class="novel-line-text-label">Текст
+                <textarea name="text" rows="2">{{ line.text }}</textarea>
+            </label>
+            <div class="novel-line-actions">
+                <button type="submit" class="btn-primary">💾 Сохранить</button>
+            </div>
+        </form>
+        <form method="post" action="/admin/novel/lines/{{ line.id }}/delete" onsubmit="return confirm('Удалить реплику?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="lesson_id" value="{{ lesson.id }}">
+            <button type="submit" class="btn-delete">🗑️ Удалить</button>
+        </form>
+    </div>
+    {% else %}
+    <p class="empty-state">Реплик пока нет.</p>
+    {% endfor %}
+
+    <div class="novel-line-card novel-line-card--new">
+        <h3>➕ Добавить реплику</h3>
+        <form method="post" action="/admin/novel/{{ lesson.id }}/create">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="novel-line-row">
+                <label>Порядок
+                    <input type="number" name="order" value="{{ (lines[-1].order + 1) if lines else 0 }}" style="width:80px">
+                </label>
+                <label>Тип
+                    <select name="type">
+                        {% for t in line_types %}
+                        <option value="{{ t }}">{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Персонаж
+                    <select name="character">
+                        <option value="">—</option>
+                        {% for c in characters %}
+                        <option value="{{ c }}">{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Имя (speaker)
+                    <input type="text" name="speaker" value="">
+                </label>
+                <label>Сторона
+                    <select name="side">
+                        <option value="">—</option>
+                        <option value="left">left</option>
+                        <option value="right">right</option>
+                    </select>
+                </label>
+            </div>
+            <label class="novel-line-text-label">Текст
+                <textarea name="text" rows="2" required></textarea>
+            </label>
+            <div class="novel-line-actions">
+                <button type="submit" class="btn-primary">Добавить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.novel-line-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+}
+.novel-line-card--new {
+    background: #f8f9fb;
+}
+.novel-line-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+.novel-line-row label {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    gap: 4px;
+}
+.novel-line-text-label {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    gap: 4px;
+}
+.novel-line-text-label textarea {
+    width: 100%;
+    font-family: inherit;
+    resize: vertical;
+}
+.novel-line-actions {
+    margin-top: 10px;
+}
+</style>
+{% endblock %}

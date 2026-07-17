@@ -309,6 +309,7 @@
         }).finally(function () {
           document.body.style.overflow = '';
           overlay.remove();
+          if (window.__hskShowNovelSkipBanner) window.__hskShowNovelSkipBanner();
         });
       }
 
@@ -401,6 +402,98 @@
       document.body.appendChild(overlay);
       render();
     })();
+    </script>
+    {% endif %}
+    {% if user %}
+    <script>
+    (function () {
+      window.__hskShowNovelSkipBanner = function () {
+        if (document.querySelector('.novel-skip-banner')) return;
+
+        var style = document.createElement('style');
+        style.textContent = `
+          .novel-skip-banner {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 999999998;
+            background: #2b2b2b;
+            color: #f2f2f2;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
+          }
+          .novel-skip-banner__text {
+            font-size: 14px;
+          }
+          .novel-skip-banner__btns {
+            display: flex;
+            gap: 10px;
+          }
+          .novel-skip-banner__btns button {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s, opacity 0.2s;
+          }
+          .novel-skip-banner__btns button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+          }
+          .novel-skip-banner__keep {
+            background: var(--red, #940501);
+            color: var(--white, #FFF8E7);
+          }
+          .novel-skip-banner__skip {
+            background: transparent;
+            color: #f2f2f2;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+          }
+        `;
+        document.head.appendChild(style);
+
+        var banner = document.createElement('div');
+        banner.className = 'novel-skip-banner';
+        banner.innerHTML =
+          '<span class="novel-skip-banner__text">Хочешь пропустить сюжетные сцены перед уроками?</span>' +
+          '<div class="novel-skip-banner__btns">' +
+            '<button type="button" class="novel-skip-banner__skip">Пропустить</button>' +
+            '<button type="button" class="novel-skip-banner__keep">Оставить</button>' +
+          '</div>';
+        document.body.appendChild(banner);
+
+        function resolve(url) {
+          fetch(url, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ request.session.csrf_token }}' },
+          }).finally(function () {
+            banner.remove();
+          });
+        }
+
+        banner.querySelector('.novel-skip-banner__skip').addEventListener('click', function () {
+          resolve('/user/skip-novel');
+        });
+        banner.querySelector('.novel-skip-banner__keep').addEventListener('click', function () {
+          resolve('/user/unskip-novel');
+        });
+      };
+    })();
+    </script>
+    {% endif %}
+    {% if user and user.novel_onboarding_completed and not user.novel_skip_asked %}
+    <script>
+      if (window.__hskShowNovelSkipBanner) window.__hskShowNovelSkipBanner();
     </script>
     {% endif %}
 </body>

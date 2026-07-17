@@ -22,3 +22,5 @@ from .user_word_mistake import UserWordMistake
 from .plan import Plan
 from .subscription import Subscription
 from .payment import Payment
+from .novel_line import NovelLine
+from .user_novel_progress import UserNovelProgress

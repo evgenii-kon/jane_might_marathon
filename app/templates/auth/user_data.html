@@ -30,6 +30,17 @@
             </div>
         </div>
 
+        <div class="profile-toggle-row">
+            <div class="profile-toggle-info">
+                <span class="profile-toggle-label">Сюжетные сцены перед уроками</span>
+                <span class="profile-toggle-hint">Короткие диалоги персонажей перед каждым уроком</span>
+            </div>
+            <label class="novel-switch">
+                <input type="checkbox" id="novel-switch-input" {% if not user.novel_skipped %}checked{% endif %}>
+                <span class="novel-switch-slider"></span>
+            </label>
+        </div>
+
         <div class="profile-actions">
             <a href="/auth/me/edit" class="btn-primary">Редактировать профиль</a>
             <button class="btn-secondary" onclick="restartTour()" title="Повторить экскурсию по платформе">Обучение платформе</button>
@@ -70,5 +81,86 @@ async function restartComic() {
     });
     window.location.href = '/dashboard';
 }
+
+const novelSwitchInput = document.getElementById('novel-switch-input');
+novelSwitchInput.addEventListener('change', async function () {
+    const url = this.checked ? '/user/unskip-novel' : '/user/skip-novel';
+    this.disabled = true;
+    try {
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        });
+    } finally {
+        this.disabled = false;
+    }
+});
 </script>
+
+<style>
+.profile-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid rgba(2, 2, 2, 0.08);
+    border-bottom: 1px solid rgba(2, 2, 2, 0.08);
+    margin: 8px 0 20px;
+}
+.profile-toggle-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.profile-toggle-label {
+    font-weight: 600;
+    color: var(--black);
+}
+.profile-toggle-hint {
+    font-size: 12px;
+    color: var(--gray);
+}
+.novel-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.novel-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.novel-switch-slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 2, 2, 0.18);
+    border-radius: 999px;
+    transition: background 0.2s;
+}
+.novel-switch-slider::before {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.novel-switch input:checked + .novel-switch-slider {
+    background: var(--red);
+}
+.novel-switch input:checked + .novel-switch-slider::before {
+    transform: translateX(22px);
+}
+.novel-switch input:disabled + .novel-switch-slider {
+    opacity: 0.6;
+}
+</style>
 {% endblock %}
