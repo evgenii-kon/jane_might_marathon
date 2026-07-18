@@ -71,7 +71,7 @@
         bottom: 31vh;
         transform: translateX(-50%);
         width: min(96vw, 988px);
-        background: var(--white, #FFF8E7);
+        background: #FFF8E7;
         border: none;
         border-radius: 22px;
         padding: 42px 36px 31px;
@@ -113,7 +113,7 @@
       }
       .novel-text {
         font-family: 'Montserrat', sans-serif;
-        color: var(--black, #111111);
+        color: #111111;
         font-size: 20px;
         line-height: 1.6;
       }

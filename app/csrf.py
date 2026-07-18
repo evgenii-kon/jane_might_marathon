@@ -20,8 +20,8 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         if request.method == "POST":
             session_token = request.session.get(CSRF_SESSION_KEY)
 
-            body = await request.body()
-            request._body = body
+            if not hasattr(request, "_body"):
+                request._body = await request.body()
             form_data = await request.form()
             form_token = form_data.get("csrf_token")
 
@@ -34,9 +34,6 @@ class CSRFMiddleware(BaseHTTPMiddleware):
                 raise HTTPException(
                     status_code=403, detail="CSRF token verification failed"
                 )
-
-            # Ротировать токен после каждого успешного POST
-            request.session[CSRF_SESSION_KEY] = secrets.token_urlsafe(32)
 
         return await call_next(request)
 
