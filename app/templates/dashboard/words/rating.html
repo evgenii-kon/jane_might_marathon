@@ -63,6 +63,24 @@
             </button>
         </div>
 
+        <!-- Прогресс изучения словаря -->
+        <div class="rp-progress-wrap">
+            <div class="rp-progress-label">
+                Изучается слов: <strong>{{ stats.started }}</strong> из <strong>{{ stats.total_in_db }}</strong>
+            </div>
+            <div class="rp-progress-bar">
+                <div class="rp-progress-fill" style="width: {{ (stats.started / stats.total_in_db * 100) | round | int if stats.total_in_db else 0 }}%"></div>
+            </div>
+        </div>
+
+        {% if not words %}
+        <!-- Пустое состояние: пользователь ещё не изучал слова -->
+        <div class="rp-empty" style="display:flex">
+            <span class="rp-empty-icon">📖</span>
+            <p>Вы ещё не изучали слова. Начните с первого урока!</p>
+        </div>
+        {% else %}
+
         <!-- Заголовки колонок -->
         <div class="rp-list-head">
             <div class="rp-col rp-col--hanzi">Иероглиф</div>
@@ -137,6 +155,8 @@
             <p>Нет слов в этой категории</p>
         </div>
 
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}
@@ -167,7 +187,7 @@
                 if (show) visible++;
             });
 
-            emptyState.style.display = visible === 0 ? 'flex' : 'none';
+            if (emptyState) emptyState.style.display = visible === 0 ? 'flex' : 'none';
         });
     });
 })();

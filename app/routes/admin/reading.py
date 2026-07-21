@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
@@ -13,7 +13,6 @@ from app.schemas.reading import ReadingTextCreate, ReadingTextUpdate, ReadingQue
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/admin/reading", tags=["admin_reading"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)

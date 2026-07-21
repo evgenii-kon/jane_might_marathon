@@ -8,7 +8,7 @@ class NovelLine(Base):
     lesson_id = Column(Integer, ForeignKey("lessons.id", ondelete="CASCADE"), nullable=False, index=True)
     order = Column(Integer, nullable=False)
     type = Column(String(20), nullable=False)  # "narrative" | "dialogue"
-    character = Column(String(50), nullable=True)  # "confusi" | "zhulan" | "zho" | "chingisu" | "brus_ley" | "user" | null
+    character = Column(String(50), nullable=True)  # "confusi" | "zhulan" | "zhulan_waitress" | "jo" | "chingisu" | "bris" | "user" | null
     speaker = Column(String(100), nullable=True)  # отображаемое имя | null
     text = Column(Text, nullable=False)
     side = Column(String(10), nullable=True)  # "left" | "right" | null для narrative

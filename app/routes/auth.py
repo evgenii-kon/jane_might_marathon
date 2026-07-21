@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, status, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated, Optional
 
@@ -30,7 +30,6 @@ from app.utils.email_service import (
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 # ============ РЕГИСТРАЦИЯ ============

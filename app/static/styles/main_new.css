@@ -614,7 +614,7 @@ a:focus, a:focus-visible{
   max-width:1280px;
   margin:0 auto;
   display:grid;
-  grid-template-columns:1.5fr 1fr 1fr;
+  grid-template-columns:1fr auto auto;
   gap:40px;
   padding-bottom:40px;
   border-bottom:1px solid rgba(255,248,231,0.15);
@@ -3658,6 +3658,30 @@ a:focus, a:focus-visible{
 }
 
 
+/* ── Dictionary progress ──────────────────────────────────────── */
+.rp-progress-wrap {
+    padding: 20px 24px 0;
+}
+.rp-progress-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+.rp-progress-bar {
+    height: 8px;
+    background: var(--blue-2);
+    border-radius: 99px;
+    overflow: hidden;
+}
+.rp-progress-fill {
+    height: 100%;
+    background: #10b981;
+    border-radius: 99px;
+    transition: width .4s ease;
+}
+
+
 /* ── Column headers ────────────────────────────────────────── */
 .rp-list-head {
     display: flex;
@@ -4855,7 +4879,7 @@ a:focus, a:focus-visible{
     background: var(--surface);
     transition: border-color 0.15s ease, background 0.15s ease;
 }
-.quiz-option:hover { border-color: var(--red); background: rgba(148, 5, 1, 0.04); }
+.quiz-option:hover:not(:disabled) { border-color: var(--red); background: rgba(148, 5, 1, 0.04); }
 .quiz-option input[type=radio] { accent-color: var(--red); width: 16px; height: 16px; flex-shrink: 0; }
 .quiz-opt-label { font-size: 14px; color: var(--black); line-height: 1.4; }
 

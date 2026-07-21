@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
@@ -13,9 +13,8 @@ from app.schemas.novel_line import NovelLineCreate, NovelLineUpdate, NOVEL_LINE_
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/admin/novel", tags=["admin_novel"])
-templates = Jinja2Templates(directory="app/templates")
 
-CHARACTERS = ("confusi", "zhulan", "zho", "chingisu", "brus_ley", "user")
+CHARACTERS = ("confusi", "zhulan", "zhulan_waitress", "jo", "chingisu", "bris", "user")
 
 
 @router.get("/", response_class=HTMLResponse)

@@ -13,7 +13,7 @@
     <div class="lesson-nav">
         <a href="/dashboard/weeks/{{ lesson.week_id }}" class="back-link">← Назад к неделе</a>
         {% if novel_lines %}
-        <button type="button" class="btn-secondary" onclick="window.novelPlayer && window.novelPlayer.start()">🎬 Повторить историю</button>
+        <button type="button" class="btn-secondary" onclick="window.novelPlayer && window.novelPlayer.start()">Повторить историю</button>
         {% endif %}
     </div>
 
@@ -33,8 +33,8 @@
 
     <!-- Вкладки -->
     <div class="lesson-tabs">
-        <button class="tab-btn active" data-tab="theory">📖 Теория</button>
-        <button class="tab-btn" data-tab="words">📝 Слова</button>
+        <button class="tab-btn active" data-tab="theory">Теория</button>
+        <button class="tab-btn" data-tab="words">Слова</button>
     </div>
 
     <!-- Теория (видео + контент) -->
@@ -72,7 +72,7 @@
                             <div class="flashcard-transcription">{{ word.transcription }}</div>
                             {% if word.audio_url %}
                             <audio id="audio-{{ word.id }}" src="{{ word.audio_url }}" preload="none"></audio>
-                            <button class="audio-play-btn" onclick="event.stopPropagation(); document.getElementById('audio-{{ word.id }}').play()">🔊 Слушать</button>
+                            <button class="audio-play-btn" onclick="event.stopPropagation(); document.getElementById('audio-{{ word.id }}').play()">Слушать</button>
                             {% endif %}
                             <div class="flashcard-hint">👆 Нажми для перевода</div>
                         </div>
@@ -100,11 +100,11 @@
     <!-- Кнопка отметки пройденным -->
     <div class="lesson-complete">
         {% if is_completed %}
-            <button class="btn-completed" disabled>✅ Урок пройден</button>
+            <button class="btn-completed" disabled>Урок пройден</button>
         {% else %}
             <form method="post" action="/dashboard/lessons/{{ lesson.id }}/complete">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                <button type="submit" class="btn-complete">📝 Отметить урок пройденным</button>
+                <button type="submit" class="btn-complete">Отметить урок пройденным</button>
             </form>
         {% endif %}
     </div>
@@ -120,7 +120,7 @@
 <script>
     const novelLines = {{ novel_lines | tojson }};
     const userName = {{ user_name | tojson }};
-    window.novelPlayer = new NovelPlayer(novelLines, userName, "{{ csrf_token }}", {{ lesson.id }});
+    window.novelPlayer = new NovelPlayer(novelLines, userName, "{{ csrf_token }}", {{ lesson.id }}, "{{ s3_public_url }}");
     {% if novel_auto_show %}
     window.novelPlayer.start();
     {% endif %}

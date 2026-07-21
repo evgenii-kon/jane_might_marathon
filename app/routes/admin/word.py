@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from app.dependencies.auth import get_current_admin
 from app.models.user import User
 
@@ -14,7 +14,6 @@ from app.csrf import get_csrf_token
 
 
 router = APIRouter(prefix="/admin/words", tags=["admin", "word"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)

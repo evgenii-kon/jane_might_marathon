@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.dependencies.auth import get_current_user
@@ -14,7 +14,6 @@ from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.subscription_service import get_active_subscription
 
 router = APIRouter(prefix="/dashboard/weeks", tags=["dashboard"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/{week_id}", response_class=HTMLResponse)

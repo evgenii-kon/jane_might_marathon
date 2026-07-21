@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
@@ -11,7 +11,6 @@ from app.dependencies.auth import get_current_admin
 from app.models.user import User
 
 router = APIRouter(prefix="/admin/users", tags=["admin", "users"])
-templates = Jinja2Templates(directory="app/templates")
 from app.csrf import get_csrf_token 
 
 

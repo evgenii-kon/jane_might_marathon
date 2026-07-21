@@ -30,12 +30,12 @@
                     <td>{{ idiom.translate[:50] }}{% if idiom.translate|length > 50 %}...{% endif %}</td>
                     <td>{{ idiom.created_at.strftime('%d.%m.%Y') if idiom.created_at else '-' }}</td>
                     <td class="actions">
-                        <a href="/admin/idioms/{{ idiom.id }}/edit" class="btn-edit">✏️</a>
+                        <a href="/admin/idioms/{{ idiom.id }}/edit" class="btn-edit">Редактировать</a>
                         <form method="post" action="/admin/idioms/{{ idiom.id }}/delete"
                               style="display: inline;"
                               onsubmit="return confirm('Удалить идиому {{ idiom.hanzi }}?');">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                            <button type="submit" class="btn-delete" style="border: none; background: none; cursor: pointer;">🗑️</button>
+                            <button type="submit" class="btn-delete" style="border: none; background: none; cursor: pointer;">Удалить</button>
                         </form>
                     </td>
                 </tr>

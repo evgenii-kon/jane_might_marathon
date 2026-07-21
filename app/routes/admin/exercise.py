@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -14,7 +14,6 @@ from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/admin/exercises", tags=["admin_exercises"])
 api_router = APIRouter(prefix="/admin/api", tags=["admin_api"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 EXERCISE_TYPE_LABELS = {

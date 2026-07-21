@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, Request
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timezone
 from app.database import get_db
@@ -17,7 +17,6 @@ from app.dependencies.subscription import require_feature
 from app.redis_client import get_redis
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 def days_word(n: int) -> str:
@@ -176,6 +175,7 @@ async def word_rating(
 ):
     service = WordTrainerService(db)
     words = await service.get_word_ranking(current_user.id)
+    total_in_db = len(await service.word_repo.get_all_ids())
 
     cnt_mastered = sum(1 for w in words if w['mastery_level'] == 5)
     cnt_mid      = sum(1 for w in words if 3 <= w['mastery_level'] < 5)
@@ -192,6 +192,9 @@ async def word_rating(
         'cnt_low':      cnt_low,
         'cnt_mid':      cnt_mid,
         'cnt_mastered': cnt_mastered,
+        # Прогресс изучения словаря
+        'total_in_db': total_in_db,
+        'started':     len(words),
     }
 
     return templates.TemplateResponse(

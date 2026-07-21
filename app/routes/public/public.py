@@ -3,10 +3,9 @@ from typing import Optional
 from app.models.user import User
 from app.dependencies.auth import get_current_user_optional
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 
 router = APIRouter(tags=["public"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)

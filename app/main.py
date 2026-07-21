@@ -1,6 +1,5 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -40,7 +39,8 @@ from .routes.admin.reading import router as reading_admin_router
 from .routes.admin.novel import router as novel_admin_router
 from .routes.payment import router as payment_router
 
-from .csrf import CSRFMiddleware, get_csrf_token
+from .csrf import CSRFMiddleware
+from app.templates_config import templates
 from app.utils.rate_limiter import limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -129,9 +129,7 @@ app.include_router(reading_admin_router)
 app.include_router(novel_admin_router)
 app.include_router(payment_router)
 
-templates = Jinja2Templates("app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates.env.globals["csrf"] = get_csrf_token
 
 
 @app.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)

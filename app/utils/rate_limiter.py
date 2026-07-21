@@ -1,6 +1,6 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -14,7 +14,6 @@ limiter = Limiter(
     headers_enabled=True
 )
 
-templates = Jinja2Templates(directory="app/templates")
 
 # Маппинг маршрутов на шаблоны для HTML-ответов
 _ROUTE_TEMPLATES: dict[str, str] = {

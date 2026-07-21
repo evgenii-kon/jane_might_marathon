@@ -180,11 +180,12 @@
     document.head.appendChild(style);
   }
 
-  function NovelPlayer(lines, userName, csrfToken, lessonId) {
+  function NovelPlayer(lines, userName, csrfToken, lessonId, s3PublicUrl) {
     this.lines = lines || [];
     this.userName = userName || '';
     this.csrfToken = csrfToken || '';
     this.lessonId = lessonId || null;
+    this.s3PublicUrl = s3PublicUrl || '';
     this.idx = 0;
   }
 
@@ -260,7 +261,7 @@
       if (line.character) {
         var spriteEl = line.character === 'user' ? this.spriteLeft : this.spriteRight;
         var img = spriteEl.querySelector('img');
-        img.src = '/static/images/characters/' + line.character + '.png';
+        img.src = this.s3PublicUrl + '/novel/characters/' + line.character + '.webp';
         img.alt = this._sub(line.speaker);
         spriteEl.style.visibility = 'visible';
       }

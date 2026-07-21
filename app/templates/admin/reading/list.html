@@ -32,11 +32,11 @@
                     <td>{{ text.questions | length }}</td>
                     <td>{{ text.created_at.strftime('%d.%m.%Y') if text.created_at else '—' }}</td>
                     <td class="actions">
-                        <a href="/reading/{{ text.slug }}" target="_blank" class="btn-edit" title="Просмотр">👁</a>
-                        <a href="/admin/reading/{{ text.id }}/edit" class="btn-edit">✏️</a>
+                        <a href="/reading/{{ text.slug }}" target="_blank" class="btn-edit" title="Просмотр">Просмотр</a>
+                        <a href="/admin/reading/{{ text.id }}/edit" class="btn-edit">Редактировать</a>
                         <form method="post" action="/admin/reading/{{ text.id }}/delete" style="display:inline" onsubmit="return confirm('Удалить текст?')">
                             <input type="hidden" name="csrf_token" value="{{ csrf(request) }}">
-                            <button type="submit" class="btn-delete">🗑️</button>
+                            <button type="submit" class="btn-delete">Удалить</button>
                         </form>
                     </td>
                 </tr>

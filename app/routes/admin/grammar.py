@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -12,7 +12,6 @@ from app.schemas.grammar import GrammarRuleCreate, GrammarRuleUpdate
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/admin/grammar", tags=["admin_grammar"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse)

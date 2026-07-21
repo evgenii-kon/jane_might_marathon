@@ -1,24 +1,5 @@
-"""
-Seed script: наполняет БД правилами грамматики китайского языка HSK-1.
-Идемпотентный — повторный запуск не дублирует данные.
-Использует psycopg2 напрямую.
-"""
+"""Seed: правила и теги грамматики (grammar_rules, grammar_tags)."""
 
-import os
-import psycopg2
-import psycopg2.extras
-
-DB_CONFIG = {
-    "host": os.getenv("DB_HOST", "localhost"),
-    "port": int(os.getenv("DB_PORT", 5432)),
-    "user": os.getenv("DB_USER", "postgres"),
-    "password": os.getenv("DB_PASSWORD", "bndcn34894hcn289"),
-    "dbname": os.getenv("DB_NAME", "fastapi_db"),
-}
-
-# ──────────────────────────────────────────────────────────────
-# ТЕГИ
-# ──────────────────────────────────────────────────────────────
 TAGS = [
     ("Структура предложения", "struktura-predlozheniya"),
     ("Частицы", "chastitsy"),
@@ -31,10 +12,7 @@ TAGS = [
     ("Прилагательные", "prilagatelnyye"),
 ]
 
-# ──────────────────────────────────────────────────────────────
-# ПРАВИЛА ГРАММАТИКИ
 # Формат: (title, slug, description, content_html, hsk_level, [tag_slugs])
-# ──────────────────────────────────────────────────────────────
 RULES = [
     (
         "Структура предложения: Подлежащее + Сказуемое + Дополнение (S+V+O)",
@@ -536,57 +514,39 @@ RULES = [
     ),
 ]
 
-
-def seed():
-    conn = psycopg2.connect(**DB_CONFIG)
-    conn.autocommit = False
-    cur = conn.cursor()
-
-    # ── Теги ──────────────────────────────────────────────────
+def seed_grammar_tags(cur):
+    """Вставляет TAGS. Возвращает {slug: tag_id}."""
+    print("\n🏷️  Вставляю теги грамматики...")
     tag_id_map = {}
     for name, slug in TAGS:
-        cur.execute("SELECT id FROM grammar_tags WHERE slug = %s", (slug,))
-        row = cur.fetchone()
-        if row:
-            tag_id_map[slug] = row[0]
-            print(f"[SKIP] Тег уже существует: {name}")
-        else:
-            cur.execute(
-                "INSERT INTO grammar_tags (name, slug) VALUES (%s, %s) RETURNING id",
-                (name, slug),
-            )
-            tag_id_map[slug] = cur.fetchone()[0]
-            print(f"[ADD]  Тег: {name}")
+        cur.execute(
+            "INSERT INTO grammar_tags (name, slug) VALUES (%s, %s) RETURNING id",
+            (name, slug),
+        )
+        tag_id_map[slug] = cur.fetchone()[0]
+        print(f"   + Тег: {name}")
+    print(f"   ✅ Вставлено тегов: {len(TAGS)}")
+    return tag_id_map
 
-    # ── Правила ───────────────────────────────────────────────
-    for title, slug, description, content, hsk_level, tag_slugs in RULES:
-        cur.execute("SELECT id FROM grammar_rules WHERE slug = %s", (slug,))
-        row = cur.fetchone()
-        if row:
-            print(f"[SKIP] Правило уже существует: {title}")
-            continue
 
+def seed_grammar_rules(cur, tag_id_map):
+    """Вставляет RULES и связи grammar_rule_tags."""
+    print("\n📐 Вставляю правила грамматики...")
+    for title, slug, description, content_html, hsk_level, tag_slugs in RULES:
         cur.execute(
             """INSERT INTO grammar_rules (title, slug, description, content, hsk_level)
                VALUES (%s, %s, %s, %s, %s) RETURNING id""",
-            (title, slug, description, content, hsk_level),
+            (title, slug, description, content_html, hsk_level),
         )
         rule_id = cur.fetchone()[0]
-        print(f"[ADD]  Правило: {title}")
-
+        print(f"   + Правило: {title}")
         for tag_slug in tag_slugs:
             tag_id = tag_id_map.get(tag_slug)
             if tag_id:
                 cur.execute(
-                    "INSERT INTO grammar_rule_tags (rule_id, tag_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
+                    """INSERT INTO grammar_rule_tags (rule_id, tag_id)
+                       VALUES (%s, %s) ON CONFLICT DO NOTHING""",
                     (rule_id, tag_id),
                 )
+    print(f"   ✅ Вставлено правил: {len(RULES)}")
 
-    conn.commit()
-    cur.close()
-    conn.close()
-    print("\nГотово! Правила грамматики успешно добавлены.")
-
-
-if __name__ == "__main__":
-    seed()

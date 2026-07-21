@@ -38,16 +38,16 @@
 
         <div class="completed-actions">
             <a href="/dashboard/weeks/{{ lesson.week_id }}" class="btn-primary">
-                📚 К списку уроков
+                К списку уроков
             </a>
             <form method="post" action="/dashboard/exercises/lesson/{{ lesson.id }}/reset" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <button type="submit" class="btn-secondary">
-                    🔄 Пройти заново
+                    Пройти заново
                 </button>
             </form>
             <a href="/dashboard" class="btn-cancel">
-                🏠 На главную
+                На главную
             </a>
         </div>
     </div>

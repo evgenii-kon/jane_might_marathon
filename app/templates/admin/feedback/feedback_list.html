@@ -26,10 +26,10 @@
                     <td class="feedback-text-preview">{{ fb.text[:80] }}{% if fb.text|length > 80 %}...{% endif %}</td>
                     <td class="feedback-date">{{ fb.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
                     <td class="feedback-actions">
-                        <a href="/admin/feedback/{{ fb.id }}" class="btn-view">👁️ Просмотр</a>
+                        <a href="/admin/feedback/{{ fb.id }}" class="btn-view">Просмотр</a>
                         <form method="post" action="/admin/feedback/{{ fb.id }}/delete" style="display: inline;">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                            <button type="submit" class="btn-delete-feedback" onclick="return confirm('Удалить этот отзыв?')">🗑️ Удалить</button>
+                            <button type="submit" class="btn-delete-feedback" onclick="return confirm('Удалить этот отзыв?')">Удалить</button>
                         </form>
                     </td>
                 </tr>

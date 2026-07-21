@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request, HTTPException, status, Form
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from app.database import get_db
@@ -13,7 +13,6 @@ from app.services.tinkoff_service import create_payment, handle_notification
 from app.csrf import get_csrf_token
 
 router = APIRouter(tags=["payment"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/pricing", response_class=HTMLResponse)

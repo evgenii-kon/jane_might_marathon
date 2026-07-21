@@ -30,8 +30,8 @@
                     <td>{{ article.slug }}</td>
                     <td>{{ article.created_at.strftime('%d.%m.%Y %H:%M') if article.created_at else '-' }}</td>
                     <td class="actions">
-                        <a href="/admin/articles/{{ article.id }}/edit" class="btn-edit">✏️</a>
-                        <a href="/admin/articles/{{ article.id }}/delete" class="btn-delete">🗑️</a>
+                        <a href="/admin/articles/{{ article.id }}/edit" class="btn-edit">Редактировать</a>
+                        <a href="/admin/articles/{{ article.id }}/delete" class="btn-delete">Удалить</a>
                     </td>
                 </tr>
                 {% else %}

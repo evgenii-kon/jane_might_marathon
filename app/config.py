@@ -62,6 +62,8 @@ class Settings(BaseSettings):
     static_dir: str = "static"
     images_dir: str = "static/images"
 
+    S3_PUBLIC_URL: str = Field("", description="S3 public base URL")
+
     @field_validator("images_dir")
     @classmethod
     def validate_images_dir(cls, v: str) -> str:

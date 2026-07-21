@@ -51,7 +51,7 @@ async def send_verification_email(to: str, token: str) -> None:
                         <tr>
                             <td style="background:#f9f9f9;padding:24px 48px;border-top:1px solid #eee;">
                                 <p style="margin:0;color:#999;font-size:12px;text-align:center;">
-                                    © 2026 Jane Marathon · <a href="https://school-might-marathon.ru" style="color:#ff6b35;">school-might-marathon.ru</a>
+                                    © 2023 Jane Marathon · <a href="https://school-might-marathon.ru" style="color:#ff6b35;">school-might-marathon.ru</a>
                                 </p>
                             </td>
                         </tr>
@@ -118,7 +118,7 @@ async def send_reset_password_email(to: str, token: str) -> None:
                         <tr>
                             <td style="background:#f9f9f9;padding:24px 48px;border-top:1px solid #eee;">
                                 <p style="margin:0;color:#999;font-size:12px;text-align:center;">
-                                    © 2026 Jane Marathon · <a href="https://school-might-marathon.ru" style="color:#ff6b35;">school-might-marathon.ru</a>
+                                    © 2023 Jane Marathon · <a href="https://school-might-marathon.ru" style="color:#ff6b35;">school-might-marathon.ru</a>
                                 </p>
                             </td>
                         </tr>

@@ -219,6 +219,8 @@ button{font-family:'Montserrat',sans-serif;}
 .slider{
   position:relative;
   overflow:hidden;
+  max-width:1160px;
+  margin:0 auto;
 }
 .slider__btn{
   position:absolute;
@@ -242,15 +244,13 @@ button{font-family:'Montserrat',sans-serif;}
   display:flex;
   gap:24px;
   transition:transform 0.4s ease;
-  padding:0 40px;
 }
 .fear-card-wrap{
-  flex-shrink:0;
-  width:230px;
+  flex:0 0 calc((100% - 48px) / 3);
 }
 .fear-card{
-  width:230px;
-  height:290px;
+  width:100%;
+  aspect-ratio:230 / 290;
   border-radius:32px;
   overflow:hidden;
   position:relative;
@@ -303,7 +303,7 @@ button{font-family:'Montserrat',sans-serif;}
 .fear-card-wrap__quote{
   color:#333;
   font-size:0.8rem;
-  max-width:230px;
+  max-width:100%;
   text-align:center;
   margin-top:12px;
   font-style:italic;
@@ -314,6 +314,8 @@ button{font-family:'Montserrat',sans-serif;}
   .fears{padding:56px 0;}
   .section-title{font-size:1.6rem;margin-bottom:32px;}
   .fears__track{padding:0 28px;gap:16px;}
+  .fear-card-wrap{flex:0 0 230px;}
+  .fear-card{width:230px;}
   .slider__btn{width:38px;height:38px;font-size:1rem;}
 }
 
@@ -500,15 +502,13 @@ button{font-family:'Montserrat',sans-serif;}
   display:flex;
   gap:24px;
   transition:transform 0.4s ease;
-  padding:0 40px;
 }
 .review-card{
-  flex-shrink:0;
-  width:280px;
+  flex:0 0 calc((100% - 48px) / 3);
 }
 .review-card__photo-wrap{
-  width:280px;
-  height:320px;
+  width:100%;
+  aspect-ratio:280 / 320;
   border-radius:32px;
   overflow:hidden;
   position:relative;
@@ -592,6 +592,8 @@ button{font-family:'Montserrat',sans-serif;}
 
 @media(max-width:860px){
   .reviews__track{padding:0 28px;gap:16px;}
+  .review-card{flex:0 0 280px;}
+  .review-card__photo-wrap{width:280px;}
 }
 
 /* ===================== PRICING ===================== */
@@ -1063,7 +1065,7 @@ button{font-family:'Montserrat',sans-serif;}
   padding:60px 120px;
   color:var(--white);
   display:grid;
-  grid-template-columns:1.5fr 1fr 1fr 1fr;
+  grid-template-columns:1fr auto auto auto;
   gap:40px;
 }
 .site-footer__logo{
@@ -1568,15 +1570,11 @@ button{font-family:'Montserrat',sans-serif;}
     <a href="/offer">Договор оферты</a>
     <a href="/privacy">Политика конфиденциальности</a>
     <a href="/personal-data">Согласие на обработку персональных данных</a>
-    <span class="plain">ИП Горбунова Евгения Витальевна</span>
   </div>
   <div>
     <h4>Соцсети</h4>
     <a href="#">Telegram</a>
-    <a href="#">VK</a>
     <a href="#">YouTube</a>
-    <a href="#">Instagram*</a>
-    <p class="site-footer__legal">*Признаны экстремистскими организациями и запрещены на территории РФ.</p>
   </div>
 </footer>
 

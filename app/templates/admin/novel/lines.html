@@ -48,13 +48,13 @@
                 <textarea name="text" rows="2">{{ line.text }}</textarea>
             </label>
             <div class="novel-line-actions">
-                <button type="submit" class="btn-primary">💾 Сохранить</button>
+                <button type="submit" class="btn-primary">Сохранить</button>
             </div>
         </form>
         <form method="post" action="/admin/novel/lines/{{ line.id }}/delete" onsubmit="return confirm('Удалить реплику?')">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <input type="hidden" name="lesson_id" value="{{ lesson.id }}">
-            <button type="submit" class="btn-delete">🗑️ Удалить</button>
+            <button type="submit" class="btn-delete">Удалить</button>
         </form>
     </div>
     {% else %}

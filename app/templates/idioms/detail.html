@@ -18,7 +18,7 @@
             <p class="idiom-hero-translate">{{ idiom.translate }}</p>
 
             {% if idiom.audio_url %}
-            <button id="idiom-audio-btn" class="idiom-audio-btn" onclick="toggleIdiomAudio()">🔊 Слушать</button>
+            <button id="idiom-audio-btn" class="idiom-audio-btn" onclick="toggleIdiomAudio()">Слушать</button>
             <audio id="idiom-audio" src="{{ idiom.audio_url }}" preload="metadata"></audio>
             {% endif %}
         </div>

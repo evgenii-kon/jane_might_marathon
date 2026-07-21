@@ -35,7 +35,7 @@
                             <form method="post" action="/admin/words/{{ word.id }}/lessons/remove" style="margin: 0;">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                 <input type="hidden" name="lesson_id" value="{{ lesson.id }}">
-                                <button type="submit" style="background: #dc2626; color: white; border: none; border-radius: 16px; padding: 4px 12px; cursor: pointer;">✖️</button>
+                                <button type="submit" style="background: #dc2626; color: white; border: none; border-radius: 16px; padding: 4px 12px; cursor: pointer;">Убрать</button>
                             </form>
                         </li>
                     {% endif %}

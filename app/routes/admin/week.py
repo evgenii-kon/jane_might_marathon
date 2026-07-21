@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 
 from app.schemas.week import WeekCreate, WeekUpdate
 from app.services.week_service import WeekService
@@ -13,7 +13,6 @@ from app.csrf import get_csrf_token
 
 
 router = APIRouter(prefix="/admin/weeks", tags=["admin", "week"])
-templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)

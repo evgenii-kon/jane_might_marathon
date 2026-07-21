@@ -2,7 +2,7 @@ import random
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from app.templates_config import templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -18,7 +18,6 @@ from app.repositories.word_repository import WordRepository
 from app.csrf import get_csrf_token
 
 router = APIRouter(prefix="/dashboard/exercises", tags=["dashboard_exercises"])
-templates = Jinja2Templates(directory="app/templates")
 
 TEMPLATE_BY_TYPE = {
     "quiz": "dashboard/exercises/exercises_quiz.html",

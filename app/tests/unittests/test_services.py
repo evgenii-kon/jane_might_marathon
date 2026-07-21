@@ -923,12 +923,22 @@ class TestWordTrainerService:
         await UserWordProgressRepository(db_session).get_or_create(user.id, w.id)
         assert await svc.get_total_words_count(user.id) == 1
 
-    async def test_get_word_ranking(self, db_session):
+    async def test_get_word_ranking_no_progress_returns_empty(self, db_session):
         svc = WordTrainerService(db_session)
         user = await _mk_user(db_session, email="wts8@svc.com")
-        w = await _mk_word(db_session, hanzi="腿", translation="leg")
-        from app.repositories.user_word_progress_repository import UserWordProgressRepository
-        await UserWordProgressRepository(db_session).get_or_create(user.id, w.id)
+        await _mk_word(db_session, hanzi="腿", translation="leg")
         ranking = await svc.get_word_ranking(user.id)
-        assert isinstance(ranking, list)
-        assert len(ranking) >= 1
+        assert ranking == []
+
+    async def test_get_word_ranking_only_includes_words_with_progress(self, db_session):
+        svc = WordTrainerService(db_session)
+        user = await _mk_user(db_session, email="wts9@svc.com")
+        w_with_progress = await _mk_word(db_session, hanzi="腿", translation="leg")
+        await _mk_word(db_session, hanzi="脚", translation="foot")
+        from app.repositories.user_word_progress_repository import UserWordProgressRepository
+        await UserWordProgressRepository(db_session).get_or_create(user.id, w_with_progress.id)
+
+        ranking = await svc.get_word_ranking(user.id)
+
+        assert len(ranking) == 1
+        assert ranking[0]['id'] == w_with_progress.id
