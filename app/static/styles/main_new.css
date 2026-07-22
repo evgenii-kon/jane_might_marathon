@@ -3607,8 +3607,8 @@ a:focus, a:focus-visible{
 }
 
 
-/* ── Filters ───────────────────────────────────────────────── */
-.rp-filters {
+/* ── Tabs ──────────────────────────────────────────────────── */
+.rp-tabs {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -3616,7 +3616,7 @@ a:focus, a:focus-visible{
     flex-wrap: wrap;
 }
 
-.filter-btn {
+.tab-btn {
     display: inline-flex;
     align-items: center;
     gap: 7px;
@@ -3631,20 +3631,20 @@ a:focus, a:focus-visible{
     transition: all .18s ease;
     outline: none;
 }
-.filter-btn:hover {
+.tab-btn:hover {
     background: var(--blue-2);
 }
-.filter-btn.active {
+.tab-btn.active {
     background: var(--red);
     border-color: var(--red);
     color: var(--white);
 }
-.filter-btn.active .filter-count {
+.tab-btn.active .tab-count {
     background: rgba(255, 248, 231, 0.24);
     color: var(--white);
 }
 
-.filter-count {
+.tab-count {
     background: var(--blue-2);
     color: var(--red-deep);
     border-radius: 50px;
@@ -4011,9 +4011,9 @@ a:focus, a:focus-visible{
     .rp-stat-divider { height: 26px; }
 
     .rp-main   { border-radius: 18px; }
-    .rp-filters { padding: 12px 12px 0; gap: 6px; }
-    .filter-btn { padding: 6px 11px; font-size: 11.5px; }
-    .filter-count { font-size: 10px; padding: 1px 6px; }
+    .rp-tabs { padding: 12px 12px 0; gap: 6px; }
+    .tab-btn { padding: 6px 11px; font-size: 11.5px; }
+    .tab-count { font-size: 10px; padding: 1px 6px; }
 
     .word-row  { padding: 10px; gap: 8px; border-radius: 12px; }
     .wr-hanzi  { width: 64px; }
@@ -4026,7 +4026,7 @@ a:focus, a:focus-visible{
 @media (max-width: 480px) {
     .rp-title  { font-size: 18px !important; }
     .rp-header { padding: 14px 12px; }
-    .filter-btn span.filter-count { display: none; }
+    .tab-btn span.tab-count { display: none; }
 }
 
 /* ============================================================

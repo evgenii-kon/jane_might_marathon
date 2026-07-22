@@ -8,8 +8,13 @@
     reading -> novel (реплики новеллы, отдельным async-подключением через SQLAlchemy)
 
 Не идемпотентен по дизайну: перед запуском таблицы контента полностью
-очищаются (TRUNCATE ... CASCADE). Таблица users и все user_*_progress
-(кроме тех, что каскадно зависят от очищаемых таблиц) не трогаются.
+очищаются (TRUNCATE ... CASCADE). Таблица users, subscriptions, payments,
+feedback и user_activities не трогаются — но TRUNCATE ... CASCADE игнорирует
+ON DELETE у внешних ключей, поэтому почти весь прогресс пользователей ВСЁ
+РАВНО стирается каскадно: user_lesson_progress, user_week_progress,
+user_idiom_progress, user_reading_progress, user_exercise_progress,
+user_word_progress, user_word_mistakes, user_novel_progress (+ novel_lines).
+Перед запуском на базе с реальными пользователями это нужно учитывать.
 """
 
 import asyncio

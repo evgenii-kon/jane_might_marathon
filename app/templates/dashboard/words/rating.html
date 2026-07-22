@@ -47,19 +47,16 @@
     <!-- ═══ ОСНОВНОЙ БЛОК ════════════════════════════════════ -->
     <div class="rp-main">
 
-        <!-- Фильтры -->
-        <div class="rp-filters">
-            <button class="filter-btn active" data-filter="all">
-                Все <span class="filter-count">{{ stats.cnt_all }}</span>
+        <!-- Вкладки -->
+        <div class="rp-tabs">
+            <button class="tab-btn active" data-tab="learning">
+                Изучается <span class="tab-count">{{ stats.cnt_learning }}</span>
             </button>
-            <button class="filter-btn" data-filter="low">
-                Нужна работа <span class="filter-count">{{ stats.cnt_low }}</span>
+            <button class="tab-btn" data-tab="mastered">
+                Выучено <span class="tab-count">{{ stats.cnt_mastered }}</span>
             </button>
-            <button class="filter-btn" data-filter="mid">
-                Изучается <span class="filter-count">{{ stats.cnt_mid }}</span>
-            </button>
-            <button class="filter-btn" data-filter="mastered">
-                Выучено <span class="filter-count">{{ stats.cnt_mastered }}</span>
+            <button class="tab-btn" data-tab="all">
+                Все слова <span class="tab-count">{{ stats.cnt_all }}</span>
             </button>
         </div>
 
@@ -93,7 +90,9 @@
         <!-- Список слов -->
         <div class="rp-list" id="wordList">
             {% for word in words %}
-            <div class="word-row" data-mastery="{{ word.mastery_level }}">
+            <div class="word-row"
+                 data-mastery="{{ word.mastery_level }}"
+                 data-has-stats="{{ 'true' if word.has_stats else 'false' }}">
 
                 <!-- Иероглиф -->
                 <div class="wr-hanzi">
@@ -164,32 +163,36 @@
 {% block extra_js %}
 <script>
 (function () {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const rows        = document.querySelectorAll('.word-row');
-    const emptyState  = document.getElementById('rpEmpty');
+    const tabBtns   = document.querySelectorAll('.tab-btn');
+    const rows      = document.querySelectorAll('.word-row');
+    const emptyState = document.getElementById('rpEmpty');
 
-    filterBtns.forEach(btn => {
+    function applyTab(tab) {
+        let visible = 0;
+        rows.forEach(row => {
+            const m        = parseInt(row.dataset.mastery, 10);
+            const hasStats = row.dataset.hasStats === 'true';
+            const show =
+                tab === 'learning' ? (hasStats && m < 5) :
+                tab === 'mastered' ? (m === 5) :
+                true; // 'all'
+
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+        if (emptyState) emptyState.style.display = visible === 0 ? 'flex' : 'none';
+    }
+
+    tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            const filter = btn.dataset.filter;
-            filterBtns.forEach(b => b.classList.remove('active'));
+            tabBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
-            let visible = 0;
-            rows.forEach(row => {
-                const m = parseInt(row.dataset.mastery, 10);
-                const show =
-                    filter === 'all'      ? true :
-                    filter === 'low'      ? m <= 2 :
-                    filter === 'mid'      ? (m === 3 || m === 4) :
-                    filter === 'mastered' ? m === 5 : false;
-
-                row.style.display = show ? '' : 'none';
-                if (show) visible++;
-            });
-
-            if (emptyState) emptyState.style.display = visible === 0 ? 'flex' : 'none';
+            applyTab(btn.dataset.tab);
         });
     });
+
+    // При загрузке показать вкладку «Изучается»
+    applyTab('learning');
 })();
 </script>
 {% endblock %}

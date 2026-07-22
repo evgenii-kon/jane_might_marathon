@@ -100,29 +100,34 @@ class WordTrainerService:
         return await self.progress_repo.get_count(user_id)
 
     async def get_word_ranking(self, user_id: int) -> List[dict]:
-        """Возвращает список слов, с которыми пользователь уже взаимодействовал (mastery, correct/wrong)"""
-        progresses = await self.progress_repo.get_all_by_user(user_id)
-        if not progresses:
-            return []
+        """Возвращает все слова, обогащённые прогрессом пользователя (mastery, correct/wrong).
 
-        word_ids = [p.word_id for p in progresses]
-        words = await self.word_repo.get_by_ids(word_ids)
-        word_map = {w.id: w for w in words}
+        Для слов, с которыми пользователь ещё не взаимодействовал в тренажёре,
+        mastery_level/correct_count/wrong_count равны 0, а has_stats — False.
+
+        has_stats — это НЕ факт наличия строки в UserWordProgress: такая строка
+        создаётся массово при открытии урока (add_lesson_words_to_progress), ещё
+        до того как пользователь хоть раз ответил по слову в тренажёре. Поэтому
+        has_stats считается по наличию хотя бы одного ответа (correct/wrong > 0).
+        """
+        all_words = await self.word_repo.get_all()
+        progresses = await self.progress_repo.get_all_by_user(user_id)
+        progress_map = {p.word_id: p for p in progresses}
 
         ranking = []
-        for prog in progresses:
-            word = word_map.get(prog.word_id)
-            if not word:
-                continue
+        for word in all_words:
+            prog = progress_map.get(word.id)
+            answered = prog is not None and (prog.correct_count > 0 or prog.wrong_count > 0)
             ranking.append({
                 'id': word.id,
                 'hanzi': word.hanzi,
                 'transcription': word.transcription,
                 'translation': word.translation,
-                'mastery_level': prog.mastery_level,
-                'correct_count': prog.correct_count,
-                'wrong_count': prog.wrong_count,
+                'mastery_level': prog.mastery_level if prog else 0,
+                'correct_count': prog.correct_count if prog else 0,
+                'wrong_count': prog.wrong_count if prog else 0,
                 'audio_url': word.audio_url,
+                'has_stats': answered,
             })
         # Сортировка по mastery (по убыванию)
         ranking.sort(key=lambda x: x['mastery_level'], reverse=True)

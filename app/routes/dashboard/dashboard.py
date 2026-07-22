@@ -175,26 +175,23 @@ async def word_rating(
 ):
     service = WordTrainerService(db)
     words = await service.get_word_ranking(current_user.id)
-    total_in_db = len(await service.word_repo.get_all_ids())
 
+    cnt_learning = sum(1 for w in words if w['has_stats'] and w['mastery_level'] < 5)
     cnt_mastered = sum(1 for w in words if w['mastery_level'] == 5)
-    cnt_mid      = sum(1 for w in words if 3 <= w['mastery_level'] < 5)
-    cnt_low      = sum(1 for w in words if w['mastery_level'] <= 2)
+    cnt_all      = len(words)
     stats = {
         # Заголовочная статистика
-        'total':    len(words),
+        'total':    cnt_all,
         'mastered': cnt_mastered,
-        'learning': cnt_mid,
-        'low':      sum(1 for w in words if 0 < w['mastery_level'] < 3),
-        'new':      sum(1 for w in words if w['mastery_level'] == 0),
-        # Счётчики для кнопок-фильтров
-        'cnt_all':      len(words),
-        'cnt_low':      cnt_low,
-        'cnt_mid':      cnt_mid,
+        'learning': cnt_learning,
+        'new':      sum(1 for w in words if not w['has_stats']),
+        # Счётчики для вкладок
+        'cnt_learning': cnt_learning,
         'cnt_mastered': cnt_mastered,
+        'cnt_all':      cnt_all,
         # Прогресс изучения словаря
-        'total_in_db': total_in_db,
-        'started':     len(words),
+        'total_in_db': cnt_all,
+        'started':     sum(1 for w in words if w['has_stats']),
     }
 
     return templates.TemplateResponse(

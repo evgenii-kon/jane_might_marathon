@@ -15,6 +15,7 @@ from app.services.word_service import WordService
 from app.services.user_activity_service import UserActivityService
 from app.services.novel_service import NovelService
 from app.services.user_novel_progress_service import UserNovelProgressService
+from app.services.exercise_service import ExerciseService
 from app.csrf import get_csrf_token
 
 
@@ -113,5 +114,9 @@ async def complete_lesson(
     if completed_count == len(lessons_in_week):
         await week_progress_service.mark_week_completed(current_user.id, lesson.week_id)
 
-    # Редирект обратно на страницу недели
+    # Редирект на упражнения урока, если они есть, иначе — на страницу недели
+    exercise_service = ExerciseService(db)
+    exercises_count = await exercise_service.get_exercises_count_by_lesson(lesson_id)
+    if exercises_count:
+        return RedirectResponse(url=f"/dashboard/exercises/lesson/{lesson_id}", status_code=302)
     return RedirectResponse(url=f"/dashboard/weeks/{lesson.week_id}", status_code=302)
