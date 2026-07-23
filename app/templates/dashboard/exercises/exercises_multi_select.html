@@ -22,29 +22,28 @@
         </div>
     </div>
 
-    <!-- Вопрос -->
+    <!-- Упражнение -->
     <div class="quiz-card">
         <div class="quiz-header">
             <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
-            <span class="quiz-description">{{ exercise.config.instruction or "Прослушайте аудио и выберите правильный вариант" }}</span>
+            <span class="quiz-description">{{ exercise.config.instruction or "Отметьте все верные суждения" }}</span>
         </div>
 
-        {% if exercise.question_text %}
         <div class="quiz-question">
             {{ exercise.question_text }}
         </div>
-        {% endif %}
 
-        <button type="button" class="audio-quiz-play-btn" id="audioPlayBtn">▶ Слушать</button>
-
-        <div class="quiz-options" id="quizOptions">
-            {% set letters = ['А', 'Б', 'В', 'Г', 'Д'] %}
-            {% for orig_num, text in shuffled_options %}
-            <button class="quiz-option" data-option="{{ orig_num }}">
-                <span class="option-letter">{{ letters[loop.index0] }}</span>
-                <span class="option-text">{{ text }}</span>
-            </button>
+        <div class="multi-select-options" id="multiSelectOptions">
+            {% for statement in exercise.config.statements %}
+            <label class="multi-select-option" data-index="{{ loop.index0 }}">
+                <input type="checkbox" class="multi-select-checkbox" value="{{ loop.index0 }}">
+                <span class="multi-select-text">{{ statement }}</span>
+            </label>
             {% endfor %}
+        </div>
+
+        <div class="bw-controls">
+            <button class="btn-next" id="checkBtn">Проверить</button>
         </div>
 
         <div class="quiz-feedback" id="quizFeedback"></div>
@@ -60,22 +59,14 @@
 <script>
     const lessonId = {{ lesson.id }};
     const exerciseId = {{ exercise.id }};
-    const audioUrl = {{ audio_url | tojson }};
     let isAnswered = false;
     let isLastQuestion = false;
 
-    const optionsContainer = document.getElementById('quizOptions');
+    const checkBtn = document.getElementById('checkBtn');
     const feedbackDiv = document.getElementById('quizFeedback');
     const nextContainer = document.getElementById('quizNext');
     const nextBtn = document.getElementById('nextBtn');
-    const playBtn = document.getElementById('audioPlayBtn');
-
-    function playAudio() {
-        if (!audioUrl) return;
-        new Audio(audioUrl).play().catch(() => {});
-    }
-
-    playBtn.addEventListener('click', playAudio);
+    const checkboxes = Array.from(document.querySelectorAll('.multi-select-checkbox'));
 
     function showFeedback(result) {
         if (result.is_correct) {
@@ -90,7 +81,7 @@
                 </div>
             `;
         } else {
-            let bodyHtml = `Неправильно! Правильный ответ: ${result.correct_answer_text}`;
+            let bodyHtml = `Правильные суждения: ${result.correct_answer_text}`;
             if (result.explanation) {
                 bodyHtml += `<br><span class="feedback-explanation">💡 ${result.explanation}</span>`;
             }
@@ -104,25 +95,17 @@
         feedbackDiv.style.display = 'block';
     }
 
-    function highlightCorrectOption(correctOption) {
-        document.querySelectorAll('.quiz-option').forEach(btn => {
-            if (parseInt(btn.dataset.option) === correctOption) {
-                btn.classList.add('correct');
-            }
-        });
-    }
-
-    function disableOptions() {
-        document.querySelectorAll('.quiz-option').forEach(btn => { btn.disabled = true; });
-    }
-
-    async function handleAnswer(selectedBtn, selectedOption) {
+    async function checkAnswer() {
         if (isAnswered) return;
+        const selected = checkboxes.filter(cb => cb.checked).map(cb => parseInt(cb.value));
+        if (!selected.length) return;
         isAnswered = true;
+        checkBtn.disabled = true;
+        checkboxes.forEach(cb => cb.disabled = true);
 
         const formData = new URLSearchParams();
         formData.append('exercise_id', exerciseId);
-        formData.append('selected_option', selectedOption);
+        formData.append('user_answer', JSON.stringify(selected));
 
         try {
             const response = await fetch(`/dashboard/exercises/lesson/${lessonId}/check`, {
@@ -133,18 +116,10 @@
                 },
                 body: formData
             });
-
             const result = await response.json();
 
-            if (result.is_correct) {
-                selectedBtn.classList.add('correct');
-            } else {
-                selectedBtn.classList.add('wrong');
-                highlightCorrectOption(result.correct_answer);
-            }
-
             showFeedback(result);
-            disableOptions();
+            checkBtn.style.display = 'none';
 
             if (result.is_correct) {
                 if (result.has_next) {
@@ -167,19 +142,23 @@
             `;
             feedbackDiv.style.display = 'block';
             isAnswered = false;
+            checkBtn.disabled = false;
+            checkboxes.forEach(cb => cb.disabled = false);
         }
     }
 
-    document.querySelectorAll('.quiz-option').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const selectedOption = parseInt(btn.dataset.option);
-            handleAnswer(btn, selectedOption);
-        });
-    });
+    checkBtn.addEventListener('click', checkAnswer);
 
     nextBtn.addEventListener('click', () => {
         if (isLastQuestion) {
             window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
+        } else if (nextBtn.textContent.includes('Попробовать')) {
+            isAnswered = false;
+            checkBtn.disabled = false;
+            checkBtn.style.display = '';
+            checkboxes.forEach(cb => { cb.disabled = false; cb.checked = false; });
+            feedbackDiv.style.display = 'none';
+            nextContainer.style.display = 'none';
         } else {
             window.location.reload();
         }

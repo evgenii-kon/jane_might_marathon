@@ -1,0 +1,98 @@
+<!-- Плавающая кнопка «Теория» — открывает содержимое урока поверх экрана
+     упражнений, чтобы можно было быстро пролистать и освежить материал, не
+     прерывая прохождение. Закрывается крестиком, кликом по фону или Esc.
+     Использует lesson.content_html — тот же HTML, что и на странице урока
+     (см. app/templates/dashboard/lessons/lesson_detail.html), поэтому ниже
+     навешаны те же обработчики аудио-кнопок диалогов/иероглифов. -->
+<button type="button" class="theory-toggle-btn" id="theoryToggleBtn">Теория</button>
+
+<div class="theory-modal-overlay" id="theoryModalOverlay">
+    <div class="theory-modal">
+        <div class="theory-modal-header">
+            <span class="theory-modal-title">{{ lesson.name }}</span>
+            <button type="button" class="theory-modal-close" id="theoryModalClose" aria-label="Закрыть">&times;</button>
+        </div>
+        <div class="theory-modal-body">
+            <div class="lesson-content">
+                {{ lesson.content_html | safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const toggleBtn = document.getElementById('theoryToggleBtn');
+    const overlay = document.getElementById('theoryModalOverlay');
+    const closeBtn = document.getElementById('theoryModalClose');
+    if (!toggleBtn || !overlay) return;
+
+    function openModal() {
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    toggleBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+    });
+
+    // Те же аудио-обработчики, что и на странице урока — чтобы кнопки "▶" у
+    // диалогов и иероглифов работали и внутри модалки с теорией.
+    overlay.querySelectorAll('.dl-play-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const line = btn.closest('.dl-line');
+            const url = line && line.dataset.audio;
+            if (url) new Audio(url).play().catch(() => {});
+        });
+    });
+    overlay.querySelectorAll('.dl-line').forEach(line => {
+        line.addEventListener('click', () => line.classList.toggle('revealed'));
+    });
+    overlay.querySelectorAll('.dl-play-all-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (btn.disabled) return;
+            const dialogueEl = btn.closest('.lesson-dialogue');
+            const urls = [...dialogueEl.querySelectorAll('.dl-line')]
+                .map(line => line.dataset.audio)
+                .filter(Boolean);
+            if (!urls.length) return;
+            btn.disabled = true;
+            const originalText = btn.textContent;
+            btn.textContent = '⏸ Идёт воспроизведение…';
+            try {
+                for (const url of urls) {
+                    await new Promise((resolve) => {
+                        const audio = new Audio(url);
+                        audio.addEventListener('ended', resolve, { once: true });
+                        audio.addEventListener('error', resolve, { once: true });
+                        audio.play().catch(resolve);
+                    });
+                }
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+    });
+    const theoryBody = overlay.querySelector('.lesson-content');
+    if (theoryBody) {
+        theoryBody.addEventListener('click', (e) => {
+            const span = e.target.closest('.audio-hanzi');
+            if (!span) return;
+            const url = span.dataset.audio;
+            if (url) new Audio(url).play().catch(() => {});
+        });
+    }
+})();
+</script>

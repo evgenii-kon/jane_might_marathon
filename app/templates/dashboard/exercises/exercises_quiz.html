@@ -3,6 +3,7 @@
 {% block title %}Упражнения - {{ lesson.name }}{% endblock %}
 
 {% block content %}
+{% include "dashboard/exercises/_theory_modal.html" %}
 <div class="quiz-container">
     <!-- Навигация -->
     <div class="quiz-nav">
@@ -25,12 +26,14 @@
     <div class="quiz-card">
         <div class="quiz-header">
             <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
-            <span class="quiz-description">{% if is_choose_hanzi %}Выберите иероглиф{% else %}Выберите правильный перевод{% endif %}</span>
+            <span class="quiz-description">{% if is_choose_hanzi %}Выберите иероглиф{% else %}{{ exercise.config.instruction or "Выберите правильный вариант" }}{% endif %}</span>
         </div>
 
+        {% if exercise.question_text %}
         <div class="quiz-question {% if is_choose_hanzi %}quiz-question--translation{% else %}quiz-question--hanzi{% endif %}">
             {{ exercise.question_text }}
         </div>
+        {% endif %}
 
         <div class="quiz-options" id="quizOptions">
             {% set letters = ['А', 'Б', 'В', 'Г'] %}

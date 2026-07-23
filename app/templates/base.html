@@ -30,17 +30,6 @@
                 <a href="{% if user %}/dashboard{% else %}/{% endif %}" class="logo-link">
                     <img src="/static/new_design/logo_red_1l.png" alt="Логотип" class="logo">
                 </a>
-                {% if user %}
-                <button type="button" id="theme-toggle" class="theme-toggle" title="Переключить тему" aria-label="Переключить тему">
-                    <svg class="theme-toggle-icon theme-toggle-icon--moon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 1 0 20.354 15.354Z" fill="currentColor"/>
-                    </svg>
-                    <svg class="theme-toggle-icon theme-toggle-icon--sun" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
-                        <path d="M12 2v2.5M12 19.5V22M4.222 4.222l1.767 1.767M18.011 18.011l1.767 1.767M2 12h2.5M19.5 12H22M4.222 19.778l1.767-1.767M18.011 5.989l1.767-1.767" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                </button>
-                {% endif %}
             </div>
             {% if not user %}
             <nav class="nav-landing">
@@ -84,6 +73,15 @@
                     {% if user.is_admin %}
                         <a href="/admin" class="admin-link">Админка</a>
                     {% endif %}
+                    <button type="button" id="theme-toggle" class="theme-toggle" title="Переключить тему" aria-label="Переключить тему">
+                        <svg class="theme-toggle-icon theme-toggle-icon--moon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 1 0 20.354 15.354Z" fill="currentColor"/>
+                        </svg>
+                        <svg class="theme-toggle-icon theme-toggle-icon--sun" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+                            <path d="M12 2v2.5M12 19.5V22M4.222 4.222l1.767 1.767M18.011 18.011l1.767 1.767M2 12h2.5M19.5 12H22M4.222 19.778l1.767-1.767M18.011 5.989l1.767-1.767" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                        </svg>
+                    </button>
                     <a href="/auth/logout" class="btn-outline">Выйти</a>
                 {% else %}
                     <a href="/auth/login">Вход</a>

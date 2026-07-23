@@ -11,6 +11,7 @@ EXERCISE_TYPES = (
     "translate",
     "audio_quiz",
     "fill_blank_open",
+    "multi_select",
 )
 
 

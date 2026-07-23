@@ -3,6 +3,7 @@
 {% block title %}Упражнения - {{ lesson.name }}{% endblock %}
 
 {% block content %}
+{% include "dashboard/exercises/_theory_modal.html" %}
 <div class="quiz-container">
     <!-- Навигация -->
     <div class="quiz-nav">
@@ -25,7 +26,7 @@
     <div class="quiz-card">
         <div class="quiz-header">
             <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
-            <span class="quiz-description">Заполните пропуски</span>
+            <span class="quiz-description">{{ exercise.config.instruction or "Заполните пропуски" }}</span>
         </div>
 
         {% if exercise.config.hint %}
@@ -34,7 +35,10 @@
 
         <div class="fb-open-template" id="fbTemplate"></div>
 
+        <div class="fb-open-bank" id="fbBank"></div>
+
         <div class="bw-controls">
+            <button class="btn-secondary" id="fbResetBtn">↺ Сбросить</button>
             <button class="btn-next" id="checkBtn">Проверить</button>
         </div>
 
@@ -52,18 +56,66 @@
     const lessonId = {{ lesson.id }};
     const exerciseId = {{ exercise.id }};
     const template = {{ exercise.config.template | tojson }};
+    const blanks = {{ exercise.config.blanks | tojson }};
     let isAnswered = false;
     let isLastQuestion = false;
 
     const templateEl = document.getElementById('fbTemplate');
+    const bankEl = document.getElementById('fbBank');
+    const resetBtn = document.getElementById('fbResetBtn');
     const checkBtn = document.getElementById('checkBtn');
     const feedbackDiv = document.getElementById('quizFeedback');
     const nextContainer = document.getElementById('quizNext');
     const nextBtn = document.getElementById('nextBtn');
-    const inputs = [];
+
+    // Блоки-«тайлы» — по одному на каждый пропуск, значение = правильный
+    // ответ этого пропуска (порядок в банке — перемешанный). Слоты — по
+    // порядку пропусков в шаблоне. placement[slotIndex] = id тайла (индекс
+    // в blanks) или null.
+    const tileOrder = shuffleIndices(blanks.length);
+    const placement = new Array(blanks.length).fill(null);
+    const slotEls = [];
+    let draggedTileId = null;
+
+    function shuffleIndices(n) {
+        const arr = Array.from({ length: n }, (_, i) => i);
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function placedSlotFor(tileId) {
+        return placement.indexOf(tileId);
+    }
+
+    function firstEmptySlot() {
+        return placement.indexOf(null);
+    }
+
+    function placeTile(tileId, slotIndex) {
+        const prevSlot = placedSlotFor(tileId);
+        if (prevSlot !== -1) placement[prevSlot] = null;
+        const displaced = placement[slotIndex];
+        placement[slotIndex] = tileId;
+        if (displaced !== null && displaced !== tileId && prevSlot !== -1) {
+            placement[prevSlot] = displaced;
+        }
+        render();
+    }
+
+    function removeTile(tileId) {
+        const slot = placedSlotFor(tileId);
+        if (slot !== -1) placement[slot] = null;
+        render();
+    }
 
     function render() {
+        // Шаблон с пропусками
         templateEl.innerHTML = '';
+        slotEls.length = 0;
+        let slotIndex = 0;
         template.split('\n').forEach(line => {
             const lineEl = document.createElement('div');
             lineEl.className = 'fb-open-line';
@@ -71,15 +123,76 @@
             parts.forEach((part, i) => {
                 if (part) lineEl.appendChild(document.createTextNode(part));
                 if (i < parts.length - 1) {
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'fb-open-input';
-                    inputs.push(input);
-                    lineEl.appendChild(input);
+                    const idx = slotIndex++;
+                    const slot = document.createElement('span');
+                    slot.dataset.slot = idx;
+                    lineEl.appendChild(slot);
+                    slotEls.push(slot);
                 }
             });
             templateEl.appendChild(lineEl);
         });
+
+        slotEls.forEach((slot, idx) => {
+            const tileId = placement[idx];
+            slot.className = 'fb-open-slot ' + (tileId !== null ? 'fb-open-slot--filled' : 'fb-open-slot--empty');
+            // Пустая строка — валидный ответ («ничего не вставлять»), но
+            // невидимый тайл сбивал бы с толку — показываем плейсхолдер,
+            // отправляем на проверку всё равно исходное значение (в т.ч. "").
+            slot.textContent = tileId !== null ? (blanks[tileId] || '—') : '';
+            slot.addEventListener('dragover', (e) => {
+                if (isAnswered) return;
+                e.preventDefault();
+                slot.classList.add('fb-open-slot--over');
+            });
+            slot.addEventListener('dragleave', () => slot.classList.remove('fb-open-slot--over'));
+            slot.addEventListener('drop', (e) => {
+                e.preventDefault();
+                slot.classList.remove('fb-open-slot--over');
+                if (isAnswered || draggedTileId === null) return;
+                placeTile(draggedTileId, idx);
+            });
+            slot.addEventListener('click', () => {
+                if (isAnswered || tileId === null) return;
+                removeTile(tileId);
+            });
+        });
+
+        // Банк доступных блоков (те, что ещё не размещены)
+        bankEl.innerHTML = '';
+        tileOrder.forEach(tileId => {
+            if (placedSlotFor(tileId) !== -1) return;
+            const tile = document.createElement('button');
+            tile.type = 'button';
+            tile.className = 'fb-open-tile';
+            tile.textContent = blanks[tileId] || '—';
+            tile.draggable = true;
+            tile.addEventListener('dragstart', () => {
+                draggedTileId = tileId;
+                tile.classList.add('fb-open-tile--dragging');
+            });
+            tile.addEventListener('dragend', () => tile.classList.remove('fb-open-tile--dragging'));
+            tile.addEventListener('click', () => {
+                if (isAnswered) return;
+                const target = firstEmptySlot();
+                if (target !== -1) placeTile(tileId, target);
+            });
+            bankEl.appendChild(tile);
+        });
+
+        checkBtn.disabled = placement.some(v => v === null);
+    }
+
+    function resetPlacement() {
+        for (let i = 0; i < placement.length; i++) placement[i] = null;
+        isAnswered = false;
+        feedbackDiv.innerHTML = '';
+        feedbackDiv.style.display = 'none';
+        nextContainer.style.display = 'none';
+        checkBtn.style.display = '';
+        checkBtn.disabled = false;
+        resetBtn.style.display = '';
+        render();
     }
 
     function showFeedback(result) {
@@ -110,12 +223,11 @@
     }
 
     async function checkAnswer() {
-        if (isAnswered) return;
+        if (isAnswered || placement.some(v => v === null)) return;
         isAnswered = true;
         checkBtn.disabled = true;
-        inputs.forEach(inp => inp.disabled = true);
 
-        const userBlanks = inputs.map(inp => inp.value.trim());
+        const userBlanks = placement.map(tileId => blanks[tileId]);
         const formData = new URLSearchParams();
         formData.append('exercise_id', exerciseId);
         formData.append('user_answer', JSON.stringify(userBlanks));
@@ -133,6 +245,7 @@
 
             showFeedback(result);
             checkBtn.style.display = 'none';
+            resetBtn.style.display = result.is_correct ? 'none' : '';
 
             if (result.is_correct) {
                 if (result.has_next) {
@@ -156,22 +269,17 @@
             feedbackDiv.style.display = 'block';
             isAnswered = false;
             checkBtn.disabled = false;
-            inputs.forEach(inp => inp.disabled = false);
         }
     }
 
+    resetBtn.addEventListener('click', resetPlacement);
     checkBtn.addEventListener('click', checkAnswer);
 
     nextBtn.addEventListener('click', () => {
         if (isLastQuestion) {
             window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
         } else if (nextBtn.textContent.includes('Попробовать')) {
-            isAnswered = false;
-            checkBtn.disabled = false;
-            checkBtn.style.display = '';
-            inputs.forEach(inp => { inp.disabled = false; inp.value = ''; });
-            feedbackDiv.style.display = 'none';
-            nextContainer.style.display = 'none';
+            resetPlacement();
         } else {
             window.location.reload();
         }

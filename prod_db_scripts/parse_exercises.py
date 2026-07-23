@@ -116,6 +116,21 @@ SENTENCE_TRANSLATIONS = {
 }
 
 
+PATTERN_KIND_INSTRUCTIONS = {
+    "Выбери верный": "Выберите правильный вариант.",
+    "Правда или ложь": "Определите: утверждение верно или неверно.",
+    "Найди лишнее": "Найдите лишнее слово в группе.",
+    "Собери правило": "Выберите правильный вариант.",
+}
+
+
+def _instruction_for_choice_block(pattern_kind: str, has_audio: bool) -> str:
+    base = PATTERN_KIND_INSTRUCTIONS.get(pattern_kind.strip(), "Выберите правильный вариант.")
+    if has_audio:
+        return "Прослушайте аудио. " + base
+    return base
+
+
 @dataclass
 class ExerciseRow:
     type: str
@@ -350,7 +365,7 @@ def parse_pattern_b(block: dict, day: int = None) -> list:
     row = ExerciseRow(
         type="matching_pairs",
         question_text=question_text,
-        config={"pairs": pairs},
+        config={"pairs": pairs, "instruction": "Сопоставьте пары."},
         explanation="",
     )
     return [row]
@@ -399,12 +414,13 @@ def parse_pattern_d(block: dict) -> list:
     if len(answers) != len(sources):
         return None
 
+    instruction = "Переведите на китайский." if direction == "ru_to_zh" else "Переведите на русский."
     rows = []
     for src, ans in zip(sources, answers):
         if direction == "zh_to_ru":
-            config = {"direction": "zh_to_ru", "source": src, "answer": ans}
+            config = {"direction": "zh_to_ru", "source": src, "answer": ans, "instruction": instruction}
         else:
-            config = {"direction": "ru_to_zh", "source": src, "answer": ans}
+            config = {"direction": "ru_to_zh", "source": src, "answer": ans, "instruction": instruction}
         rows.append(
             ExerciseRow(
                 type="translate",
@@ -446,7 +462,12 @@ def parse_pattern_g_sentence(block: dict) -> list:
             ExerciseRow(
                 type="build_word",
                 question_text="Соберите предложение из слов",
-                config={"translation": translation, "parts": parts, "answer": answer},
+                config={
+                    "translation": translation,
+                    "parts": parts,
+                    "answer": answer,
+                    "instruction": "Соберите предложение из слов.",
+                },
                 explanation="" if translation else f"(перевод не найден для: {answer!r})",
             )
         )
@@ -582,6 +603,12 @@ def parse_choice_block(block: dict, exercise_type_hint: str = None) -> list:
 
     has_audio = any(it["audio"] for it in items)
     ex_type = exercise_type_hint or ("audio_quiz" if has_audio else "quiz")
+    default_instruction = _instruction_for_choice_block(block["pattern_kind"], has_audio)
+    # Специфичная инструкция задания из PDF (заголовок блока/первая строка тела)
+    # приоритетнее общего шаблона по паттерну — она точнее описывает, что
+    # конкретно нужно сделать (например, "Выберите правильный пиньинь для
+    # иероглифа" вместо общего "Выберите правильный вариант.").
+    row_instruction = instruction or default_instruction
 
     rows = []
     for item, raw_token in zip(items, raw_tokens):
@@ -591,11 +618,20 @@ def parse_choice_block(block: dict, exercise_type_hint: str = None) -> list:
         if idx is None:
             return None  # не смогли сопоставить — блок целиком на ручную проверку
 
-        question_text = item["stem"] or instruction or block["title"] or f"[{block['pattern_kind']}]"
+        # Если у пункта нет собственного текста (например, задание —
+        # просто аудио + варианты слога), question_text оставляем пустым:
+        # инструкция (config["instruction"]) и так полностью описывает
+        # задание — дублировать её в отдельный вопрос не нужно.
+        question_text = item["stem"]
         if ex_type == "audio_quiz":
-            config = {"audio_url": item["audio"] or "", "options": item["options"], "correct": idx}
+            config = {
+                "audio_url": item["audio"] or "",
+                "options": item["options"],
+                "correct": idx,
+                "instruction": row_instruction,
+            }
         else:
-            config = {"options": item["options"], "correct": idx}
+            config = {"options": item["options"], "correct": idx, "instruction": row_instruction}
         rows.append(
             ExerciseRow(
                 type=ex_type,
@@ -651,8 +687,13 @@ def parse_pattern_z(block: dict) -> list:
         rows.append(
             ExerciseRow(
                 type="audio_quiz",
-                question_text=instruction,
-                config={"audio_url": audio, "options": TONE_OPTIONS, "correct": idx},
+                question_text="",
+                config={
+                    "audio_url": audio,
+                    "options": TONE_OPTIONS,
+                    "correct": idx,
+                    "instruction": instruction,
+                },
                 explanation="",
             )
         )
@@ -804,11 +845,81 @@ def parse_fill_blank_open(block: dict) -> list:
     if blank_count != len(blanks):
         return None
 
+    default_instruction = "Допишите диалог, вставив нужные слова." if is_dialogue_style else "Заполните пропуски."
     row = ExerciseRow(
         type="fill_blank_open",
-        question_text=hint or "Заполните пропуски",
-        config={"template": template, "blanks": blanks, "hint": hint},
+        question_text=hint or default_instruction,
+        config={"template": template, "blanks": blanks, "hint": hint, "instruction": default_instruction},
         explanation=f"Ответы: {' · '.join(v if v else '(пусто)' for v in blanks)}",
+    )
+    return [row]
+
+
+# ──────────────────────────────────────────────────────────────
+# Паттерн Е (вариант «Выберите ВСЕ правильные суждения») -> multi_select
+# ──────────────────────────────────────────────────────────────
+
+CHECKBOX_ITEM_RE = re.compile(r"^□\s*(\d+)\.\s*(.*)$")
+CORRECT_LIST_RE = re.compile(r"^Верные\s*:\s*(.*)$")
+
+
+def _get_explanation_text(lines: list, check_idx: int) -> str:
+    for i in range(check_idx, len(lines)):
+        s = lines[i].strip()
+        if EXPLANATIONS_HEADER_RE.match(s):
+            rest = [EXPLANATIONS_HEADER_RE.sub("", s).strip()]
+            for line in lines[i + 1:]:
+                ss = line.strip()
+                if ss:
+                    rest.append(ss)
+            return " ".join(p for p in rest if p)
+    return ""
+
+
+def parse_pattern_multi_select(block: dict) -> list:
+    lines = block["lines"]
+    check_idx = _find_check_line_index(lines)
+    if check_idx == -1:
+        return None
+    check_text = _get_check_text(lines, check_idx)
+
+    statements = []
+    title_continuation = []
+    instruction_sentence = None
+    for line in lines[:check_idx]:
+        s = line.strip()
+        if not s:
+            continue
+        m = CHECKBOX_ITEM_RE.match(s)
+        if m:
+            statements.append(m.group(2).strip())
+        elif not statements:
+            if instruction_sentence is not None or s.startswith("Отметьте"):
+                instruction_sentence = (instruction_sentence + " " + s) if instruction_sentence else s
+            else:
+                title_continuation.append(s)
+    if not statements:
+        return None
+
+    m = CORRECT_LIST_RE.match(check_text.strip())
+    if not m:
+        return None
+    try:
+        correct_indices = sorted(int(x.strip()) - 1 for x in m.group(1).split(",") if x.strip())
+    except ValueError:
+        return None
+    if any(i < 0 or i >= len(statements) for i in correct_indices):
+        return None
+
+    instruction = instruction_sentence or "Отметьте все верные суждения. Правильных ответов может быть несколько."
+    question_text = " ".join([block["title"]] + title_continuation).strip() or instruction
+    explanation = _get_explanation_text(lines, check_idx)
+
+    row = ExerciseRow(
+        type="multi_select",
+        question_text=question_text,
+        config={"statements": statements, "correct": correct_indices, "instruction": instruction},
+        explanation=explanation,
     )
     return [row]
 
@@ -830,12 +941,17 @@ def parse_block(block: dict, day: int = None):
         return parse_pattern_g_sentence(block)
     if letter == "Г" and "правило" in kind:
         return parse_choice_block(block)
+    if letter == "Е" and "ВСЕ" in kind:
+        return parse_pattern_multi_select(block)
     if letter in ("А", "Е", "Ж") and "ВСЕ" not in kind:
         return parse_choice_block(block)
     if letter == "З":
         return parse_pattern_z(block)
     if letter in ("В", "К"):
-        return parse_fill_blank_open(block)
+        # Тип fill_blank_open убран из курса целиком — блоки этих паттернов
+        # намеренно не парсятся (не в "пропущенные для ручной проверки",
+        # а просто отсутствуют в итоговых данных).
+        return []
     return None  # неизвестный/особый паттерн (напр. «Выберите ВСЕ...») — на ручной разбор
 
 

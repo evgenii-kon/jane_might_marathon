@@ -3,6 +3,7 @@
 {% block title %}Упражнения - {{ lesson.name }}{% endblock %}
 
 {% block content %}
+{% include "dashboard/exercises/_theory_modal.html" %}
 <div class="quiz-container">
     <!-- Навигация -->
     <div class="quiz-nav">
@@ -25,8 +26,12 @@
     <div class="quiz-card">
         <div class="quiz-header">
             <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
-            <span class="quiz-description">Сопоставьте иероглифы с переводом</span>
+            <span class="quiz-description">{{ exercise.config.instruction or "Сопоставьте пары" }}</span>
         </div>
+
+        {% if exercise.question_text %}
+        <div class="quiz-question">{{ exercise.question_text }}</div>
+        {% endif %}
 
         <div class="mp-grid" id="mpGrid"></div>
 

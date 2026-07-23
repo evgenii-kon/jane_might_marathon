@@ -1,4 +1,5 @@
 import json
+import re
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from fastapi import status, HTTPException
@@ -11,6 +12,13 @@ from ..schemas.exercise import (
 )
 from ..services.cashe_service import CacheService
 
+_TRANSLATE_PUNCT_RE = re.compile(r"[，,。.！!？?；;：:、\s]+")
+
+
+def _normalize_translate_answer(text: str) -> str:
+    """Сравнение ответов в 'translate' игнорирует регистр и знаки препинания
+    (пользователь не обязан ставить точку/запятую так же, как в эталоне)."""
+    return _TRANSLATE_PUNCT_RE.sub("", text.strip().lower())
 
 
 class ExerciseService:
@@ -160,13 +168,29 @@ class ExerciseService:
 
         if exercise.type == "translate":
             answer = config.get("answer", "")
-            is_correct = (user_answer or "").strip().lower() == answer.strip().lower()
+            is_correct = _normalize_translate_answer(user_answer or "") == _normalize_translate_answer(answer)
             return ExerciseCheckResponse(
                 is_correct=is_correct,
                 correct_answer=answer,
                 explanation=exercise.explanation if not is_correct else None,
                 user_answer=user_answer,
                 correct_answer_text=answer,
+            )
+
+        if exercise.type == "multi_select":
+            statements = config.get("statements", [])
+            correct = sorted(config.get("correct", []))
+            try:
+                selected = sorted(set(json.loads(user_answer or "[]")))
+            except (TypeError, ValueError):
+                selected = []
+            is_correct = selected == correct
+            correct_answer_text = " · ".join(statements[i] for i in correct if 0 <= i < len(statements))
+            return ExerciseCheckResponse(
+                is_correct=is_correct,
+                explanation=exercise.explanation if not is_correct else None,
+                user_answer=user_answer,
+                correct_answer_text=correct_answer_text,
             )
 
         if exercise.type == "fill_blank_open":

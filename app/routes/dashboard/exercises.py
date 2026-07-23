@@ -17,6 +17,7 @@ from app.services.user_lesson_progress_service import UserLessonProgressService
 from app.services.user_activity_service import UserActivityService
 from app.repositories.word_repository import WordRepository
 from app.csrf import get_csrf_token
+from app.services.exercise_service import _normalize_translate_answer
 
 router = APIRouter(prefix="/dashboard/exercises", tags=["dashboard_exercises"])
 
@@ -29,6 +30,7 @@ TEMPLATE_BY_TYPE = {
     "audio_quiz": "dashboard/exercises/exercises_audio_quiz.html",
     "translate": "dashboard/exercises/exercises_translate.html",
     "fill_blank_open": "dashboard/exercises/exercises_fill_blank_open.html",
+    "multi_select": "dashboard/exercises/exercises_multi_select.html",
 }
 
 
@@ -217,7 +219,16 @@ async def check_exercise_answer(
     elif exercise.type == "translate":
         correct_answer = config.get("answer", "")
         correct_answer_text = correct_answer
-        is_correct = (user_answer or "").strip().lower() == correct_answer.strip().lower()
+        is_correct = _normalize_translate_answer(user_answer or "") == _normalize_translate_answer(correct_answer)
+    elif exercise.type == "multi_select":
+        statements = config.get("statements", [])
+        correct = sorted(config.get("correct", []))
+        try:
+            selected = sorted(set(json.loads(user_answer or "[]")))
+        except (TypeError, ValueError):
+            selected = []
+        is_correct = selected == correct
+        correct_answer_text = " · ".join(statements[i] for i in correct if 0 <= i < len(statements))
     elif exercise.type == "fill_blank_open":
         blanks = config.get("blanks", [])
         try:

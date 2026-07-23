@@ -213,6 +213,7 @@ ul,ol{margin:0;}
   border:none;
   background:transparent;
   padding:0;
+  margin:0 10px;
   cursor:pointer;
   display:flex;
   align-items:center;
@@ -1565,6 +1566,66 @@ a:focus, a:focus-visible{
 }
 
 /* ---------------------------------------------------------------------
+   KEYBOARD SETUP (lesson-content, День 2 — установка китайской
+   клавиатуры). Раскрывающиеся блоки на нативных <details>/<summary>,
+   без JS. См. keyboard_setup() в prod_db_scripts/seed_lessons_v2.py.
+   --------------------------------------------------------------------- */
+.kb-setup-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0 20px;
+}
+
+.kb-setup-item {
+    background: rgba(149, 187, 234, 0.08);
+    border: 2px solid var(--blue);
+    border-radius: 16px;
+    padding: 0 20px;
+}
+
+.kb-setup-item summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 14px 0;
+    font-weight: 700;
+    color: var(--black);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kb-setup-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.kb-setup-item summary::after {
+    content: "▾";
+    color: var(--red);
+    font-size: 14px;
+    margin-left: 12px;
+    transition: transform 0.15s ease;
+}
+
+.kb-setup-item[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.kb-setup-item .kb-setup-body {
+    padding-bottom: 16px;
+}
+
+.kb-setup-item .kb-setup-body p {
+    margin-bottom: 10px;
+    color: var(--gray);
+}
+
+.kb-setup-item .kb-setup-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------
    LESSON DIALOGUE (content_html <div class="lesson-dialogue"> — см.
    prod_db_scripts/seed_lessons_v2.py, функция dialogue()).
    Карточка-диалог: заголовок с кнопкой "Слушать всё" + список реплик
@@ -1967,6 +2028,125 @@ a:focus, a:focus-visible{
 }
 
 /* ---------------------------------------------------------------------
+   THEORY MODAL (exercises pages) — see
+   app/templates/dashboard/exercises/_theory_modal.html. Floating side tab
+   opens the lesson theory as an overlay so it can be skimmed mid-exercise
+   without leaving the page.
+   --------------------------------------------------------------------- */
+.theory-toggle-btn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 500;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 14px 0 0 14px;
+    padding: 16px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    box-shadow: -2px 2px 12px rgba(0, 0, 0, 0.18);
+    transition: background 0.15s ease, padding-right 0.15s ease;
+}
+
+.theory-toggle-btn:hover {
+    background: var(--red-deep);
+    padding-right: 16px;
+}
+
+.theory-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    padding: 40px 20px;
+    overflow-y: auto;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.theory-modal-overlay.open {
+    display: flex;
+}
+
+.theory-modal {
+    background: var(--surface);
+    border-radius: 24px;
+    max-width: 800px;
+    width: 100%;
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.theory-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 2px solid var(--blue);
+    flex-shrink: 0;
+}
+
+.theory-modal-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--black);
+}
+
+.theory-modal-close {
+    background: none;
+    border: none;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--gray-2);
+    padding: 2px 10px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.theory-modal-close:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--black);
+}
+
+.theory-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+    .theory-toggle-btn {
+        padding: 12px 8px;
+        font-size: 12px;
+    }
+
+    .theory-modal-overlay {
+        padding: 0;
+    }
+
+    .theory-modal {
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .theory-modal-body {
+        padding: 16px;
+    }
+}
+
+/* ---------------------------------------------------------------------
    QUIZ / EXERCISES SHARED SHELL
    (used by exercises_build_word, exercises_fill_blank, exercises_quiz,
    exercises_completed)
@@ -2165,6 +2345,46 @@ a:focus, a:focus-visible{
 
 .quiz-option.wrong .option-text {
     color: #dc2626;
+}
+
+/* Multi-select (checkbox) exercises */
+.multi-select-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.multi-select-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    color: var(--black);
+}
+
+.multi-select-option:hover {
+    border-color: var(--blue);
+    background: rgba(149, 187, 234, 0.1);
+}
+
+.multi-select-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--red);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.multi-select-text {
+    flex: 1;
 }
 
 .quiz-option:disabled {
@@ -2548,6 +2768,80 @@ a:focus, a:focus-visible{
 .fb-open-input:focus {
     outline: none;
     border-bottom-color: var(--blue);
+}
+
+/* Перетаскиваемые блоки вместо текстового ввода: пустой слот — зона
+   для drag&drop / клика, заполненный слот — блок с ответом, банк
+   снизу — доступные для перетаскивания блоки (визуальный язык как у
+   .bw-slot/.bw-part в build_word). */
+.fb-open-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    height: 40px;
+    padding: 0 8px;
+    margin: 0 4px;
+    vertical-align: middle;
+    border-radius: 10px;
+    font-family: var(--cjk-font);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.fb-open-slot--empty {
+    background: rgba(0, 0, 0, 0.02);
+    border: 2px dashed var(--blue);
+    color: transparent;
+}
+
+.fb-open-slot--empty.fb-open-slot--over {
+    border-color: var(--red);
+    background: rgba(148, 5, 1, 0.06);
+}
+
+.fb-open-slot--filled {
+    background: var(--surface);
+    border: 2px solid var(--red);
+    color: var(--red);
+}
+
+.fb-open-bank {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 8px 0 28px;
+}
+
+.fb-open-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    height: 44px;
+    padding: 0 12px;
+    background: var(--surface);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    font-family: var(--cjk-font);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--black);
+    cursor: grab;
+    transition: all 0.15s ease;
+}
+
+.fb-open-tile:hover {
+    background: rgba(149, 187, 234, 0.12);
+    border-color: var(--blue);
+    transform: translateY(-2px);
+}
+
+.fb-open-tile--dragging {
+    opacity: 0.4;
 }
 
 /* ---------------------------------------------------------------------
