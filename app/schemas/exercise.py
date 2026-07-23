@@ -2,7 +2,16 @@ from pydantic import BaseModel
 from typing import Optional, Any, List
 from pydantic_settings import SettingsConfigDict
 
-EXERCISE_TYPES = ("quiz", "choose_hanzi", "matching_pairs", "build_word", "fill_blank")
+EXERCISE_TYPES = (
+    "quiz",
+    "choose_hanzi",
+    "matching_pairs",
+    "build_word",
+    "fill_blank",
+    "translate",
+    "audio_quiz",
+    "fill_blank_open",
+)
 
 
 class ExerciseCreate(BaseModel):

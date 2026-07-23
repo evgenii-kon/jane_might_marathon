@@ -1,3 +1,4 @@
+import json
 import random
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Form
@@ -25,6 +26,9 @@ TEMPLATE_BY_TYPE = {
     "matching_pairs": "dashboard/exercises/exercises_matching.html",
     "build_word": "dashboard/exercises/exercises_build_word.html",
     "fill_blank": "dashboard/exercises/exercises_fill_blank.html",
+    "audio_quiz": "dashboard/exercises/exercises_audio_quiz.html",
+    "translate": "dashboard/exercises/exercises_translate.html",
+    "fill_blank_open": "dashboard/exercises/exercises_fill_blank_open.html",
 }
 
 
@@ -141,17 +145,32 @@ async def exercises_quiz(
         context["shuffled_options"] = shuffled_options
         context["is_choose_hanzi"] = current_exercise.type == "choose_hanzi"
 
+    elif current_exercise.type == "audio_quiz":
+        options = current_exercise.config.get("options", [])
+        shuffled_options = list(enumerate(options))
+        random.shuffle(shuffled_options)
+        context["shuffled_options"] = shuffled_options
+        context["audio_url"] = current_exercise.config.get("audio_url", "")
+
     elif current_exercise.type == "matching_pairs":
-        word_ids = current_exercise.config.get("word_ids", [])
-        word_repo = WordRepository(db)
-        words = await word_repo.get_by_ids(word_ids)
-        words_by_id = {w.id: w for w in words}
-        ordered_words = [words_by_id[wid] for wid in word_ids if wid in words_by_id]
-        context["words"] = [
-            {"id": w.id, "word": w.hanzi, "translation": w.translation}
-            for w in ordered_words
-        ]
-        context["pair_count"] = current_exercise.config.get("pair_count", 4)
+        if "pairs" in current_exercise.config:
+            pairs = current_exercise.config["pairs"]
+            context["words"] = [
+                {"id": i, "word": p["left"], "translation": p["right"]}
+                for i, p in enumerate(pairs)
+            ]
+            context["pair_count"] = len(pairs)
+        else:
+            word_ids = current_exercise.config.get("word_ids", [])
+            word_repo = WordRepository(db)
+            words = await word_repo.get_by_ids(word_ids)
+            words_by_id = {w.id: w for w in words}
+            ordered_words = [words_by_id[wid] for wid in word_ids if wid in words_by_id]
+            context["words"] = [
+                {"id": w.id, "word": w.hanzi, "translation": w.translation}
+                for w in ordered_words
+            ]
+            context["pair_count"] = current_exercise.config.get("pair_count", 4)
 
     return templates.TemplateResponse(template_name, context)
 
@@ -184,7 +203,7 @@ async def check_exercise_answer(
     correct_answer_text = ""
 
     # 2. Проверяем ответ (логика зависит от типа упражнения)
-    if exercise.type in ("quiz", "choose_hanzi", "fill_blank"):
+    if exercise.type in ("quiz", "choose_hanzi", "fill_blank", "audio_quiz"):
         correct_answer = config.get("correct")
         is_correct = selected_option == correct_answer
         correct_answer_text = _option_text(options, correct_answer)
@@ -195,6 +214,21 @@ async def check_exercise_answer(
         correct_answer = config.get("answer", "")
         correct_answer_text = correct_answer
         is_correct = user_answer == correct_answer
+    elif exercise.type == "translate":
+        correct_answer = config.get("answer", "")
+        correct_answer_text = correct_answer
+        is_correct = (user_answer or "").strip().lower() == correct_answer.strip().lower()
+    elif exercise.type == "fill_blank_open":
+        blanks = config.get("blanks", [])
+        try:
+            user_blanks = json.loads(user_answer or "[]")
+        except (TypeError, ValueError):
+            user_blanks = []
+        is_correct = len(user_blanks) == len(blanks) and all(
+            (u or "").strip().lower() == (b or "").strip().lower()
+            for u, b in zip(user_blanks, blanks)
+        )
+        correct_answer_text = " · ".join(b if b else "(пусто)" for b in blanks)
     else:
         is_correct = False
 

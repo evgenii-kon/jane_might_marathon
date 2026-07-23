@@ -21,29 +21,25 @@
         </div>
     </div>
 
-    <!-- Вопрос -->
+    <!-- Упражнение -->
     <div class="quiz-card">
         <div class="quiz-header">
             <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
-            <span class="quiz-description">{% if is_choose_hanzi %}Выберите иероглиф{% else %}Выберите правильный перевод{% endif %}</span>
+            <span class="quiz-description">Заполните пропуски</span>
         </div>
 
-        <div class="quiz-question {% if is_choose_hanzi %}quiz-question--translation{% else %}quiz-question--hanzi{% endif %}">
-            {{ exercise.question_text }}
+        {% if exercise.config.hint %}
+        <div class="fb-open-hint">{{ exercise.config.hint }}</div>
+        {% endif %}
+
+        <div class="fb-open-template" id="fbTemplate"></div>
+
+        <div class="bw-controls">
+            <button class="btn-next" id="checkBtn">Проверить</button>
         </div>
 
-        <div class="quiz-options" id="quizOptions">
-            {% set letters = ['А', 'Б', 'В', 'Г'] %}
-            {% for orig_num, text in shuffled_options %}
-            <button class="quiz-option" data-option="{{ orig_num }}">
-                <span class="option-letter">{{ letters[loop.index0] }}</span>
-                <span class="option-text {% if is_choose_hanzi %}option-text--hanzi{% endif %}">{{ text }}</span>
-            </button>
-            {% endfor %}
-        </div>
-        
         <div class="quiz-feedback" id="quizFeedback"></div>
-        
+
         <div class="quiz-next" id="quizNext" style="display: none;">
             <button class="btn-next" id="nextBtn">Следующий вопрос →</button>
         </div>
@@ -55,13 +51,36 @@
 <script>
     const lessonId = {{ lesson.id }};
     const exerciseId = {{ exercise.id }};
+    const template = {{ exercise.config.template | tojson }};
     let isAnswered = false;
     let isLastQuestion = false;
 
-    const optionsContainer = document.getElementById('quizOptions');
+    const templateEl = document.getElementById('fbTemplate');
+    const checkBtn = document.getElementById('checkBtn');
     const feedbackDiv = document.getElementById('quizFeedback');
     const nextContainer = document.getElementById('quizNext');
     const nextBtn = document.getElementById('nextBtn');
+    const inputs = [];
+
+    function render() {
+        templateEl.innerHTML = '';
+        template.split('\n').forEach(line => {
+            const lineEl = document.createElement('div');
+            lineEl.className = 'fb-open-line';
+            const parts = line.split('_____');
+            parts.forEach((part, i) => {
+                if (part) lineEl.appendChild(document.createTextNode(part));
+                if (i < parts.length - 1) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'fb-open-input';
+                    inputs.push(input);
+                    lineEl.appendChild(input);
+                }
+            });
+            templateEl.appendChild(lineEl);
+        });
+    }
 
     function showFeedback(result) {
         if (result.is_correct) {
@@ -76,7 +95,7 @@
                 </div>
             `;
         } else {
-            let bodyHtml = `Неправильно! Правильный ответ: ${result.correct_answer_text}`;
+            let bodyHtml = `Правильные ответы: ${result.correct_answer_text}`;
             if (result.explanation) {
                 bodyHtml += `<br><span class="feedback-explanation">💡 ${result.explanation}</span>`;
             }
@@ -90,41 +109,16 @@
         feedbackDiv.style.display = 'block';
     }
 
-    function highlightCorrectOption(correctOption) {
-        const btns = document.querySelectorAll('.quiz-option');
-        btns.forEach(btn => {
-            if (parseInt(btn.dataset.option) === correctOption) {
-                btn.classList.add('correct');
-            }
-        });
-    }
-
-    function disableOptions() {
-        const btns = document.querySelectorAll('.quiz-option');
-        btns.forEach(btn => {
-            btn.disabled = true;
-        });
-    }
-
-    function showNextButton() {
-        nextContainer.style.display = 'block';
-    }
-
-    function loadNextQuestion() {
-        if (isLastQuestion) {
-            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
-        } else {
-            window.location.reload();
-        }
-    }
-
-    async function handleAnswer(selectedBtn, selectedOption) {
+    async function checkAnswer() {
         if (isAnswered) return;
         isAnswered = true;
+        checkBtn.disabled = true;
+        inputs.forEach(inp => inp.disabled = true);
 
+        const userBlanks = inputs.map(inp => inp.value.trim());
         const formData = new URLSearchParams();
         formData.append('exercise_id', exerciseId);
-        formData.append('selected_option', selectedOption);
+        formData.append('user_answer', JSON.stringify(userBlanks));
 
         try {
             const response = await fetch(`/dashboard/exercises/lesson/${lessonId}/check`, {
@@ -135,32 +129,22 @@
                 },
                 body: formData
             });
-
             const result = await response.json();
 
-            if (result.is_correct) {
-                selectedBtn.classList.add('correct');
-            } else {
-                selectedBtn.classList.add('wrong');
-                highlightCorrectOption(result.correct_answer);
-            }
-
             showFeedback(result);
-            disableOptions();
+            checkBtn.style.display = 'none';
 
             if (result.is_correct) {
                 if (result.has_next) {
-                    showNextButton();
+                    nextBtn.textContent = 'Следующий вопрос →';
                 } else {
                     isLastQuestion = true;
                     nextBtn.textContent = 'Завершить →';
-                    showNextButton();
                 }
             } else {
-                // Неправильный ответ — варианты перемешаются при перезагрузке
                 nextBtn.textContent = 'Попробовать снова';
-                showNextButton();
             }
+            nextContainer.style.display = 'block';
 
         } catch (error) {
             console.error('Ошибка:', error);
@@ -171,17 +155,28 @@
             `;
             feedbackDiv.style.display = 'block';
             isAnswered = false;
+            checkBtn.disabled = false;
+            inputs.forEach(inp => inp.disabled = false);
         }
     }
 
-    // Обработчики
-    document.querySelectorAll('.quiz-option').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const selectedOption = parseInt(btn.dataset.option);
-            handleAnswer(btn, selectedOption);
-        });
+    checkBtn.addEventListener('click', checkAnswer);
+
+    nextBtn.addEventListener('click', () => {
+        if (isLastQuestion) {
+            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
+        } else if (nextBtn.textContent.includes('Попробовать')) {
+            isAnswered = false;
+            checkBtn.disabled = false;
+            checkBtn.style.display = '';
+            inputs.forEach(inp => { inp.disabled = false; inp.value = ''; });
+            feedbackDiv.style.display = 'none';
+            nextContainer.style.display = 'none';
+        } else {
+            window.location.reload();
+        }
     });
 
-    nextBtn.addEventListener('click', loadNextQuestion);
+    render();
 </script>
 {% endblock %}

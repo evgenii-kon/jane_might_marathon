@@ -1,3 +1,4 @@
+import json
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from fastapi import status, HTTPException
@@ -123,7 +124,7 @@ class ExerciseService:
 
         config = exercise.config or {}
 
-        if exercise.type in ("quiz", "choose_hanzi", "fill_blank"):
+        if exercise.type in ("quiz", "choose_hanzi", "fill_blank", "audio_quiz"):
             options = config.get("options", [])
             correct = config.get("correct")
             is_correct = selected_option == correct
@@ -155,6 +156,35 @@ class ExerciseService:
                 explanation=exercise.explanation if not is_correct else None,
                 user_answer=user_answer,
                 correct_answer_text=answer,
+            )
+
+        if exercise.type == "translate":
+            answer = config.get("answer", "")
+            is_correct = (user_answer or "").strip().lower() == answer.strip().lower()
+            return ExerciseCheckResponse(
+                is_correct=is_correct,
+                correct_answer=answer,
+                explanation=exercise.explanation if not is_correct else None,
+                user_answer=user_answer,
+                correct_answer_text=answer,
+            )
+
+        if exercise.type == "fill_blank_open":
+            blanks = config.get("blanks", [])
+            try:
+                user_blanks = json.loads(user_answer or "[]")
+            except (TypeError, ValueError):
+                user_blanks = []
+            is_correct = len(user_blanks) == len(blanks) and all(
+                (u or "").strip().lower() == (b or "").strip().lower()
+                for u, b in zip(user_blanks, blanks)
+            )
+            correct_answer_text = " · ".join(b if b else "(пусто)" for b in blanks)
+            return ExerciseCheckResponse(
+                is_correct=is_correct,
+                explanation=exercise.explanation if not is_correct else None,
+                user_answer=user_answer,
+                correct_answer_text=correct_answer_text,
             )
 
         raise HTTPException(

@@ -25,25 +25,27 @@
     <div class="quiz-card">
         <div class="quiz-header">
             <span class="quiz-badge">Вопрос {{ current_index }} из {{ total_count }}</span>
-            <span class="quiz-description">{% if is_choose_hanzi %}Выберите иероглиф{% else %}Выберите правильный перевод{% endif %}</span>
+            <span class="quiz-description">Прослушайте аудио и выберите правильный вариант</span>
         </div>
 
-        <div class="quiz-question {% if is_choose_hanzi %}quiz-question--translation{% else %}quiz-question--hanzi{% endif %}">
+        <div class="quiz-question">
             {{ exercise.question_text }}
         </div>
 
+        <button type="button" class="audio-quiz-play-btn" id="audioPlayBtn">▶ Слушать</button>
+
         <div class="quiz-options" id="quizOptions">
-            {% set letters = ['А', 'Б', 'В', 'Г'] %}
+            {% set letters = ['А', 'Б', 'В', 'Г', 'Д'] %}
             {% for orig_num, text in shuffled_options %}
             <button class="quiz-option" data-option="{{ orig_num }}">
                 <span class="option-letter">{{ letters[loop.index0] }}</span>
-                <span class="option-text {% if is_choose_hanzi %}option-text--hanzi{% endif %}">{{ text }}</span>
+                <span class="option-text">{{ text }}</span>
             </button>
             {% endfor %}
         </div>
-        
+
         <div class="quiz-feedback" id="quizFeedback"></div>
-        
+
         <div class="quiz-next" id="quizNext" style="display: none;">
             <button class="btn-next" id="nextBtn">Следующий вопрос →</button>
         </div>
@@ -55,6 +57,7 @@
 <script>
     const lessonId = {{ lesson.id }};
     const exerciseId = {{ exercise.id }};
+    const audioUrl = {{ audio_url | tojson }};
     let isAnswered = false;
     let isLastQuestion = false;
 
@@ -62,6 +65,14 @@
     const feedbackDiv = document.getElementById('quizFeedback');
     const nextContainer = document.getElementById('quizNext');
     const nextBtn = document.getElementById('nextBtn');
+    const playBtn = document.getElementById('audioPlayBtn');
+
+    function playAudio() {
+        if (!audioUrl) return;
+        new Audio(audioUrl).play().catch(() => {});
+    }
+
+    playBtn.addEventListener('click', playAudio);
 
     function showFeedback(result) {
         if (result.is_correct) {
@@ -91,8 +102,7 @@
     }
 
     function highlightCorrectOption(correctOption) {
-        const btns = document.querySelectorAll('.quiz-option');
-        btns.forEach(btn => {
+        document.querySelectorAll('.quiz-option').forEach(btn => {
             if (parseInt(btn.dataset.option) === correctOption) {
                 btn.classList.add('correct');
             }
@@ -100,22 +110,7 @@
     }
 
     function disableOptions() {
-        const btns = document.querySelectorAll('.quiz-option');
-        btns.forEach(btn => {
-            btn.disabled = true;
-        });
-    }
-
-    function showNextButton() {
-        nextContainer.style.display = 'block';
-    }
-
-    function loadNextQuestion() {
-        if (isLastQuestion) {
-            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
-        } else {
-            window.location.reload();
-        }
+        document.querySelectorAll('.quiz-option').forEach(btn => { btn.disabled = true; });
     }
 
     async function handleAnswer(selectedBtn, selectedOption) {
@@ -150,17 +145,15 @@
 
             if (result.is_correct) {
                 if (result.has_next) {
-                    showNextButton();
+                    nextBtn.textContent = 'Следующий вопрос →';
                 } else {
                     isLastQuestion = true;
                     nextBtn.textContent = 'Завершить →';
-                    showNextButton();
                 }
             } else {
-                // Неправильный ответ — варианты перемешаются при перезагрузке
                 nextBtn.textContent = 'Попробовать снова';
-                showNextButton();
             }
+            nextContainer.style.display = 'block';
 
         } catch (error) {
             console.error('Ошибка:', error);
@@ -174,7 +167,6 @@
         }
     }
 
-    // Обработчики
     document.querySelectorAll('.quiz-option').forEach(btn => {
         btn.addEventListener('click', () => {
             const selectedOption = parseInt(btn.dataset.option);
@@ -182,6 +174,12 @@
         });
     });
 
-    nextBtn.addEventListener('click', loadNextQuestion);
+    nextBtn.addEventListener('click', () => {
+        if (isLastQuestion) {
+            window.location.href = `/dashboard/exercises/lesson/${lessonId}/completed`;
+        } else {
+            window.location.reload();
+        }
+    });
 </script>
 {% endblock %}
