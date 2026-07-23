@@ -1371,9 +1371,19 @@ a:focus, a:focus-visible{
     border-bottom: 2px solid rgba(0, 0, 0, 0.08);
 }
 
-.tab-btn {
+/* Селектор нарочно с префиксом .lesson-tabs: ниже по каскаду (~3846) есть
+   ещё один .tab-btn — для вкладок на странице рейтинга слов (пилюли с
+   границей и счётчиком) — с той же специфичностью (0,0,1,0). При равном
+   весе выигрывает тот, что ниже по файлу, а не этот, поэтому здесь
+   специфичность поднята до (0,0,2,0), чтобы вкладки урока не наследовали
+   чужой стиль. */
+.lesson-tabs .tab-btn {
+    display: inline-block;
     background: none;
     border: none;
+    border-radius: 0;
+    gap: 0;
+    outline: none;
     padding: 12px 24px;
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
@@ -1385,11 +1395,13 @@ a:focus, a:focus-visible{
     margin-bottom: -2px;
 }
 
-.tab-btn:hover {
+.lesson-tabs .tab-btn:hover {
+    background: none;
     color: var(--red);
 }
 
-.tab-btn.active {
+.lesson-tabs .tab-btn.active {
+    background: none;
     color: var(--red);
     border-bottom-color: var(--red);
 }
@@ -1451,6 +1463,12 @@ a:focus, a:focus-visible{
     margin-top: 0;
 }
 
+.lesson-content hr {
+    border: none;
+    border-top: 1px solid rgba(149, 187, 234, 0.25);
+    margin: 32px 0 20px;
+}
+
 .lesson-content h3 {
     margin: 20px 0 10px 0;
     font-size: 18px;
@@ -1500,6 +1518,238 @@ a:focus, a:focus-visible{
 
 .lesson-content table tr:nth-child(even) td {
     background: rgba(149, 187, 234, 0.10);
+}
+
+/* Иероглифы с аудио (<span class="audio-hanzi" data-audio="...">) — в
+   таблице «Новые слова» (vocab_table()) и в примерах остальных table()
+   (согласные, гласные, тоны, ключи и т.п.). Клик обрабатывает JS в
+   lesson_detail.html через делегирование на .lesson-content.
+   Значок динамика — через mask-image (не background-image!), поэтому его
+   цвет берётся из background-color и подстраивается под тему сам, без
+   отдельной SVG под тёмный режим. */
+.lesson-content .audio-hanzi {
+    cursor: pointer;
+    position: relative;
+    padding-right: 14px;
+    color: var(--black);
+    transition: color 0.15s;
+}
+
+.lesson-content .audio-hanzi::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 11px;
+    height: 11px;
+    background-color: var(--red);
+    opacity: 0.55;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 5 6 9H2v6h4l5 4V5z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M18.5 5.5a9 9 0 0 1 0 13' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 5 6 9H2v6h4l5 4V5z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M18.5 5.5a9 9 0 0 1 0 13' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.lesson-content .audio-hanzi:hover {
+    color: var(--red);
+}
+
+.lesson-content .audio-hanzi:hover::after {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+/* ---------------------------------------------------------------------
+   LESSON DIALOGUE (content_html <div class="lesson-dialogue"> — см.
+   prod_db_scripts/seed_lessons_v2.py, функция dialogue()).
+   Карточка-диалог: заголовок с кнопкой "Слушать всё" + список реплик
+   с аватаром-кружком (цвет зависит от персонажа через data-character),
+   без выравнивания влево/вправо — все реплики одинаковой ширины.
+   --------------------------------------------------------------------- */
+.lesson-dialogue {
+    margin: 24px 0 32px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 2px solid var(--blue);
+    border-radius: 20px;
+}
+
+.dl-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(149, 187, 234, 0.4);
+}
+
+.dl-header-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--gray-2);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.dl-play-all-btn {
+    font-family: 'Montserrat', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 2px solid var(--red);
+    color: var(--red);
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.dl-play-all-btn:hover {
+    background: var(--red);
+    color: var(--white);
+}
+
+.dl-play-all-btn[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.dl-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 0;
+    cursor: pointer;
+}
+
+.dl-line + .dl-line {
+    border-top: 1px solid rgba(149, 187, 234, 0.25);
+}
+
+.dl-avatar {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 38px;
+    height: 38px;
+    padding: 0 3px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+    color: var(--white);
+    background: var(--gray-2);
+}
+
+/* Цвет аватара — по персонажу (устойчиво совпадает для одного и того же
+   героя во всех уроках, где он встречается). */
+.dl-line[data-character="user"] .dl-avatar { background: var(--red); }
+.dl-line[data-character="konfusi"] .dl-avatar { background: #2f8f5b; }
+.dl-line[data-character="zhulan"] .dl-avatar { background: #7c5cd6; }
+.dl-line[data-character="chingisu"] .dl-avatar { background: #d9922a; }
+.dl-line[data-character="bris_lei"] .dl-avatar { background: #3574e0; }
+.dl-line[data-character="zho"] .dl-avatar { background: #d64b8f; }
+
+.dl-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.dl-speaker {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-2);
+    margin-bottom: 6px;
+}
+
+.dl-hanzi-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dl-hanzi {
+    font-family: var(--cjk-font);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--black);
+}
+
+.dl-play-btn {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--blue);
+    color: var(--red);
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.dl-play-btn:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+    transform: scale(1.08);
+}
+
+/* Пиньинь и перевод скрыты, пока по .dl-line не кликнут (JS в
+   lesson_detail.html переключает класс .revealed) — тренирует чтение
+   иероглифа/восприятие на слух до подсказки. Подсказку-приглашение
+   показываем через ::after у .dl-hanzi-row, пока карточка не раскрыта. */
+.dl-pinyin,
+.dl-ru {
+    display: none;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.dl-line.revealed .dl-pinyin,
+.dl-line.revealed .dl-ru {
+    display: block;
+}
+
+.dl-pinyin {
+    font-weight: 600;
+    color: #3d72d1;
+}
+
+.dl-ru {
+    color: var(--gray);
+    margin-top: 2px;
+}
+
+.dl-hanzi-row::after {
+    content: "Показать перевод ↓";
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-2);
+    opacity: 0.65;
+    margin-left: 2px;
+}
+
+.dl-line.revealed .dl-hanzi-row::after {
+    display: none;
 }
 
 /* Words empty state */
@@ -2340,7 +2590,7 @@ a:focus, a:focus-visible{
 @media (max-width: 860px) {
     .lesson-container,
     .quiz-container {
-        padding: 20px 7px 40px;
+        padding: 20px 14px 40px;
     }
 
     .lesson-header {
@@ -2359,8 +2609,8 @@ a:focus, a:focus-visible{
 
     .lesson-content {
         padding: 18px 0;
-        margin-left: -23px;
-        margin-right: -23px;
+        margin-left: 0;
+        margin-right: 0;
         border-radius: 0;
     }
 
@@ -2372,12 +2622,21 @@ a:focus, a:focus-visible{
         font-size: 16px;
     }
 
+    /* Широкие таблицы (согласные/тоны/ключи — по 3-4 колонки) не влезают в
+       узкий экран — без этого они растягивали всю страницу горизонтально,
+       сводя на нет боковые отступы. Скроллим саму таблицу, а не страницу. */
+    .lesson-content table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .lesson-tabs {
         gap: 4px;
         margin-bottom: 16px;
     }
 
-    .tab-btn {
+    .lesson-tabs .tab-btn {
         padding: 10px 14px;
         font-size: 13.5px;
     }
@@ -5104,7 +5363,7 @@ a:focus, a:focus-visible{
    RESPONSIVE — breakpoint 860px
    ============================================================ */
 @media (max-width: 860px) {
-    .articles-page { padding: 32px 7px 56px; }
+    .articles-page { padding: 32px 14px 56px; }
     .articles-header { margin-bottom: 32px; }
     .articles-header h1 { font-size: 30px; }
     .articles-header p { font-size: 15px; }
@@ -5117,12 +5376,17 @@ a:focus, a:focus-visible{
     .article-meta { font-size: 12px; }
     .article-description { font-size: 14px; }
 
-    .article-detail-container { padding: 28px 7px 56px; }
+    .article-detail-container { padding: 28px 14px 56px; }
     .article-header h1 { font-size: 27px; }
     .article-description-lead { font-size: 15px; padding: 14px 0; }
-    .article-content-body { padding: 22px 0; font-size: 14px; line-height: 1.7; border-radius: 0; margin-left: -23px; margin-right: -23px; }
+    .article-content-body { padding: 22px 0; font-size: 14px; line-height: 1.7; border-radius: 0; margin-left: 0; margin-right: 0; }
     .article-content-body h2 { font-size: 20px; margin: 24px 0 12px; }
     .article-content-body h3 { font-size: 17px; margin: 18px 0 10px; }
+    .article-content-body table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
     .article-footer-nav { flex-direction: column; }
     .article-footer-nav a { text-align: center; }
 
@@ -5145,15 +5409,15 @@ a:focus, a:focus-visible{
     .idiom-example-zh { font-size: 1rem; }
     .idiom-example-ru { font-size: 0.88rem; }
 
-    .reading-page { padding: 32px 7px 56px; }
+    .reading-page { padding: 32px 14px 56px; }
     .reading-header h1 { font-size: 26px; }
-    .reading-detail { padding: 28px 7px 56px; }
+    .reading-detail { padding: 28px 14px 56px; }
     .reading-quiz { padding: 22px 18px; border-radius: 22px; }
     .reading-article {
         padding: 22px 0;
         border-radius: 0;
-        margin-left: -23px;
-        margin-right: -23px;
+        margin-left: 0;
+        margin-right: 0;
     }
     .reading-article-header h1 { font-size: 21px; }
     .reading-text-hanzi { font-size: 18px; }

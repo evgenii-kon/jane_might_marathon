@@ -420,6 +420,7 @@
         transition: background 0.2s, color 0.2s;
         white-space: nowrap;
         cursor: pointer;
+        text-shadow: none;
       }
       .driver-popover.hsk-tour-popover .driver-popover-prev-btn:hover:not(:disabled) {
         background: var(--red);
@@ -442,6 +443,8 @@
         overflow: hidden;
       }
       .hsk-progress-label {
+        align-self: center;
+        margin-right: 14px;
         font-family: 'Montserrat', sans-serif;
         font-size: 12px;
         font-weight: 600;
@@ -455,13 +458,46 @@
         border-radius: 999px;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      /* driver.js's popover arrow is hardcoded white in its base CSS; it only
-         matched the old plain-white popover by coincidence. Re-point it at
-         --surface so it still blends once the popover itself is themed. */
-      .driver-popover-arrow {
+      /* driver.js's popover arrow is a CSS border-triangle: base class sets
+         all 4 border sides to one color, then a -side-X modifier class makes
+         3 of them transparent so only the pointing side stays colored. Our
+         earlier override set border-color via shorthand, which re-set all 4
+         sides again — since it loads after the CDN stylesheet, it clobbered
+         the transparent sides too and turned the arrow into a solid square.
+         Fixing by re-declaring each -side-X combo ourselves at higher
+         specificity, so only the pointing side ever gets the surface color. */
+      .driver-popover.hsk-tour-popover .driver-popover-arrow {
         border-color: var(--surface);
       }
+      .driver-popover.hsk-tour-popover .driver-popover-arrow-side-left {
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-top-color: transparent;
+      }
+      .driver-popover.hsk-tour-popover .driver-popover-arrow-side-right {
+        border-left-color: transparent;
+        border-bottom-color: transparent;
+        border-top-color: transparent;
+      }
+      .driver-popover.hsk-tour-popover .driver-popover-arrow-side-top {
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+      }
+      .driver-popover.hsk-tour-popover .driver-popover-arrow-side-bottom {
+        border-left-color: transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+      }
       .driver-popover.hsk-tour-popover .driver-popover-close-btn {
+        top: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
         color: var(--gray);
       }
       .driver-popover.hsk-tour-popover .driver-popover-close-btn:hover {

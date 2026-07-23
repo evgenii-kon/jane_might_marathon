@@ -115,11 +115,13 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    const userName = {{ user_name | tojson }};
+</script>
 {% if novel_lines %}
 <script src="/static/js/novel_player.js"></script>
 <script>
     const novelLines = {{ novel_lines | tojson }};
-    const userName = {{ user_name | tojson }};
     window.novelPlayer = new NovelPlayer(novelLines, userName, "{{ csrf_token }}", {{ lesson.id }}, "{{ s3_public_url }}");
     {% if novel_auto_show %}
     window.novelPlayer.start();
@@ -127,6 +129,38 @@
 </script>
 {% endif %}
 <script>
+    {% raw %}
+    // Диалоги в теории урока хранят "{{user_name}}"/"{{user_initial}}" как
+    // текстовые плейсхолдеры (content_html — статичный HTML из БД, реальное
+    // имя туда не подставить на этапе сида) — заменяем их на настоящее имя
+    // пользователя прямо в тексте, обходя только текстовые узлы, чтобы не
+    // задеть атрибуты (data-audio и т.п.) и не терять навешанные обработчики.
+    // Обязательно внутри {% raw %}: иначе Jinja2 сама распознаёт
+    // "{{user_name}}"/"{{user_initial}}" как СВОИ переменные (ей всё равно,
+    // что это JS-строка внутри <script>) — user_initial в контексте шаблона
+    // не существует и рендерится в пустую строку, из-за чего
+    // .replaceAll('', ...) вставлял символ между каждым символом ВСЕХ
+    // текстовых узлов на странице.
+    (function replaceUserNamePlaceholders() {
+        const root = document.querySelector('.lesson-content');
+        if (!root || !userName) return;
+        const initial = userName.charAt(0).toUpperCase();
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        let node;
+        while ((node = walker.nextNode())) {
+            if (node.nodeValue.includes('{{user_name}}') || node.nodeValue.includes('{{user_initial}}')) {
+                nodes.push(node);
+            }
+        }
+        nodes.forEach((n) => {
+            n.nodeValue = n.nodeValue
+                .replaceAll('{{user_name}}', userName)
+                .replaceAll('{{user_initial}}', initial);
+        });
+    })();
+    {% endraw %}
+
     // Табы
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -153,5 +187,74 @@
             this.classList.toggle('flipped');
         });
     });
+
+    // Диалоги в теории урока — кнопка "▶" на реплике проигрывает её аудио
+    // (ссылка лежит в data-audio ближайшего .dl-line, см. content_html)
+    document.querySelectorAll('.dl-play-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const line = btn.closest('.dl-line');
+            const url = line && line.dataset.audio;
+            if (url) {
+                new Audio(url).play();
+            }
+        });
+    });
+
+    // Пиньинь и перевод скрыты по умолчанию (см. main_new.css) — клик по
+    // реплике их раскрывает. Клик по кнопке "▶" сюда не долетает — она уже
+    // останавливает всплытие (e.stopPropagation() выше).
+    document.querySelectorAll('.dl-line').forEach(line => {
+        line.addEventListener('click', () => {
+            line.classList.toggle('revealed');
+        });
+    });
+
+    // "Слушать всё" — проигрывает все реплики диалога по очереди, дожидаясь
+    // конца каждой перед следующей. Кнопка блокируется на время проигрывания,
+    // чтобы не запустить несколько параллельных проходов разом.
+    document.querySelectorAll('.dl-play-all-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (btn.disabled) return;
+            const dialogueEl = btn.closest('.lesson-dialogue');
+            const urls = [...dialogueEl.querySelectorAll('.dl-line')]
+                .map(line => line.dataset.audio)
+                .filter(Boolean);
+            if (!urls.length) return;
+
+            btn.disabled = true;
+            const originalText = btn.textContent;
+            btn.textContent = '⏸ Идёт воспроизведение…';
+            try {
+                for (const url of urls) {
+                    await new Promise((resolve) => {
+                        const audio = new Audio(url);
+                        audio.addEventListener('ended', resolve, { once: true });
+                        audio.addEventListener('error', resolve, { once: true });
+                        audio.play().catch(resolve);
+                    });
+                }
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+    });
+
+    // Иероглифы в таблицах теории (span.audio-hanzi, см. vocab_table() и
+    // linkify_table_hanzi() в prod_db_scripts/seed_lessons_v2.py) — клик
+    // проигрывает их аудио. Делегирование, а не отдельный listener на
+    // каждый span — в уроке их может быть несколько десятков.
+    const lessonContent = document.querySelector('.lesson-content');
+    if (lessonContent) {
+        lessonContent.addEventListener('click', (e) => {
+            const span = e.target.closest('.audio-hanzi');
+            if (!span) return;
+            const url = span.dataset.audio;
+            if (url) {
+                new Audio(url).play();
+            }
+        });
+    }
 </script>
 {% endblock %}
