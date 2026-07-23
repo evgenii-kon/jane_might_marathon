@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Файлы - HSK-1 Марафон{% endblock %}
+
+{% block content %}
+<div class="articles-page">
+    <div class="articles-header">
+        <h1>Файлы</h1>
+        <p>Прописи и другие дополнительные материалы к курсу</p>
+    </div>
+
+    <div class="files-list">
+        {% for file in files %}
+        <a href="{{ file.url }}" class="file-card" download>
+            <span class="file-card-ext">{{ file.label }}</span>
+            <span class="file-card-body">
+                <span class="file-card-name">{{ file.name }}</span>
+                <span class="file-card-size">{{ file.size }}</span>
+            </span>
+            <span class="file-card-download">⬇</span>
+        </a>
+        {% else %}
+        <div class="empty-state">
+            <p>📭 Пока файлов нет. Скоро здесь появятся прописи и дополнительные материалы!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

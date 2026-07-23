@@ -28,6 +28,7 @@ from .routes.dashboard.lessons import router as dashboard_lessons_router
 from .routes.dashboard.word_trainer.word_trainer import router as word_trainer_router
 from .routes.dashboard.word_trainer.word_trainer_modes import router as word_trainer_modes_router
 from .routes.public.articles import router as article_router
+from .routes.public.files import router as files_router
 from app.routes.dashboard.feedback import router as feedback_router
 from .routes.admin.feedback import router as admin_feedback_router
 from .routes.public.idioms import router as idiom_router
@@ -117,6 +118,7 @@ app.include_router(exercise_router)
 app.include_router(word_trainer_modes_router)
 app.include_router(article_admin_router)
 app.include_router(article_router)
+app.include_router(files_router)
 app.include_router(word_trainer_router)
 app.include_router(feedback_router)
 app.include_router(admin_feedback_router)
